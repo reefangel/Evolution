@@ -42,5 +42,5 @@ public class Globals {
 	public static final byte RELAY_RON = 0x1;
 	public static final byte RELAY_ROFF = 0x2;
 
-
+	public static final String PREFS_NAME = "EvolutionPrefs";
 }

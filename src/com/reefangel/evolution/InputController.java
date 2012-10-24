@@ -3,28 +3,21 @@ package com.reefangel.evolution;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
-import android.app.ActionBar;
+import com.reefangel.evolution.EvolutionActivity.UpdateData;
+
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 public class InputController extends AccessoryController  {
 	private static final String TAG = "EvolutionActivity";
@@ -44,7 +37,7 @@ public class InputController extends AccessoryController  {
 	private int Relay_RON[];
 	private int Relay_ROFF[];
 	
-//	AnimationSet Shrink;
+	SharedPreferences prefs;
 		
 	ArrayList<SwitchDisplayer> mSwitchDisplayers;
 	ArrayList<RelayButtonController> mRelayButtonControllers;
@@ -92,7 +85,16 @@ public class InputController extends AccessoryController  {
 		tspec1ports.setContent(R.id.standardports);
 		tabsports.addTab(tspec1ports);
 		tabsports.setCurrentTabByTag("Std Ports");
-		
+
+		prefs = mHostActivity.getSharedPreferences(Globals.PREFS_NAME, 0);
+        Log.d(TAG,"Reef Angel ID: " + prefs.getString("MYREEFANGELID", ""));
+        if (prefs.getString("MYREEFANGELID", "")!="")
+        {
+		    DownloadXMLLabels task = new DownloadXMLLabels();
+		    task.execute();
+        }
+        UpdateLabels();
+        
 	}
 
 	protected void onAccesssoryAttached() {
@@ -278,16 +280,16 @@ public class InputController extends AccessoryController  {
 				if (BigInteger.valueOf(t).testBit(3)) {
 					
 					TextView sl=(TextView)findViewById(R.id.SalinityLabel);
-					sl.setText("Salinity");
+					sl.setText(prefs.getString("SALN", "Salinity"));
 					LinearLayout sc=(LinearLayout) findViewById(R.id.SalinityContainer);
-					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.sal_bk));
+					sc.setBackground(mHostActivity.getResources().getDrawable(R.drawable.sal_bk));
 				}
 				if (BigInteger.valueOf(t).testBit(4)) {
 					
 					TextView sl=(TextView)findViewById(R.id.ORPLabel);
-					sl.setText("ORP");
+					sl.setText(prefs.getString("ORPN", "ORP"));
 					LinearLayout sc=(LinearLayout) findViewById(R.id.ORPContainer);
-					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.orp_bk));
+					sc.setBackground(mHostActivity.getResources().getDrawable(R.drawable.orp_bk));
 				}				
 				if (BigInteger.valueOf(t).testBit(5)) {
 					
@@ -313,16 +315,16 @@ public class InputController extends AccessoryController  {
 				if (BigInteger.valueOf(t).testBit(6)) {
 					
 					TextView sl=(TextView)findViewById(R.id.pHExpLabel);
-					sl.setText("pH Exp");
+					sl.setText(prefs.getString("PHEN", "pH Exp"));
 					LinearLayout sc=(LinearLayout) findViewById(R.id.pHExpContainer);
-					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.phexp_bk));
+					sc.setBackground(mHostActivity.getResources().getDrawable(R.drawable.phexp_bk));
 				}
 				if (BigInteger.valueOf(t).testBit(7)) {
 					
 					TextView sl=(TextView)findViewById(R.id.WLLabel);
 					sl.setText("WL");
 					LinearLayout sc=(LinearLayout) findViewById(R.id.WaterLevelContainer);
-					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.waterlevel_bk));
+					sc.setBackground(mHostActivity.getResources().getDrawable(R.drawable.waterlevel_bk));
 				}				
 			    
 //				List<String> l = new ArrayList<String>();
@@ -523,11 +525,31 @@ public class InputController extends AccessoryController  {
 		}
 
 	}
-	
+
 	private void setupRelayButtonController(int index, int pos, int viewId) {
-		Log.d(TAG,"Relay Button index: " + index + ", pos: " + pos + ", viewID: " + viewId);
+//		Log.d(TAG,"Relay Button index: " + index + ", pos: " + pos + ", viewID: " + viewId);
 		RelayButtonController r = new RelayButtonController(mHostActivity, index, pos, getResources());
 		r.attachToView((ViewGroup) findViewById(viewId));		
 		mRelayButtonControllers.add(r);
 	}	
+
+
+	private class DownloadXMLLabels extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			XMLfunctions.GetLabels(mHostActivity);
+			return null;
+		}
+	}
+	
+	private void UpdateLabels()
+	{
+		for (int a=1; a<4; a++)
+		{
+			TextView t=(TextView) findViewById(getResources().getIdentifier("t" + a + "n", "id", "com.reefangel.evolution"));
+			t.setText(prefs.getString("T" + a + "N", "Temp "+a));
+		}		
+		TextView t=(TextView) findViewById(R.id.phn);
+		t.setText(prefs.getString("PHN", "pH"));
+	}
 }
