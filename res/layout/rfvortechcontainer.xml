@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RFVortechContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/EvolutionWhite"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/RFModeContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/RFModeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Mode"
+                android:textColor="@color/EvolutionGray" />
+
+            <TextView
+                android:id="@+id/RFModeValue"
+                style="@style/EvolutionMeasurement"
+                android:text="Constant" />
+        </LinearLayout>
+                
+        <LinearLayout
+            android:id="@+id/RFSpeedContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/RFSpeedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Speed"
+                android:textColor="@color/EvolutionGray" />
+
+            <TextView
+                android:id="@+id/RFSpeedValue"
+                style="@style/EvolutionMeasurement"
+                android:text="0%" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/RFDurationContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/RFDurationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Duration"
+                android:textColor="@color/EvolutionGray" />
+
+            <TextView
+                android:id="@+id/RFDurationValue"
+                style="@style/EvolutionMeasurement"
+                android:text="0s" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+    <com.reefangel.evolution.SpeedometerView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+    </LinearLayout>
+
+</LinearLayout>
+    

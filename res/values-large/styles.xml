@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="EvolutionTextBase" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">24dip</item>
+        <item name="android:textColor">@color/EvolutionWhite</item>
+        <item name="android:background">@null</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="EvolutionContainerLabel" parent="@style/EvolutionTextBase">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">25dp</item>
+        <item name="android:gravity">center|left</item>
+    </style>
+
+    <style name="EvolutionControlLabel" parent="@style/EvolutionTextBase">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/EvolutionWhite</item>
+        <item name="android:shadowColor">@color/EvolutionBlack</item>
+        <item name="android:gravity">center|right</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">1</item>     
+    </style>
+
+    <style name="EvolutionControlLightLowerLabel" parent="@style/EvolutionTextBase">
+        <item name="android:layout_marginTop">-2dip</item>
+        <item name="android:textSize">15dip</item>
+        <item name="android:textColor">@color/EvolutionWhite</item>
+    </style>
+
+    <style name="EvolutionControlLightLowerLabelConst" parent="@style/EvolutionControlLightLowerLabel">
+        <item name="android:textColor">@color/EvolutionGray</item>
+    </style>
+
+    <style name="EvolutionMeasurement" parent="@style/EvolutionTextBase">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/EvolutionBlack</item>
+        <item name="android:shadowColor">@color/EvolutionPurple</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+
+    <style name="EvolutionLEDText" parent="@style/EvolutionControlLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:textColor">@color/EvolutionBlack</item>
+        <item name="android:shadowColor">@color/EvolutionGray</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+</style>
+
+    <style name="EvolutionATO" parent="@style/EvolutionTextBase">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">36dp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">@color/EvolutionBlack</item>
+        <item name="android:shadowColor">@color/EvolutionGray</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>      
+
+    <style name="EvolutionNoDevice" parent="@style/EvolutionTextBase">
+        <item name="android:textSize">30dip</item>
+    </style>
+
+    <style name="EvolutionMeasurementSuffix" parent="@style/EvolutionMeasurement">
+        <item name="android:textSize">20dip</item>
+    </style>
+
+    <style name="EvolutionButtonDisplay">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal|bottom</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">2dip</item>
+        <item name="android:padding">2dip</item>
+    </style>
+
+    <style name="EvolutionRelayButton" parent="@style/EvolutionTextBase">
+        <item name="android:textSize">15dip</item>
+        <item name="android:layout_marginTop">-10dip</item>
+        <item name="android:layout_height">70dip</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:textColor">@color/EvolutionWhite</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/toggle_button_off_holo_dark</item>
+    </style>
+
+    <style name="EvolutionRelayButtonBottom" parent="@style/EvolutionTextBase">
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">15dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/EvolutionWhite</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minHeight">55dip</item>
+        <item name="android:minWidth">55dip</item>
+        <item name="android:background">@drawable/relay_off</item>
+    </style>
+
+    <style name="EvolutionRelayButtonTop" parent="@style/EvolutionTextBase">
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">15dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/EvolutionWhite</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minHeight">55dip</item>
+        <item name="android:minWidth">55dip</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:background">@drawable/relay_off1</item>
+    </style>
+        
+    <style name="EvolutionRelayLabel">
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLength">10</item>
+        <item name="android:textColor">@color/EvolutionWhite</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:shadowColor">@color/EvolutionBlack</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+        
+    <style name="EvolutionOverriden">
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLength">10</item>
+        <item name="android:textColor">@color/EvolutionOverriden</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">@color/EvolutionBlack</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+    <style name="EvolutionRelayBox" parent="@style/EvolutionTextBase">
+        <item name="android:minHeight">280dp</item>
+        <item name="android:minWidth">500dp</item>
+        <item name="android:paddingLeft">25dp</item>
+        <item name="android:paddingRight">25dp</item>        
+    </style>
+    <style name="EvolutionRelayWidget" parent="@style/EvolutionTextBase">
+    </style>    
+</resources>

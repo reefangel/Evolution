@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ParamsContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/paramspadding"
+    android:paddingLeft="5dip"
+    android:paddingTop="@dimen/paramspadding" >
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dip"
+        android:paddingTop="15dip" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/paramspadding"
+            android:paddingTop="@dimen/paramspadding" >
+
+            <LinearLayout
+                android:id="@+id/Temp1Container"
+                style="@style/EvolutionContainerLabel"
+                android:background="@drawable/temp1_bk" >
+
+                <TextView
+                    android:id="@+id/temp1Label"
+                    style="@style/EvolutionControlLabel"
+                    android:text="Temp1" />
+
+                <TextView
+                    android:id="@+id/temp1Value"
+                    style="@style/EvolutionMeasurement"
+                    android:text="78.1º" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Temp2Container"
+                style="@style/EvolutionContainerLabel"
+                android:background="@drawable/temp2_bk" >
+
+                <TextView
+                    android:id="@+id/temp2Label"
+                    style="@style/EvolutionControlLabel"
+                    android:text="Temp2" />
+
+                <TextView
+                    android:id="@+id/temp2Value"
+                    style="@style/EvolutionMeasurement"
+                    android:text="95.7º" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Temp3Container"
+                style="@style/EvolutionContainerLabel"
+                android:background="@drawable/temp3_bk" >
+
+                <TextView
+                    android:id="@+id/temp3Label"
+                    style="@style/EvolutionControlLabel"
+                    android:text="Temp3" />
+
+                <TextView
+                    android:id="@+id/temp3Value"
+                    style="@style/EvolutionMeasurement"
+                    android:text="81.2º" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pHContainer"
+                style="@style/EvolutionContainerLabel"
+                android:background="@drawable/ph_bk" >
+
+                <TextView
+                    android:id="@+id/pHLabel"
+                    style="@style/EvolutionControlLabel"
+                    android:text="pH" />
+
+                <TextView
+                    android:id="@+id/pHValue"
+                    style="@style/EvolutionMeasurement"
+                    android:text="8.15" />
+            </LinearLayout>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/paramspadding"
+            android:paddingTop="@dimen/paramspadding" >
+
+            <LinearLayout
+                android:id="@+id/SalinityContainer"
+                style="@style/EvolutionContainerLabel"
+                android:background="@drawable/none_bk" >
+
+                <TextView
+                    android:id="@+id/SalinityLabel"
+                    style="@style/EvolutionControlLabel" />
+
+                <TextView
+                    android:id="@+id/SalinityValue"
+                    style="@style/EvolutionMeasurement" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ORPContainer"
+                style="@style/EvolutionContainerLabel"
+                android:background="@drawable/none_bk" >
+
+                <TextView
+                    android:id="@+id/ORPLabel"
+                    style="@style/EvolutionControlLabel" />
+
+                <TextView
+                    android:id="@+id/ORPValue"
+                    style="@style/EvolutionMeasurement" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pHExpContainer"
+                style="@style/EvolutionContainerLabel"
+                android:background="@drawable/none_bk" >
+
+                <TextView
+                    android:id="@+id/pHExpLabel"
+                    style="@style/EvolutionControlLabel" />
+
+                <TextView
+                    android:id="@+id/pHExpValue"
+                    style="@style/EvolutionMeasurement" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/WaterLevelContainer"
+                style="@style/EvolutionContainerLabel"
+                android:background="@drawable/none_bk" >
+
+                <TextView
+                    android:id="@+id/WLLabel"
+                    style="@style/EvolutionControlLabel" />
+
+                <TextView
+                    android:id="@+id/WLValue"
+                    style="@style/EvolutionMeasurement" />
+
+            </LinearLayout>
+
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

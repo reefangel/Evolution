@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/EvolutionWhite"
+    android:orientation="vertical" >
+
+	<LinearLayout android:id="@+id/InOutTabContainer"
+		android:layout_width="fill_parent" android:orientation="horizontal"
+		android:layout_height="0dip">
+		<TextView android:layout_width="wrap_content" android:id="@+id/inputLabel"
+			android:text="@string/input" style="@style/EvolutionTextBase"
+			android:gravity="center" android:layout_weight="1"
+			android:clickable="true" android:layout_gravity="center"
+			android:layout_height="match_parent"></TextView>
+		<TextView android:text="@string/output" android:id="@+id/outputLabel"
+			android:layout_width="wrap_content" android:layout_height="match_parent"
+			style="@style/EvolutionTextBase" android:gravity="center"
+			android:layout_weight="1" android:layout_gravity="center"
+			android:clickable="true"></TextView>
+	</LinearLayout>
+
+	<FrameLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:paddingLeft="10dip"
+	    android:paddingRight="10dip" >
+
+		<include
+		    android:id="@+id/inputContainer"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    layout="@layout/inputcontainer" />
+
+		<include
+		    android:id="@+id/outputContainer"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    layout="@layout/outputcontainer" />
+
+	</FrameLayout>
+</LinearLayout>

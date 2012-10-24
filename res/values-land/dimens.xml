@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   	<dimen name="dimmingpercentage">18dp</dimen>
+	<dimen name="dimmingpercentagetop">16dp</dimen>
+	<dimen name="expansionscrollingbar">280dp</dimen>
+		
+</resources> 

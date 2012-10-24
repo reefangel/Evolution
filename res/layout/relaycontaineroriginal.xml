@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TabHost
+        android:id="@+id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0" >
+
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="horizontal">
+
+                            <TabWidget
+                                android:id="@android:id/tabs"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0" >
+
+                            </TabWidget>
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:id="@+id/mainbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0" >
+
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/relay_box_bk"
+                        android:gravity="center"
+                        android:minHeight="200dip"
+                        android:paddingLeft="15dip"
+                        android:paddingRight="15dip" >
+
+                        <TableRow
+                            android:id="@+id/tableRow1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay5"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay7"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/tableRow4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay6"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay8"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expbox1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TableLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/relay_box_bk"
+                        android:gravity="center"
+                        android:minHeight="200dip"
+                        android:paddingLeft="15dip"
+                        android:paddingRight="15dip" >
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay11"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay13"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay15"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay17"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay12"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay14"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay16"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay18"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expbox2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TableLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/relay_box_bk"
+                        android:gravity="center"
+                        android:minHeight="200dip"
+                        android:paddingLeft="15dip"
+                        android:paddingRight="15dip" >
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay21"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay23"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay25"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay27"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay22"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay24"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay26"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay28"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expbox3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TableLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/relay_box_bk"
+                        android:gravity="center"
+                        android:minHeight="200dip"
+                        android:paddingLeft="15dip"
+                        android:paddingRight="15dip" >
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay31"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay33"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay35"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay37"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay32"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay34"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay36"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay38"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expbox4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TableLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/relay_box_bk"
+                        android:gravity="center"
+                        android:minHeight="200dip"
+                        android:paddingLeft="15dip"
+                        android:paddingRight="15dip" >
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay41"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay43"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay45"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay47"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay42"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay44"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay46"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay48"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expbox5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TableLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/relay_box_bk"
+                        android:gravity="center"
+                        android:minHeight="200dip"
+                        android:paddingLeft="15dip"
+                        android:paddingRight="15dip" >
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay51"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay53"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay55"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay57"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay52"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay54"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay56"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay58"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expbox6"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TableLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/relay_box_bk"
+                        android:gravity="center"
+                        android:minHeight="200dip"
+                        android:paddingLeft="15dip"
+                        android:paddingRight="15dip" >
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay61"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay63"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay65"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay67"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay62"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay64"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay66"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay68"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expbox7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TableLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/relay_box_bk"
+                        android:gravity="center"
+                        android:minHeight="200dip"
+                        android:paddingLeft="15dip"
+                        android:paddingRight="15dip" >
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay71"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay73"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay75"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay77"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay72"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay74"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay76"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay78"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/expbox8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TableLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/relay_box_bk"
+                        android:gravity="center"
+                        android:minHeight="200dip"
+                        android:paddingLeft="15dip"
+                        android:paddingRight="15dip" >
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay81"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay83"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay85"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+
+                            <include
+                                android:id="@+id/Relay87"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttontopcontainer" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" >
+
+                            <include
+                                android:id="@+id/Relay82"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay84"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay86"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+
+                            <include
+                                android:id="@+id/Relay88"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                layout="@layout/relaybuttonbottomcontainer" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+</LinearLayout>

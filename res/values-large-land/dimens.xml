@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="dimmingpercentage">24dp</dimen>
+	<dimen name="dimmingpercentagetop">24dp</dimen>
+	<dimen name="expansionscrollingbar">450dp</dimen>
+	<dimen name="expansiondimminglabel">110dp</dimen>
+	<dimen name="expansiondimminglabelpaddingleft">0dp</dimen>
+	<dimen name="expansiondimmingpaddingtop">10dp</dimen>
+					
+</resources> 

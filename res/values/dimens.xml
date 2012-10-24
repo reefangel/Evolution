@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="dimmingpercentage">18dp</dimen>
+	<dimen name="dimmingpercentagetop">16dp</dimen>
+	<dimen name="expansionscrollingbar">380dp</dimen>
+	<dimen name="expansiondimminglabel">80dp</dimen>
+	<dimen name="expansiondimminglabelpaddingleft">0dp</dimen>
+	<dimen name="expansiondimmingpaddingtop">5dp</dimen>
+	<dimen name="paramspadding">0dp</dimen>
+	<dimen name="atoheight">50dp</dimen>
+		
+</resources> 

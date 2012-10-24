@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="EvolutionWhite">#FFF</color>
+	<color name="EvolutionGray">#666</color>
+	<color name="EvolutionBlack">#000</color>
+	<color name="EvolutionOverriden">#2248BA</color>
+	<color name="EvolutionPurple">#8000FF</color>
+	<color name="EvolutionOrange">#FF8D0A</color>
+	<color name="EvolutionMarron">#C32148</color>
+	<color name="EvolutionRelayLabelColor">#145225</color>
+					
+</resources>

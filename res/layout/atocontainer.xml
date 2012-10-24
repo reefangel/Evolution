@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ATOContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/EvolutionWhite"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/LowATOContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/LowATO"
+            style="@style/EvolutionButtonDisplay"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/ato_on" >
+        </ImageButton>
+
+        <TextView
+            android:id="@+id/LowATOLabel"
+            style="@style/EvolutionATO"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Low ATO" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/HighATOContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/HighATO"
+            style="@style/EvolutionButtonDisplay"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/ato_off" >
+        </ImageButton>
+
+        <TextView
+            android:id="@+id/HighATOLabel"
+            style="@style/EvolutionATO"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="High ATO" />
+
+    </LinearLayout>
+
+</LinearLayout>

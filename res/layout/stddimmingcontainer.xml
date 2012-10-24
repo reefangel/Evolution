@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/StdDimmingContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/EvolutionWhite"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="15dip"
+    android:paddingRight="15dip" >
+
+    <com.reefangel.evolution.ProgressView
+        android:id="@+id/daylightdimming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <com.reefangel.evolution.ProgressView
+        android:id="@+id/actinicdimming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+</LinearLayout>

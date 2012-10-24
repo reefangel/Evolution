@@ -1,0 +1,12 @@
+# files/directories to be ignored in this project
+# ignore these directories
+gen/
+bin/
+# ignore this zip script, may get deleted in the future
+ziplib.bat
+# ignore .patch files
+*.patch
+# ignore .zip files
+*.zip
+# ignore .apk files
+*.apk
