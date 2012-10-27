@@ -279,17 +279,17 @@ public class InputController extends AccessoryController  {
 
 				if (BigInteger.valueOf(t).testBit(3)) {
 					
-					TextView sl=(TextView)findViewById(R.id.SalinityLabel);
+					TextView sl=(TextView)findViewById(R.id.saln);
 					sl.setText(prefs.getString("SALN", "Salinity"));
 					LinearLayout sc=(LinearLayout) findViewById(R.id.SalinityContainer);
-					sc.setBackground(mHostActivity.getResources().getDrawable(R.drawable.sal_bk));
+					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.sal_bk));
 				}
 				if (BigInteger.valueOf(t).testBit(4)) {
 					
-					TextView sl=(TextView)findViewById(R.id.ORPLabel);
+					TextView sl=(TextView)findViewById(R.id.orpn);
 					sl.setText(prefs.getString("ORPN", "ORP"));
 					LinearLayout sc=(LinearLayout) findViewById(R.id.ORPContainer);
-					sc.setBackground(mHostActivity.getResources().getDrawable(R.drawable.orp_bk));
+					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.orp_bk));
 				}				
 				if (BigInteger.valueOf(t).testBit(5)) {
 					
@@ -314,17 +314,17 @@ public class InputController extends AccessoryController  {
 				}			
 				if (BigInteger.valueOf(t).testBit(6)) {
 					
-					TextView sl=(TextView)findViewById(R.id.pHExpLabel);
+					TextView sl=(TextView)findViewById(R.id.phen);
 					sl.setText(prefs.getString("PHEN", "pH Exp"));
 					LinearLayout sc=(LinearLayout) findViewById(R.id.pHExpContainer);
-					sc.setBackground(mHostActivity.getResources().getDrawable(R.drawable.phexp_bk));
+					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.phexp_bk));
 				}
 				if (BigInteger.valueOf(t).testBit(7)) {
 					
-					TextView sl=(TextView)findViewById(R.id.WLLabel);
+					TextView sl=(TextView)findViewById(R.id.wln);
 					sl.setText("WL");
 					LinearLayout sc=(LinearLayout) findViewById(R.id.WaterLevelContainer);
-					sc.setBackground(mHostActivity.getResources().getDrawable(R.drawable.waterlevel_bk));
+					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.waterlevel_bk));
 				}				
 			    
 //				List<String> l = new ArrayList<String>();

@@ -22,6 +22,8 @@ public class Globals {
 	public static final byte EXPANSIONMODULES = 0x70;
 
 	public static final byte RELAYMODULES = 0x71;
+	
+	public static final byte REEFANGELID = 0x7f;
 
 
 // Dimming Channels

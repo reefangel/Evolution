@@ -8,5 +8,6 @@
 	<dimen name="expansiondimmingpaddingtop">5dp</dimen>
 	<dimen name="paramspadding">0dp</dimen>
 	<dimen name="atoheight">50dp</dimen>
-		
+	<dimen name="ParamsLabel">16dp</dimen>	
+	<dimen name="ParamsValue">26dp</dimen>	
 </resources> 

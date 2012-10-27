@@ -7,16 +7,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.View.MeasureSpec;
 
 public class ProgressView extends View {
 	
-	private static final String TAG = "ProgressView";
+	private static final String TAG = "EvolutionProgressView";
 
 	private Drawable mProgressBackground;
 	private Drawable[] mProgressDrawables;
@@ -102,10 +100,11 @@ public class ProgressView extends View {
 		mLabelPaint.setShadowLayer(1, 1, 1, Color.LTGRAY);
 		srcRect = new Rect(0, 0, mProgressBackground.getIntrinsicWidth(), mProgressBackground.getIntrinsicHeight()); 
 		destRect = new Rect(0, 0, mProgressBackground.getIntrinsicWidth()*2/3,mProgressBackground.getIntrinsicHeight());
-		destRect.offset(mProgressBackground.getIntrinsicWidth()/3, 5); 
+		destRect.offset(mProgressBackground.getIntrinsicWidth()/3, 0); 
 		setPercentage(0);
 		setLabel("Channel");
 		setMode(0);
+//		currentP=100;
 	}
 
 	@Override
@@ -117,17 +116,16 @@ public class ProgressView extends View {
 			int w=mProgressBackground.getIntrinsicWidth();
 			int h=mProgressBackground.getIntrinsicHeight();
 			float scalew = (float) getWidth()/w;	
-			float scaleh = (float) getHeight()/(h*2.5f);	
 			canvas.save(); 
-			canvas.scale(scalew, scaleh, 0, 0); 
-			canvas.drawBitmap(background, 0, h*1.5f, null); 
-			int x = 20 + (int)((currentP * (w-50) )/100);
-			Utilities.centerAround(x,(int)(h*1.5f), indicator);
+			canvas.scale(scalew, scalew, 0, 0); 
+			canvas.drawBitmap(background, 0, h*1.2f, null); 
+			int x =(w/26) + (int)((currentP * (w-(w/12)) )/100);
+			Utilities.centerAround(x,(int)(h*1.2f), indicator);
 			indicator.draw(canvas);
 			if (currentP<=50)
-				canvas.drawText(mPercentageText, x + 12,h*1.5f + mLabelPaint.getTextSize() , mLabelPaint);
+				canvas.drawText(mPercentageText, x + (w/26),h*1.15f + mLabelPaint.getTextSize() , mLabelPaint);
 			else
-				canvas.drawText(mPercentageText, x - 110,h*1.5f + mLabelPaint.getTextSize() , mLabelPaint);
+				canvas.drawText(mPercentageText, x - (w/5.2f),h*1.15f + mLabelPaint.getTextSize() , mLabelPaint);
 			canvas.drawText(mLabelText, 0, h, mLabelPaint);
 		}
 		else
@@ -135,19 +133,17 @@ public class ProgressView extends View {
 			int w=mProgressBackground.getIntrinsicWidth();
 			int h=mProgressBackground.getIntrinsicHeight();
 			float scalew = (float) getWidth()/w;	
-			float scaleh = (float) getHeight()/(h*1.2f);	
 			canvas.save(); 
-			canvas.scale(scalew, scaleh, 0, 0); 
+			canvas.scale(scalew, scalew, 0, 0); 
 			canvas.drawBitmap(background,srcRect,destRect, null); 
-			int x = 20+(int)((currentP * (((mProgressBackground.getIntrinsicWidth()*2/3))-40) )/100);
-			x+=mProgressBackground.getIntrinsicWidth()/3;
-			Utilities.centerAround(x,5, indicator);
+			int x = (int)(w/2.7f) + (int)((currentP * (w-(w/2.45f)) )/100);
+			Utilities.centerAround(x,0, indicator);
 			indicator.draw(canvas);
 			if (currentP<=50)
-				canvas.drawText(mPercentageText, x + 12, 2+mLabelPaint.getTextSize() , mLabelPaint);
+				canvas.drawText(mPercentageText, x + (w/26), (h*.75f) , mLabelPaint);
 			else
-				canvas.drawText(mPercentageText, x - 110, 2+mLabelPaint.getTextSize() , mLabelPaint);
-			canvas.drawText(mLabelText, 0, h, mLabelPaint);
+				canvas.drawText(mPercentageText, x - (w/5.2f), (h*.75f) , mLabelPaint);
+			canvas.drawText(mLabelText, 0, (h*.75f), mLabelPaint);
 		}
 		canvas.restore(); 
 		if (IndicatorNeedsToMove()) {

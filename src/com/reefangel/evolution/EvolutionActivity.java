@@ -35,6 +35,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -383,7 +384,6 @@ public class EvolutionActivity extends Activity implements Runnable {
 			int len = ret - i;
 
 			switch (buffer[i]) {
-
 			case Globals.T1_PROBE: case Globals.T2_PROBE: case Globals.T3_PROBE: case Globals.PH: case Globals.SALINITY: case Globals.ORP: case Globals.PHEXP: case Globals.EXPANSIONMODULES: case Globals.RELAYMODULES:
 				if (len >= 3) {
 					Message m = Message.obtain(mHandler, MESSAGE_PARAMS);
@@ -427,6 +427,20 @@ public class EvolutionActivity extends Activity implements Runnable {
 				i += 3;
 				break;
 
+			case Globals.REEFANGELID:
+				if (len >= 3) {
+					SharedPreferences prefs = getSharedPreferences(Globals.PREFS_NAME, 0);
+					String reefangelid=new String(buffer);
+					reefangelid=reefangelid.substring(1,reefangelid.length()-1);
+					Log.d(TAG, "Received ReefAngelID: " + reefangelid );
+//					Message m = Message.obtain(mHandler, MESSAGE_RELAY);
+//					m.obj = new RelayMsg(buffer[i + 1], buffer[i + 2]);
+//					mHandler.sendMessage(m);
+					
+				}
+				i += buffer.length;
+				break;
+				
 			default:
 				Log.d(TAG, "unknown msg: " + buffer[i]);
 				i = len;

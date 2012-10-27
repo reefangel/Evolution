@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -55,25 +56,16 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 	}
 
 	public void attachToView(ViewGroup targetView) {
-//		SpannableStringBuilder ssb = new SpannableStringBuilder("Relay");
-//		ssb.append(String.valueOf(mRelayNumber));
-//		ssb.setSpan(new SubscriptSpan(), 5, 6, 0);
-//		ssb.setSpan(new RelativeSizeSpan(0.7f), 5, 6, 0);
+		SharedPreferences prefs = mActivity.getSharedPreferences(Globals.PREFS_NAME, 0);
 		mLabel = (TextView) targetView.getChildAt(0);
-		mLabel.setText("Relay " + mRelayNumber);
+		mLabel.setText(prefs.getString("Relay " + mRelayNumber +"N","Relay " + mRelayNumber));
 		mOverride = (TextView) targetView.getChildAt(2);
 		mOverride.setText("");
 		mButton = (Button) targetView.getChildAt(1);
 		mButton.setOnClickListener(this);
-//		mButton.setOnClickListener((android.view.View.OnClickListener) this);
-//		mButton.setOnCheckedChangeListener(this);
 		 
 		OnLongClickListener listener = new OnLongClickListener() {
 			public boolean onLongClick(View v) {
-//				Dialog dialog = new Dialog(mActivity);
-//				dialog.setContentView(R.layout.overridecontainer);
-//				dialog.setTitle("Choose Mode:");
-//				dialog.show();
 				final CharSequence[] items = {"Off (Override)", "On (Override)", "Auto"};
 				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 				builder.setTitle("Choose Mode:");
@@ -90,37 +82,7 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 		};
 		mButton.setOnLongClickListener(listener);
 		 
-		 
-		 
 		}
-
-//	public void setOnClickListener(CompoundButton arg0, boolean isChecked) {
-//		mOverride.setText("Overridden");
-//
-//		if (mPos==0)
-//		{
-//			if (isChecked) {
-//				mButton.setBackgroundDrawable(mBottomOnBackground);
-//			} else {
-//				mButton.setBackgroundDrawable(mBottomOffBackground);
-//			}
-//
-//		}
-//		else
-//		{
-//			if (isChecked) {
-//				mButton.setBackgroundDrawable(mTopOnBackground);
-//			} else {
-//				mButton.setBackgroundDrawable(mTopOffBackground);
-//			}
-//
-//		}
-//		if (mActivity != null) {
-//			mActivity.sendCommand(EvolutionActivity.RELAY_COMMAND,
-//					mCommandTarget, isChecked ? 1 : 0);
-//		}
-//		
-//	}
 
 	public void onClick(View v) {
 		switch (mState)

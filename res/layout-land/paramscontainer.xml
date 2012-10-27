@@ -26,7 +26,7 @@
                 android:background="@drawable/temp1_bk" >
 
                 <TextView
-                    android:id="@+id/temp1Label"
+                    android:id="@+id/t1n"
                     style="@style/EvolutionControlLabel"
                     android:text="Temp1" />
 
@@ -42,7 +42,7 @@
                 android:background="@drawable/temp2_bk" >
 
                 <TextView
-                    android:id="@+id/temp2Label"
+                    android:id="@+id/t2n"
                     style="@style/EvolutionControlLabel"
                     android:text="Temp2" />
 
@@ -59,7 +59,7 @@
                 android:background="@drawable/temp3_bk" >
 
                 <TextView
-                    android:id="@+id/temp3Label"
+                    android:id="@+id/t3n"
                     style="@style/EvolutionControlLabel"
                     android:text="Temp3" />
 
@@ -75,7 +75,7 @@
                 android:background="@drawable/ph_bk" >
 
                 <TextView
-                    android:id="@+id/pHLabel"
+                    android:id="@+id/phn"
                     style="@style/EvolutionControlLabel"
                     android:text="pH" />
 
@@ -91,7 +91,7 @@
                 android:background="@drawable/none_bk" >
 
                 <TextView
-                    android:id="@+id/SalinityLabel"
+                    android:id="@+id/saln"
                     style="@style/EvolutionControlLabel" />
 
                 <TextView
@@ -106,7 +106,7 @@
                 android:background="@drawable/none_bk" >
 
                 <TextView
-                    android:id="@+id/ORPLabel"
+                    android:id="@+id/orpn"
                     style="@style/EvolutionControlLabel" />
 
                 <TextView
@@ -122,7 +122,7 @@
                 android:background="@drawable/none_bk" >
 
                 <TextView
-                    android:id="@+id/pHExpLabel"
+                    android:id="@+id/phen"
                     style="@style/EvolutionControlLabel" />
 
                 <TextView
@@ -137,7 +137,7 @@
                 android:background="@drawable/none_bk" >
 
                 <TextView
-                    android:id="@+id/WLLabel"
+                    android:id="@+id/wln"
                     style="@style/EvolutionControlLabel" />
 
                 <TextView
