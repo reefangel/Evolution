@@ -76,12 +76,11 @@ public class EvolutionActivity extends Activity implements Runnable {
 
 	private static final int MESSAGE_SWITCH = 1;
 	private static final int MESSAGE_PARAMS = 2;
-	private static final int MESSAGE_DIMMING = 3;
+	private static final int MESSAGE_BYTE = 3;
 	private static final int MESSAGE_RELAY = 4;
-	private static final int MESSAGE_JOY = 5;
+	private static final int MESSAGE_PORTAL = 5;
 
-	public static final byte LED_SERVO_COMMAND = 2;
-	public static final byte RELAY_COMMAND = 3;
+
 
 	protected class SwitchMsg {
 		private byte sw;
@@ -118,11 +117,11 @@ public class EvolutionActivity extends Activity implements Runnable {
 		}
 	}
 
-	protected class DimmingMsg {
+	protected class ByteMsg {
 		private int channelvalue;
 		private byte channel;
 
-		public DimmingMsg(byte channel, int channelvalue) {
+		public ByteMsg(byte channel, int channelvalue) {
 			this.channelvalue = channelvalue;
 			this.channel = channel;
 		}
@@ -151,6 +150,19 @@ public class EvolutionActivity extends Activity implements Runnable {
 			return relayattr;
 		}
 	}
+	
+	protected class PortalNameMsg {
+		private String portalname;
+
+		public PortalNameMsg(String p) {
+			this.portalname = p;
+		}
+
+		public String getPortalNameValue() {
+			return portalname;
+		}
+	}
+		
 	protected class LightMsg {
 		private int light;
 
@@ -384,7 +396,7 @@ public class EvolutionActivity extends Activity implements Runnable {
 			int len = ret - i;
 
 			switch (buffer[i]) {
-			case Globals.T1_PROBE: case Globals.T2_PROBE: case Globals.T3_PROBE: case Globals.PH: case Globals.SALINITY: case Globals.ORP: case Globals.PHEXP: case Globals.EXPANSIONMODULES: case Globals.RELAYMODULES:
+			case Globals.T1_PROBE: case Globals.T2_PROBE: case Globals.T3_PROBE: case Globals.PH: case Globals.SALINITY: case Globals.ORP: case Globals.PHEXP: case Globals.WL: case Globals.EXPANSIONMODULES: case Globals.RELAYMODULES:
 				if (len >= 3) {
 					Message m = Message.obtain(mHandler, MESSAGE_PARAMS);
 					m.obj = new ParamsMsg(buffer[i], composeInt(buffer[i + 1], buffer[i + 2]));
@@ -392,15 +404,6 @@ public class EvolutionActivity extends Activity implements Runnable {
 				}
 				i += 3;
 				break;
-			case Globals.WL:
-				if (len >= 3) {
-					Message m = Message.obtain(mHandler, MESSAGE_DIMMING);
-					m.obj = new DimmingMsg(buffer[i + 1], buffer[i + 2]);
-					mHandler.sendMessage(m);
-				}
-				i += 3;
-				break;
-				
 			case Globals.ATO:
 				if (len >= 3) {
 					Message m = Message.obtain(mHandler, MESSAGE_SWITCH);
@@ -409,10 +412,10 @@ public class EvolutionActivity extends Activity implements Runnable {
 				}
 				i += 3;
 				break;
-			case Globals.DIMMING:
+			case Globals.BYTEMSG:
 				if (len >= 3) {
-					Message m = Message.obtain(mHandler, MESSAGE_DIMMING);
-					m.obj = new DimmingMsg(buffer[i + 1], buffer[i + 2]);
+					Message m = Message.obtain(mHandler, MESSAGE_BYTE);
+					m.obj = new ByteMsg(buffer[i + 1], buffer[i + 2]);
 					mHandler.sendMessage(m);
 				}
 				i += 3;
@@ -429,14 +432,12 @@ public class EvolutionActivity extends Activity implements Runnable {
 
 			case Globals.REEFANGELID:
 				if (len >= 3) {
-					SharedPreferences prefs = getSharedPreferences(Globals.PREFS_NAME, 0);
 					String reefangelid=new String(buffer);
-					reefangelid=reefangelid.substring(1,reefangelid.length()-1);
+					reefangelid=reefangelid.substring(1,reefangelid.length());
 					Log.d(TAG, "Received ReefAngelID: " + reefangelid );
-//					Message m = Message.obtain(mHandler, MESSAGE_RELAY);
-//					m.obj = new RelayMsg(buffer[i + 1], buffer[i + 2]);
-//					mHandler.sendMessage(m);
-					
+					Message m = Message.obtain(mHandler, MESSAGE_PORTAL);
+					m.obj = new PortalNameMsg(reefangelid);
+					mHandler.sendMessage(m);
 				}
 				i += buffer.length;
 				break;
@@ -482,22 +483,20 @@ public class EvolutionActivity extends Activity implements Runnable {
 				handleParamsMessage(t);
 				break;
 
-			case MESSAGE_DIMMING:
-				DimmingMsg d = (DimmingMsg) msg.obj;
-				handleDimmingMessage(d);
+			case MESSAGE_BYTE:
+				ByteMsg d = (ByteMsg) msg.obj;
+				handleByteMessage(d);
 				break;
 				
 			case MESSAGE_RELAY:
 				RelayMsg r = (RelayMsg) msg.obj;
 				handleRelayMessage(r);
 				break;
-				
-			case MESSAGE_JOY:
-				JoyMsg j = (JoyMsg) msg.obj;
-				handleJoyMessage(j);
+			case MESSAGE_PORTAL:
+				PortalNameMsg p = (PortalNameMsg) msg.obj;
+				handlePortalNameMessage(p);
 				break;
-
-			}
+			}			
 		}
 	};
 
@@ -521,7 +520,7 @@ public class EvolutionActivity extends Activity implements Runnable {
 	protected void handleJoyMessage(JoyMsg j) {
 	}
 
-	protected void handleDimmingMessage(DimmingMsg d) {
+	protected void handleByteMessage(ByteMsg d) {
 	}
 	
 	protected void handleParamsMessage(ParamsMsg t) {
@@ -533,6 +532,9 @@ public class EvolutionActivity extends Activity implements Runnable {
 	protected void handleRelayMessage(RelayMsg o) {
 	}
 
+	protected void handlePortalNameMessage(PortalNameMsg o) {
+	}
+	
 	public void onStartTrackingTouch(SeekBar seekBar) {
 	}
 

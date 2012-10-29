@@ -1,5 +1,7 @@
 package com.reefangel.evolution;
 
+import java.io.IOException;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SubscriptSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
@@ -22,6 +25,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 public class RelayButtonController implements android.view.View.OnClickListener {
+	private static final String TAG = "EvolutionActivity";
+	
 	private final int mRelayNumber;
 	private final byte mCommandTarget;
 	private EvolutionActivity mActivity;
@@ -48,7 +53,7 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 		mR=0;
 		mRON=0;
 		mROFF=1;
-		mCommandTarget = (byte) (relayNumber - 1);
+		mCommandTarget = (byte) (relayNumber);
 		mTopOffBackground = res.getDrawable(R.drawable.relay_off1);
 		mTopOnBackground = res.getDrawable(R.drawable.relay_on1);
 		mBottomOffBackground = res.getDrawable(R.drawable.relay_off);
@@ -73,6 +78,7 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 	        		 public void onClick(DialogInterface dialog, int item) {
 	        			 mState= item;
 	        			 updateView();
+	        			 SendCommand((byte)item);
 	        		 }
 	        	 });
 	        	 AlertDialog alert = builder.create();
@@ -101,8 +107,22 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 			break;
 		}
 		updateView();
+		SendCommand((byte)mState);
 	}
 
+	
+	public void SendCommand (byte state)
+	{
+		Log.d(TAG,"Relay " + mCommandTarget + " Command Sent: " + state);
+		mActivity.sendCommand(Globals.RELAY_COMMAND, mCommandTarget, state);
+		try {
+			mActivity.server.send(new byte[] {Globals.RELAY_COMMAND, mCommandTarget, state});
+		} catch (IOException e) {
+			Log.e(TAG,e.getMessage());
+			e.printStackTrace();
+		}		
+	}
+	
 	public int GetState() {
 		return mState;
 	}
@@ -152,5 +172,10 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 			}
 			break;
 		}
+	}
+	
+	public void SetLabel(String label)
+	{
+		mLabel.setText(label);
 	}
 }

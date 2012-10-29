@@ -12,21 +12,31 @@ public class Globals {
 	public static final byte ORP = 0x6;
 	public static final byte PHEXP = 0x7;
 	public static final byte WL = 0x8;
-
+	
 	public static final byte ATO = 0x10;
 
-	public static final byte DIMMING = 0x20;
+	public static final byte BYTEMSG = 0x20;
 
 	public static final byte RELAY = 0x30;
-
+		
 	public static final byte EXPANSIONMODULES = 0x70;
 
 	public static final byte RELAYMODULES = 0x71;
 	
 	public static final byte REEFANGELID = 0x7f;
 
+// ATO 
+	public static final byte LOW_ATO = 0x0;
+	public static final byte HIGH_ATO = 0x1;
+	
+	public static final byte IO_CHANNEL0 = 0x2;
+	public static final byte IO_CHANNEL1 = 0x3;
+	public static final byte IO_CHANNEL2 = 0x4;
+	public static final byte IO_CHANNEL3 = 0x5;
+	public static final byte IO_CHANNEL4 = 0x6;
+	public static final byte IO_CHANNEL5 = 0x7;
 
-// Dimming Channels
+// Byte Messages
 	public static final byte DIMMING_CHANNEL0 = 0x0;
 	public static final byte DIMMING_CHANNEL1 = 0x1;
 	public static final byte DIMMING_CHANNEL2 = 0x2;
@@ -37,12 +47,30 @@ public class Globals {
 	public static final byte DIMMING_DAYLIGHT = 0x6;
 	public static final byte DIMMING_ACTINIC = 0x7;	
 
-	public static final byte DIMMING_WATERLEVEL = 0x8;	
+	public static final byte RF_MODE = 0x8;	
+	public static final byte RF_SPEED = 0x9;	
+	public static final byte RF_DURATION = 0xa;	
 
+	public static final byte RF_RADION_WHITE = 0x10;	
+	public static final byte RF_RADION_ROYAL_BLUE = 0x11;	
+	public static final byte RF_RADION_RED = 0x12;	
+	public static final byte RF_RADION_GREEN = 0x13;	
+	public static final byte RF_RADION_BLUE = 0x14;	
+	public static final byte RF_RADION_INTENSITY = 0x15;	
+	
+	public static final byte AI_WHITE = 0x20;	
+	public static final byte AI_BLUE = 0x21;	
+	public static final byte AI_ROYAL_BLUE = 0x22;	
+	
 // Relay
 	public static final byte RELAY_R = 0x0;
 	public static final byte RELAY_RON = 0x1;
 	public static final byte RELAY_ROFF = 0x2;
 
 	public static final String PREFS_NAME = "EvolutionPrefs";
+	
+// Commands
+	public static final byte RELAY_COMMAND = 0x3;
+	public static final byte DIMMING_COMMAND_OVERRIDE_STATE = 0x4;	
+	public static final byte PORTAL_REQUEST_COMMAND = 0x7f;
 }

@@ -1,5 +1,6 @@
 package com.reefangel.evolution;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -22,15 +23,15 @@ import android.widget.TextView;
 public class InputController extends AccessoryController  {
 	private static final String TAG = "EvolutionActivity";
 	
-	private TextView mTemperature1;
-	private TextView mTemperature2;
-	private TextView mTemperature3;
-	private TextView mpH;
-	private TextView mSalinity;
-	private TextView mOrp;
-	private TextView mpHExp;
-	private TextView mWaterLevel;
-	private JoystickView mJoystickView;
+	private String RfMode[] = {"Constant","Lagoon","Reef Crest","Short Pulse","Long Pulse","Nutrient Transport","Tidal Swell","Feeding","Feeding","Night","Storm","Custom","Custom","Custom","Custom"};
+	private ParamsView mTemperature1;
+	private ParamsView mTemperature2;
+	private ParamsView mTemperature3;
+	private ParamsView mpH;
+	private ParamsView mSalinity;
+	private ParamsView mOrp;
+	private ParamsView mpHExp;
+	private ParamsView mWaterLevel;
 	private ProgressView mDaylightView;
 	private ProgressView mActinicView;
 	private int Relay_R[];
@@ -45,37 +46,42 @@ public class InputController extends AccessoryController  {
 	private final DecimalFormat mpHFormatter = new DecimalFormat("#.##");
 	private final DecimalFormat mSalinityFormatter = new DecimalFormat("##.#");
 	private final DecimalFormat mORPFormatter = new DecimalFormat("###");
-	private final DecimalFormat mWLFormatter = new DecimalFormat("###" + "%");
 	
 	InputController(EvolutionActivity hostActivity) {
 		super(hostActivity);
-		mTemperature1 = (TextView) findViewById(R.id.temp1Value);
-		mTemperature2 = (TextView) findViewById(R.id.temp2Value);
-		mTemperature3 = (TextView) findViewById(R.id.temp3Value);
-		mpH = (TextView) findViewById(R.id.pHValue);
-		mSalinity = (TextView) findViewById(R.id.SalinityValue);
-		mOrp = (TextView) findViewById(R.id.ORPValue);
-		mpHExp = (TextView) findViewById(R.id.pHExpValue);
-		mJoystickView = (JoystickView) findViewById(R.id.joystickView);
+		mTemperature1 = (ParamsView) findViewById(R.id.T1);
+		mTemperature1.setParam("0.0");
+		mTemperature2 = (ParamsView) findViewById(R.id.T2);
+		mTemperature2.setParam("0.0");
+		mTemperature3 = (ParamsView) findViewById(R.id.T3);
+		mTemperature3.setParam("0.0");
+		mpH = (ParamsView) findViewById(R.id.PH);
+		mpH.setParam("0.0");
+		mSalinity = (ParamsView) findViewById(R.id.SAL);
+		mOrp = (ParamsView) findViewById(R.id.ORP);
+		mpHExp = (ParamsView) findViewById(R.id.PHE);
+		mWaterLevel = (ParamsView) findViewById(R.id.WL);
 		mDaylightView = (ProgressView) findViewById(R.id.daylightdimming);
 		mDaylightView.setLabel("Daylight");
 		mActinicView = (ProgressView) findViewById(R.id.actinicdimming);
 		mActinicView.setBarColor(1);
 		mActinicView.setLabel("Actinic");
-		mWaterLevel = (TextView) findViewById(R.id.WLValue);
 		
-		Relay_R = new int[9];
-		Relay_RON = new int[9];
-		Relay_ROFF = new int[9];
+		mRelayButtonControllers = new ArrayList<RelayButtonController>();
+		mSwitchDisplayers = new ArrayList<SwitchDisplayer>();
+
+		Relay_R = new int[8];
+		Relay_RON = new int[8];
+		Relay_ROFF = new int[8];
 
 	    TabHost tabs = (TabHost) this.findViewById(R.id.tabhost);
 		tabs.setup();
-
-		TabSpec tspec1 = tabs.newTabSpec("Main Box");
-		tspec1.setIndicator("Main Box");
-		tspec1.setContent(R.id.mainbox);
-		tabs.addTab(tspec1);
-		tabs.setCurrentTabByTag("Main Box");
+//
+//		TabSpec tspec1 = tabs.newTabSpec("Main Box");
+//		tspec1.setIndicator("Main Box");
+//		tspec1.setContent(R.id.mainbox);
+//		tabs.addTab(tspec1);
+//		tabs.setCurrentTabByTag("Main Box");
 		
 		TabHost tabsports = (TabHost) this.findViewById(R.id.tabhostports);
 		tabsports.setup();
@@ -87,49 +93,50 @@ public class InputController extends AccessoryController  {
 		tabsports.setCurrentTabByTag("Std Ports");
 
 		prefs = mHostActivity.getSharedPreferences(Globals.PREFS_NAME, 0);
-        Log.d(TAG,"Reef Angel ID: " + prefs.getString("MYREEFANGELID", ""));
-        if (prefs.getString("MYREEFANGELID", "")!="")
-        {
-		    DownloadXMLLabels task = new DownloadXMLLabels();
-		    task.execute();
-        }
+//        Log.d(TAG,"Reef Angel ID: " + prefs.getString("MYREEFANGELID", ""));
+//        if (prefs.getString("MYREEFANGELID", "")!="")
+//        {
+//		    DownloadXMLLabels task = new DownloadXMLLabels();
+//		    task.execute();
+//        }
+//        else
+//        {
+    		try {
+    			mHostActivity.server.send(new byte[] {Globals.PORTAL_REQUEST_COMMAND});
+    			 Log.d(TAG,"Request Portal name");
+    		} catch (IOException e) {
+    			Log.e(TAG,e.getMessage());
+    			e.printStackTrace();
+    		}	
+//        }
+    	Log.d(TAG,"Set Default Labels");
         UpdateLabels();
+        
         
 	}
 
 	protected void onAccesssoryAttached() {
 
-		mSwitchDisplayers = new ArrayList<SwitchDisplayer>();
-		for (int i = 0; i < 2; ++i) {
+		for (int i = 0; i < 2; i++) {
 			SwitchDisplayer sd = new SwitchDisplayer(i);
 			mSwitchDisplayers.add(sd);
 		}
 		
-		mRelayButtonControllers = new ArrayList<RelayButtonController>();
-		int bt=1;
+//		int bt=1;
 		for (int i=1;i<9;i++)
 		{
-			int resID = getResources().getIdentifier("Relay"+i, "id", "com.reefangel.evolution");
-			setupRelayButtonController(i, bt, resID);
-			bt= (bt==1)?0:1;
-			resID = getResources().getIdentifier("expbox"+i, "id", "com.reefangel.evolution");
+//			int resID = getResources().getIdentifier("Relay"+i, "id", "com.reefangel.evolution");
+//			setupRelayButtonController(i, bt, resID);
+//			bt= (bt==1)?0:1;
+			int resID = getResources().getIdentifier("expbox"+i, "id", "com.reefangel.evolution");
 			ViewGroup v = (ViewGroup) this.findViewById(resID);
 			v.setVisibility(4);
 		}	
 		
-		mTemperature1.setText("0.0" + (char)0x00B0);
-		mTemperature2.setText("0.0" + (char)0x00B0);
-		mTemperature3.setText("0.0" + (char)0x00B0);
-		mpH.setText("0.00");
-//		mSalinity.setText("0.0");
-//		mOrp.setText("0");
-//		mpHExp.setText("0.00");
-//		mWaterLevel.setText("0%");
-		
 		mDaylightView.setPercentage(0);
 		mActinicView.setPercentage(0);
 		
-		for (int a=0;a<9;a++)
+		for (int a=0;a<8;a++)
 		{
 			Relay_R[a]=0;
 			Relay_RON[a] = 0;
@@ -140,28 +147,28 @@ public class InputController extends AccessoryController  {
 	public void setParam(byte param, int t) {
 		switch (param){
 		case Globals.T1_PROBE:
-			mTemperature1.setText(mTemperatureFormatter.format((double)t/10));
+			mTemperature1.setParam(mTemperatureFormatter.format((double)t/10));
 			break;
 		case Globals.T2_PROBE:
-			mTemperature2.setText(mTemperatureFormatter.format((double)t/10));
+			mTemperature2.setParam(mTemperatureFormatter.format((double)t/10));
 			break;
 		case Globals.T3_PROBE:
-			mTemperature3.setText(mTemperatureFormatter.format((double)t/10));
+			mTemperature3.setParam(mTemperatureFormatter.format((double)t/10));
 			break;
 		case Globals.PH:
-			mpH.setText(mpHFormatter.format((double)t/100));
+			mpH.setParam(mpHFormatter.format((double)t/100));
 			break;
 		case Globals.SALINITY:
-			mSalinity.setText(mSalinityFormatter.format((double)t/10));
+			mSalinity.setParam(mSalinityFormatter.format((double)t/10));
 			break;
 		case Globals.ORP:
-			mOrp.setText(mORPFormatter.format((double)t));
+			mOrp.setParam(mORPFormatter.format(t));
 			break;
 		case Globals.PHEXP:
-			mpHExp.setText(mpHFormatter.format((double)t/100));
+			mpHExp.setParam(mpHFormatter.format((double)t/100));
 			break;
-		case Globals.DIMMING_WATERLEVEL:
-			mWaterLevel.setText(mWLFormatter.format((double)t));
+		case Globals.WL:
+			mWaterLevel.setParam(t+"%");
 			break;			
 		case Globals.EXPANSIONMODULES:
 			if (mHostActivity.em!=t)
@@ -279,17 +286,15 @@ public class InputController extends AccessoryController  {
 
 				if (BigInteger.valueOf(t).testBit(3)) {
 					
-					TextView sl=(TextView)findViewById(R.id.saln);
-					sl.setText(prefs.getString("SALN", "Salinity"));
-					LinearLayout sc=(LinearLayout) findViewById(R.id.SalinityContainer);
-					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.sal_bk));
+					ParamsView sl=(ParamsView)findViewById(R.id.SAL);
+					sl.setLabel(prefs.getString("SALN", "Salinity"));
+					sl.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.sal_bk));
 				}
 				if (BigInteger.valueOf(t).testBit(4)) {
 					
-					TextView sl=(TextView)findViewById(R.id.orpn);
-					sl.setText(prefs.getString("ORPN", "ORP"));
-					LinearLayout sc=(LinearLayout) findViewById(R.id.ORPContainer);
-					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.orp_bk));
+					ParamsView sl=(ParamsView)findViewById(R.id.ORP);
+					sl.setLabel(prefs.getString("ORPN", "ORP"));
+					sl.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.orp_bk));
 				}				
 				if (BigInteger.valueOf(t).testBit(5)) {
 					
@@ -311,81 +316,50 @@ public class InputController extends AccessoryController  {
 							(float) 1.0
 							);	
 					v.addView(lIOExp,lr);
+					for (int i = 2; i < 8; i++) {
+						SwitchDisplayer sd = new SwitchDisplayer(i);
+						mSwitchDisplayers.add(sd);
+					}
+					
 				}			
 				if (BigInteger.valueOf(t).testBit(6)) {
 					
-					TextView sl=(TextView)findViewById(R.id.phen);
-					sl.setText(prefs.getString("PHEN", "pH Exp"));
-					LinearLayout sc=(LinearLayout) findViewById(R.id.pHExpContainer);
-					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.phexp_bk));
+					ParamsView sl=(ParamsView)findViewById(R.id.PHE);
+					sl.setLabel(prefs.getString("PHEN", "pH Exp"));
+					sl.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.phexp_bk));
 				}
 				if (BigInteger.valueOf(t).testBit(7)) {
 					
-					TextView sl=(TextView)findViewById(R.id.wln);
-					sl.setText("WL");
-					LinearLayout sc=(LinearLayout) findViewById(R.id.WaterLevelContainer);
-					sc.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.waterlevel_bk));
+					ParamsView sl=(ParamsView)findViewById(R.id.WL);
+					sl.setLabel("WL");
+					sl.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.wl_bk));
 				}				
-			    
-//				List<String> l = new ArrayList<String>();
-//				
-//				if ((t&(1<<0))!=0) l.add("Dimming");
-//				if ((t&(1<<1))!=0) l.add("RF");
-//				if ((t&(1<<2))!=0) l.add("Aqua Illumination");
-//				if ((t&(1<<3))!=0) l.add("Salinity");
-//				if ((t&(1<<4))!=0) l.add("ORP");
-//				if ((t&(1<<5))!=0) l.add("I/O");
-//				if ((t&(1<<6))!=0) l.add("pH Expansion");
-//				if ((t&(1<<7))!=0) l.add("Water Level");
-				
 
-//			    final ActionBar actionBar = mHostActivity.getActionBar();
-//
-//			    // Specify that a dropdown list should be displayed in the action bar.
-//			    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//
-//			    actionBar.setListNavigationCallbacks(
-//			            // Specify a SpinnerAdapter to populate the dropdown list.
-//			            new ArrayAdapter<Object>(
-//			                    actionBar.getThemedContext(),
-//			                    android.R.layout.simple_list_item_1,
-//			                    android.R.id.text1,
-//			                    l.toArray()),
-//
-//			            // Provide a listener to be called when an item is selected.
-//			            new ActionBar.OnNavigationListener() {
-//			                public boolean onNavigationItemSelected(
-//			                        int position, long id) {
-//			                    // Take action here, e.g. switching to the
-//			                    // corresponding fragment.
-//			                    return true;
-//			                }
-//			            });				
 			}
 			break;
 		case Globals.RELAYMODULES:
 			if (mHostActivity.rem!=t)
 			{
+				int firstbox=-1;
 				Log.d("EvolutionActivity", "Relay Modules: " + t);
 				mHostActivity.rem=t;
 				TabHost tabs = (TabHost) this.findViewById(R.id.tabhost);
-				for(int a=0;a<9;a++)
+				for(int a=0;a<8;a++)
 					if (BigInteger.valueOf(t).testBit(a)) {
-						TabSpec tspec2 = tabs.newTabSpec("Exp Box " + (a+1));
-						tspec2.setIndicator("Exp Box " + (a+1));
+						if (firstbox==-1) firstbox=a;
+						Log.d(TAG,"Adding Box "+(a+1)+ " tab");
+						TabSpec tspec2 = tabs.newTabSpec("Box " + (a+1));
+						tspec2.setIndicator("Box " + (a+1));
 						int resID = getResources().getIdentifier("expbox"+(a+1), "id", "com.reefangel.evolution");
+						Log.d(TAG,"ID: " + resID);
 						tspec2.setContent(resID);
 						tabs.addTab(tspec2);
-						tabs.setCurrentTabByTag("Exp Box " + (a+1));
+						tabs.setCurrentTabByTag("Box " + (a+1));
 
 						ViewGroup v = (ViewGroup) this.findViewById(resID);
 						v.setVisibility(0);
 						TableLayout tLayout = new TableLayout(mHostActivity);
 						tLayout = (TableLayout) View.inflate(mHostActivity, R.layout.relaybox, null);
-//						tLayout.setBackgroundDrawable(mHostActivity.getResources().getDrawable(R.drawable.relay_box_bk));
-//						tLayout.setMinimumHeight((int) (200 * scale + 0.5f));
-//						tLayout.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
-//						tLayout.setGravity(0x11);
 						TableLayout.LayoutParams tp = new TableLayout.LayoutParams(
 								TableLayout.LayoutParams.WRAP_CONTENT,
 								TableLayout.LayoutParams.WRAP_CONTENT
@@ -427,7 +401,8 @@ public class InputController extends AccessoryController  {
 						}
 						
 					}
-				tabs.setCurrentTabByTag("Main Box");				
+				if (firstbox!=-1) tabs.setCurrentTabByTag("Box " + (firstbox+1));
+				
 			}
 			
 			break;
@@ -436,7 +411,10 @@ public class InputController extends AccessoryController  {
 		}
 	}
 	
-	public void setDimming(byte channel, int value) {
+	public void setByteMsg(byte channel, int value) {
+		TextView c;
+		SpeedometerView s;
+		String rf_unit="s";
 		switch (channel){
 		case Globals.DIMMING_DAYLIGHT:
 			mDaylightView.setPercentage(value);
@@ -444,7 +422,96 @@ public class InputController extends AccessoryController  {
 		case Globals.DIMMING_ACTINIC:
 			mActinicView.setPercentage(value);
 			break;
+		case Globals.DIMMING_CHANNEL0: case Globals.DIMMING_CHANNEL1: case Globals.DIMMING_CHANNEL2: case Globals.DIMMING_CHANNEL3: case Globals.DIMMING_CHANNEL4: case Globals.DIMMING_CHANNEL5:
+			if (BigInteger.valueOf(mHostActivity.em).testBit(0)) {
+				int resID = getResources().getIdentifier("channel"+channel+"dimming", "id", "com.reefangel.evolution");
+			    ProgressView p = (ProgressView)findViewById(resID);
+			    p.setPercentage(value);
+			}			
+			break;
+		case Globals.RF_RADION_WHITE: case Globals.RF_RADION_ROYAL_BLUE: case Globals.RF_RADION_RED: case Globals.RF_RADION_GREEN: case Globals.RF_RADION_BLUE: case Globals.RF_RADION_INTENSITY:
+			if (BigInteger.valueOf(mHostActivity.em).testBit(1)) {
+				int resID = getResources().getIdentifier("radion"+(channel-0x10)+"dimming", "id", "com.reefangel.evolution");
+			    ProgressView p = (ProgressView)findViewById(resID);
+			    p.setPercentage(value);				
+			}
+			break;
+		case Globals.AI_WHITE:
+			if (BigInteger.valueOf(mHostActivity.em).testBit(2)) {
+			    ProgressView p = (ProgressView)findViewById(R.id.aiwhitedimming);
+			    p.setPercentage(value);				
+			}
+			break;			
+		case Globals.AI_BLUE:
+			if (BigInteger.valueOf(mHostActivity.em).testBit(2)) {
+			    ProgressView p = (ProgressView)findViewById(R.id.aibluedimming);
+			    p.setPercentage(value);				
+			}
+			break;			
+		case Globals.AI_ROYAL_BLUE:
+			if (BigInteger.valueOf(mHostActivity.em).testBit(2)) {
+			    ProgressView p = (ProgressView)findViewById(R.id.airoyalbluedimming);
+			    p.setPercentage(value);				
+			}
+			break;			
+		case Globals.RF_MODE:
+			if (BigInteger.valueOf(mHostActivity.em).testBit(1)) {
+				c = (TextView) findViewById(R.id.RFModeValue);
+				c.setText(RfMode[value]);
+			    s = (SpeedometerView)findViewById(R.id.RFSpeedometer);
+				switch (value)
+				{
+				case 0:
+					rf_unit=" s";
+					s.setScaleColor(0x9F00FF00);
+					break;
+				case 1: case 2:
+					rf_unit=" s";
+					s.setScaleColor(0x9FFFFF00);
+					break;
+				case 3:
+					rf_unit=" ms";
+					s.setScaleColor(0x9F0000FF);
+					break;
+				case 4:
+					rf_unit=" s";
+					s.setScaleColor(0x9FFF99FF);
+					break;
+				case 5:
+					rf_unit=" ms";
+					s.setScaleColor(0x9FBB00FF);
+					break;
+				case 6:
+					rf_unit=" s";
+					s.setScaleColor(0x9FBB00FF);
+					break;
+				case 7: case 8: case 9:
+					rf_unit=" s";
+					s.setScaleColor(0x9FFFFFFF);
+					break;
+				case 10:
+					rf_unit=" ms";
+					s.setScaleColor(0x9F00DDFF);
+					break;
+				default:
+					rf_unit=" s";
+					s.setScaleColor(0x9FFF0000);
+					break;
+				}
+			}
+			break;
+		case Globals.RF_SPEED:
+			c = (TextView) findViewById(R.id.RFSpeedValue);
+			c.setText(value+"%");
+		    s = (SpeedometerView)findViewById(R.id.RFSpeedometer);
+		    s.setHandTarget(value);
+			break;
+		case Globals.RF_DURATION:
+			c = (TextView) findViewById(R.id.RFDurationValue);
+			c.setText(value+rf_unit);
+			break;
 		}
+			
 	}
 
 	public void setRelay(byte attr, int value) {
@@ -463,6 +530,15 @@ public class InputController extends AccessoryController  {
 		}
 	}
 
+	public void setPortalName(String portalname) {
+		Log.d(TAG,"Downloading Labels");
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString("MYREEFANGELID", portalname);
+		editor.commit();
+		DownloadXMLLabels task = new DownloadXMLLabels();
+		task.execute();
+	}
+	
 	public void switchStateChanged(int switchIndex, boolean switchState) {
 		if (switchIndex >= 0 && switchIndex < mSwitchDisplayers.size()) {
 			SwitchDisplayer sd = mSwitchDisplayers.get(switchIndex);
@@ -470,24 +546,8 @@ public class InputController extends AccessoryController  {
 		}
 	}
 
-	public void joystickButtonSwitchStateChanged(boolean buttonState) {
-		mJoystickView.setPressed(buttonState);
-	}
-
-	public void joystickMoved(int x, int y) {
-		mJoystickView.setPosition(x, y);
-	}
-
 	public void onSwitchStateChange(int switchIndex, Boolean switchState) {
 		switchStateChanged(switchIndex, switchState);
-	}
-
-	public void onButton(Boolean buttonState) {
-		joystickButtonSwitchStateChanged(buttonState);
-	}
-
-	public void onStickMoved(int x, int y) {
-		joystickMoved(x, y);
 	}
 
 	class SwitchDisplayer {
@@ -496,22 +556,41 @@ public class InputController extends AccessoryController  {
 		private final Drawable mOffImage;
 
 		SwitchDisplayer(int switchIndex) {
-			int viewId, onImageId, offImageId;
+			int viewId= R.id.LowATO;
 			switch (switchIndex) {
-			default:
+			case Globals.LOW_ATO:
 				viewId = R.id.LowATO;
-				onImageId = R.drawable.ato_on;
-				offImageId = R.drawable.ato_off;
 				break;
-			case 1:
+			case Globals.HIGH_ATO:
 				viewId = R.id.HighATO;
-				onImageId = R.drawable.ato_on;
-				offImageId = R.drawable.ato_off;
 				break;
+			case Globals.IO_CHANNEL0:
+				viewId = R.id.iochannel0;
+				break;
+			case Globals.IO_CHANNEL1:
+				viewId = R.id.iochannel1;
+				break;
+			case Globals.IO_CHANNEL2:
+				viewId = R.id.iochannel2;
+				break;
+			case Globals.IO_CHANNEL3:
+				viewId = R.id.iochannel3;
+				break;
+			case Globals.IO_CHANNEL4:
+				viewId = R.id.iochannel4;
+				break;
+			case Globals.IO_CHANNEL5:
+				viewId = R.id.iochannel5;
+				break;
+				
+//			case Globals.IO_CHANNEL0: case Globals.IO_CHANNEL1: case Globals.IO_CHANNEL2: case Globals.IO_CHANNEL3: case Globals.IO_CHANNEL4: case Globals.IO_CHANNEL5:
+//				viewId = getResources().getIdentifier("iochannel"+(switchIndex-0x2), "id", "com.reefangel.evolution");
+//				break;
 			}
 			mTargetView = (ImageView) findViewById(viewId);
-			mOffImage = mHostActivity.getResources().getDrawable(offImageId);
-			mOnImage = mHostActivity.getResources().getDrawable(onImageId);
+			mOffImage = mHostActivity.getResources().getDrawable(R.drawable.ato_off);
+			mOnImage = mHostActivity.getResources().getDrawable(R.drawable.ato_on);
+			
 		}
 
 		public void onSwitchStateChange(Boolean switchState) {
@@ -534,22 +613,77 @@ public class InputController extends AccessoryController  {
 	}	
 
 
-	private class DownloadXMLLabels extends AsyncTask<Void, Void, Void> {
-		@Override
-		protected Void doInBackground(Void... params) {
+	public class DownloadXMLLabels extends AsyncTask<String, Integer, Integer> {
+		
+		protected Integer doInBackground(String... params) {
 			XMLfunctions.GetLabels(mHostActivity);
+			publishProgress(0); 
 			return null;
 		}
+		
+		protected void onProgressUpdate(Integer... values) {
+			Log.d(TAG,"Updating Labels");
+			UpdateLabels();
+		}
+
+		protected void onPostExecute(Integer result) {
+
+	    }
+
+		
 	}
 	
-	private void UpdateLabels()
+	public void UpdateLabels()
 	{
 		for (int a=1; a<4; a++)
 		{
-			TextView t=(TextView) findViewById(getResources().getIdentifier("t" + a + "n", "id", "com.reefangel.evolution"));
-			t.setText(prefs.getString("T" + a + "N", "Temp "+a));
+			ParamsView t=(ParamsView) findViewById(getResources().getIdentifier("T" + a, "id", "com.reefangel.evolution"));
+			t.setLabel (prefs.getString("T" + a + "N", "Temp "+a));
+			Log.d(TAG,"Updated Label T" + a + ": " + prefs.getString("T" + a + "N", "Temp "+a));
 		}		
-		TextView t=(TextView) findViewById(R.id.phn);
-		t.setText(prefs.getString("PHN", "pH"));
+		ParamsView t=(ParamsView) findViewById(R.id.PH);
+		t.setLabel(prefs.getString("PHN", "pH"));
+		Log.d(TAG,"Updated Label PH: " + prefs.getString("PHN", "pH"));
+		if (BigInteger.valueOf(mHostActivity.em).testBit(3)) {
+			t=(ParamsView) findViewById(R.id.SAL);
+			t.setLabel(prefs.getString("SALN", "Salinity"));
+			Log.d(TAG,"Updated Label SAL: " + prefs.getString("SALN", "Salinity"));
+		}
+		if (BigInteger.valueOf(mHostActivity.em).testBit(4)) {
+			t=(ParamsView) findViewById(R.id.ORP);
+			t.setLabel(prefs.getString("ORPN", "ORP"));
+			Log.d(TAG,"Updated Label ORP: " + prefs.getString("ORPN", "ORP"));
+		}
+		if (BigInteger.valueOf(mHostActivity.em).testBit(6)) {
+			t=(ParamsView) findViewById(R.id.PHE);
+			t.setLabel(prefs.getString("PHEN", "PH Exp"));
+			Log.d(TAG,"Updated Label PHE: " + prefs.getString("PHEN", "PH Exp"));
+		}
+		if (mRelayButtonControllers.size()>0)
+		{
+			int indexr=0;
+			for (int a=1;a<9;a++)
+			{
+				RelayButtonController r = mRelayButtonControllers.get(indexr);
+				r.SetLabel(prefs.getString("R"+a+"N", "Port "+a));
+				Log.d(TAG,"Updated Label R"+a+"N: " + prefs.getString("R"+a+"N", "Relay "+a));
+				indexr++;
+			}
+			int x=1;
+			int y=1;
+			while (indexr<mRelayButtonControllers.size())
+			{
+				RelayButtonController r = mRelayButtonControllers.get(indexr);
+				r.SetLabel(prefs.getString("R"+x+""+y+"N", "Relay "+x+""+y));
+				Log.d(TAG,"Updated Label R"+x+""+y+"N: " + prefs.getString("R"+x+""+y+"N", "Relay "+x+""+y));
+				indexr++;
+				y++;
+				if (y==9)
+				{
+					y=1;
+					x++;
+				}
+			}
+		}
 	}
 }

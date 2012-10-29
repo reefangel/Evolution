@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.View.MeasureSpec;
 
 public class ParamsView extends View {
 	
@@ -53,8 +54,8 @@ public class ParamsView extends View {
 	}	
 	
 	private void initParamView(Context context) {
-		mParamText="0.0";
-		mLabelText="Param";
+		mParamText="";
+		mLabelText="";
 		mDrawableindex=0;
 		mParamDrawables=new Drawable[8];
 		Resources r = context.getResources();
@@ -65,7 +66,7 @@ public class ParamsView extends View {
 		mParamDrawables[4]=r.getDrawable(R.drawable.sal_bk);
 		mParamDrawables[5]=r.getDrawable(R.drawable.orp_bk);
 		mParamDrawables[6]=r.getDrawable(R.drawable.phexp_bk);
-		mParamDrawables[7]=r.getDrawable(R.drawable.waterlevel_bk);
+		mParamDrawables[7]=r.getDrawable(R.drawable.wl_bk);
 		mParamBackground = r.getDrawable(R.drawable.none_bk);
 		int w = mParamBackground.getIntrinsicWidth();
 		int h = mParamBackground.getIntrinsicHeight();
@@ -83,15 +84,15 @@ public class ParamsView extends View {
 		mLabelPaint.setTextSize(getResources().getDimension(R.dimen.ParamsLabel)); 
 		mLabelPaint.setTextAlign(Paint.Align.CENTER);
 		mLabelPaint.setAntiAlias(true);
-		mLabelPaint.setShadowLayer(1, 1, 1, Color.LTGRAY);
+		mLabelPaint.setShadowLayer(2, 2, 2, Color.BLACK);
 		mParamPaint = new Paint();
 		mParamPaint.setColor(Color.BLACK);
 		mParamPaint.setTextSize(getResources().getDimension(R.dimen.ParamsValue)); 
 		mParamPaint.setTextAlign(Paint.Align.CENTER);
 		mParamPaint.setAntiAlias(true);
-		mParamPaint.setShadowLayer(1, 1, 1, R.color.EvolutionPurple);
+		mParamPaint.setShadowLayer(2, 2, 2, R.color.EvolutionPurple);
 		
-		setParam("0.0");
+		setParam("");
 	}
 
 	@Override
@@ -101,28 +102,34 @@ public class ParamsView extends View {
 		float scalew = (float) getWidth()/w;	
 		canvas.save(); 
 		canvas.scale(scalew, scalew, 0, 0); 
-		canvas.drawBitmap(background, 0, 0, null); 
+//		canvas.drawBitmap(background, 0, 0, null); 
 		int x =(w/2);
-		canvas.drawText(mLabelText, x, h/3.5f, mLabelPaint);
-		canvas.drawText(mParamText, x ,h/1.3f  , mParamPaint);
+		canvas.drawText(mLabelText, x, h/2.5f, mLabelPaint);
+		canvas.drawText(mParamText, x ,h*1.15f  , mParamPaint);
 		canvas.restore(); 
-			
 	}
 	
+	
 	@Override
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		Log.d(TAG, "Size changed to " + w + "x" + h);
-		regenerateBackground();
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		float scalew = (float)MeasureSpec.getSize(widthMeasureSpec)/mParamBackground.getIntrinsicWidth();
+		setMeasuredDimension(widthMeasureSpec, (int)(mParamBackground.getIntrinsicHeight()*scalew*1.5));
 	}	
-
-	private void regenerateBackground() {
-		// free the old bitmap
-		if (background != null) {
-			background.recycle();
-		}
-		background = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-		Canvas backgroundCanvas = new Canvas(background);
-		mParamDrawables[mDrawableindex].draw(backgroundCanvas);
-		
-	}
+	
+//	@Override
+//	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+//		Log.d(TAG, "Size changed to " + w + "x" + h);
+//		regenerateBackground();
+//	}	
+//
+//	private void regenerateBackground() {
+//		// free the old bitmap
+//		if (background != null) {
+//			background.recycle();
+//		}
+//		background = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+//		Canvas backgroundCanvas = new Canvas(background);
+//		mParamDrawables[mDrawableindex].draw(backgroundCanvas);
+//		
+//	}
 }

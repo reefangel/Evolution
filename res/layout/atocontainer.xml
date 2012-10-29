@@ -21,7 +21,7 @@
             style="@style/EvolutionButtonDisplay"
             android:layout_weight="1"
             android:background="@null"
-            android:src="@drawable/ato_on" >
+            android:src="@drawable/ato_off" >
         </ImageButton>
 
         <TextView

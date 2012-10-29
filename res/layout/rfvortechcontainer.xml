@@ -89,6 +89,7 @@
         android:orientation="vertical" >
 
     <com.reefangel.evolution.SpeedometerView
+        android:id="@+id/RFSpeedometer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
     </LinearLayout>

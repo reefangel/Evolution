@@ -20,7 +20,7 @@
             style="@style/EvolutionButtonDisplay"
             android:layout_weight="1"
             android:background="@null"
-            android:src="@drawable/ato_on" />
+            android:src="@drawable/ato_off" />
 
         <TextView
             android:id="@+id/IOChannel0Label"
@@ -44,7 +44,7 @@
             style="@style/EvolutionButtonDisplay"
             android:layout_weight="1"
             android:background="@null"
-            android:src="@drawable/ato_on" />
+            android:src="@drawable/ato_off" />
 
         <TextView
             android:id="@+id/IOChannel1Label"
@@ -68,7 +68,7 @@
             style="@style/EvolutionButtonDisplay"
             android:layout_weight="1"
             android:background="@null"
-            android:src="@drawable/ato_on" />
+            android:src="@drawable/ato_off" />
 
         <TextView
             android:id="@+id/IOChannel2Label"
@@ -92,7 +92,7 @@
             style="@style/EvolutionButtonDisplay"
             android:layout_weight="1"
             android:background="@null"
-            android:src="@drawable/ato_on" />
+            android:src="@drawable/ato_off" />
 
         <TextView
             android:id="@+id/IOChannel3Label"
@@ -116,7 +116,7 @@
             style="@style/EvolutionButtonDisplay"
             android:layout_weight="1"
             android:background="@null"
-            android:src="@drawable/ato_on" />
+            android:src="@drawable/ato_off" />
 
         <TextView
             android:id="@+id/IOChannel4Label"
@@ -140,7 +140,7 @@
             style="@style/EvolutionButtonDisplay"
             android:layout_weight="1"
             android:background="@null"
-            android:src="@drawable/ato_on" />
+            android:src="@drawable/ato_off" />
 
         <TextView
             android:id="@+id/IOChannel5Label"

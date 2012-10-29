@@ -33,8 +33,8 @@ public class ColorLEDController {
 			int v = (int) (255 * value);
 			mTarget.setText(String.valueOf(v));
 			if (mActivity != null) {
-				mActivity.sendCommand(EvolutionActivity.LED_SERVO_COMMAND,
-						mCommandTarget, (byte) v);
+//				mActivity.sendCommand(EvolutionActivity.LED_SERVO_COMMAND,
+//						mCommandTarget, (byte) v);
 			}
 		}
 	}

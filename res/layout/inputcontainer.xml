@@ -4,28 +4,47 @@
     android:layout_height="match_parent"
     android:background="@color/EvolutionWhite"
     android:gravity="center"
-    android:orientation="vertical"
-    android:weightSum="2" >
-
-    <include
-        android:id="@+id/ParamsContainer_ref"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/paramscontainer" />
-
-    <include
-        android:id="@+id/PortsContainer_ref"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:layout_weight="2"
-        layout="@layout/portscontainer" />
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:orientation="vertical" >
 
-    <include
-        android:id="@+id/RelayContainer_ref"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        layout="@layout/relaycontainer" />
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/paramscontainer" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="vertical" >
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/portscontainer" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/relaycontainer" />
+
+    </LinearLayout>
 
 </LinearLayout>

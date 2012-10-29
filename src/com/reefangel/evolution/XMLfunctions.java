@@ -48,8 +48,11 @@ public class XMLfunctions {
     		for (int a=0; a<doc.getFirstChild().getChildNodes().getLength(); a++)
     		{
     			Node nRAItem=doc.getFirstChild().getChildNodes().item(a);
-    	        editor.putString(nRAItem.getNodeName(), nRAItem.getTextContent());
-//    	        Log.d(TAG,nRAItem.getNodeName() + " - " + nRAItem.getTextContent());
+    			if (!nRAItem.getTextContent().matches("null"))
+    			{
+	    	        editor.putString(nRAItem.getNodeName(), nRAItem.getTextContent());
+	    	        Log.d(TAG,nRAItem.getNodeName() + " - " + nRAItem.getTextContent());
+    			}
     		}
 	        editor.commit();
         }

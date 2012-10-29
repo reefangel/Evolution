@@ -12,16 +12,16 @@ public class OutputController extends AccessoryController {
 	}
 
 	protected void onAccesssoryAttached() {
-		setupServoController(1, R.id.servo1);
-		setupServoController(2, R.id.servo2);
-		setupServoController(3, R.id.servo3);
-
-		setupLedController(1, R.id.leds1);
-		setupLedController(2, R.id.leds2);
-		setupLedController(3, R.id.leds3);
-
-		setupRelayController(1, R.id.relay1);
-		setupRelayController(2, R.id.relay2);
+//		setupServoController(1, R.id.servo1);
+//		setupServoController(2, R.id.servo2);
+//		setupServoController(3, R.id.servo3);
+//
+//		setupLedController(1, R.id.leds1);
+//		setupLedController(2, R.id.leds2);
+//		setupLedController(3, R.id.leds3);
+//
+//		setupRelayController(1, R.id.relay1);
+//		setupRelayController(2, R.id.relay2);
 		
 //		setupRelayButtonController(1, 1, R.id.Relay1);
 //		setupRelayButtonController(2, 0, R.id.Relay2);
@@ -33,22 +33,22 @@ public class OutputController extends AccessoryController {
 //		setupRelayButtonController(8, 0, R.id.Relay8);
 	}
 
-	private void setupServoController(int servoIndex, int viewId) {
-		ServoController sc = new ServoController(mHostActivity, servoIndex);
-		sc.attachToView((ViewGroup) findViewById(viewId));
-	}
-
-	private void setupLedController(int index, int viewId) {
-		ColorLEDController ledC = new ColorLEDController(mHostActivity, index,
-				getResources(), mVertical);
-		ledC.attachToView((ViewGroup) findViewById(viewId));
-	}
-
-	private void setupRelayController(int index, int viewId) {
-		RelayController r = new RelayController(mHostActivity, index,
-				getResources());
-		r.attachToView((ViewGroup) findViewById(viewId));
-	}
+//	private void setupServoController(int servoIndex, int viewId) {
+//		ServoController sc = new ServoController(mHostActivity, servoIndex);
+//		sc.attachToView((ViewGroup) findViewById(viewId));
+//	}
+//
+//	private void setupLedController(int index, int viewId) {
+//		ColorLEDController ledC = new ColorLEDController(mHostActivity, index,
+//				getResources(), mVertical);
+//		ledC.attachToView((ViewGroup) findViewById(viewId));
+//	}
+//
+//	private void setupRelayController(int index, int viewId) {
+//		RelayController r = new RelayController(mHostActivity, index,
+//				getResources());
+//		r.attachToView((ViewGroup) findViewById(viewId));
+//	}
 	
 //	private void setupRelayButtonController(int index, int pos, int viewId) {
 //		RelayButtonController r = new RelayButtonController(mHostActivity, index, pos, getResources());
