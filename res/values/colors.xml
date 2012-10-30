@@ -8,5 +8,10 @@
 	<color name="EvolutionOrange">#FF8D0A</color>
 	<color name="EvolutionMarron">#C32148</color>
 	<color name="EvolutionRelayLabelColor">#145225</color>
-					
+	<color name="EvolutionGreen">#0f0</color>
+	<color name="EvolutionYellow">#ff0</color>
+	<color name="EvolutionBlue">#00f</color>
+	<color name="EvolutionLightPink">#f9f</color>
+	<color name="EvolutionDarkPink">#b0f</color>
+										
 </resources>

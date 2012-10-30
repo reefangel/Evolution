@@ -71,6 +71,13 @@ public class Globals {
 	
 // Commands
 	public static final byte RELAY_COMMAND = 0x3;
-	public static final byte DIMMING_COMMAND_OVERRIDE_STATE = 0x4;	
+	public static final byte DIMMING_COMMAND_OVERRIDE_STATE = 0x4;
+	public static final byte RF_COMMAND_MODE = 0x4;
+	public static final byte RF_COMMAND_SPEED = 0x4;
+	public static final byte RF_COMMAND_DURATION = 0x4;
 	public static final byte PORTAL_REQUEST_COMMAND = 0x7f;
+	
+// Activity Requests
+	public static final int PICK_RF_MODE = 0;
+	
 }

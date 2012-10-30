@@ -540,4 +540,12 @@ public class EvolutionActivity extends Activity implements Runnable {
 
 	public void onStopTrackingTouch(SeekBar seekBar) {
 	}
+	
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Globals.PICK_RF_MODE) {
+			Message m = Message.obtain(mHandler, MESSAGE_BYTE);
+			m.obj = new ByteMsg(Globals.RF_MODE, resultCode);
+			mHandler.sendMessage(m);
+        }
+    }	
 }

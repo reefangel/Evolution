@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_weight="1"
+        android:minWidth="190dp"        
         android:orientation="vertical" >
 
         <LinearLayout
@@ -91,7 +92,8 @@
     <com.reefangel.evolution.SpeedometerView
         android:id="@+id/RFSpeedometer"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="fill_parent"
+        android:gravity="center" />
     </LinearLayout>
 
 </LinearLayout>

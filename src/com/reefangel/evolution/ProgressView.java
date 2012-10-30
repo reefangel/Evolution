@@ -117,7 +117,6 @@ public class ProgressView extends View {
 		mActivity = (EvolutionActivity) context;
 		OnLongClickListener listener = new OnLongClickListener() {
 			public boolean onLongClick(View v) {
-//				final CharSequence[] items = {"Cancel Override","Override Channel"};
 				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 				final ProgressView p = new ProgressView(mActivity);
 				builder.setTitle("Override Channel?");
@@ -143,6 +142,7 @@ public class ProgressView extends View {
 				p.setPercentageText(currentP+"%");
 				p.setBarColor(mDrawableindex);
 				p.setLabel(mLabelText);
+				p.setScaleX(.9f);
 				builder.setView(p);
 				AlertDialog alert = builder.create();
 				alert.show();

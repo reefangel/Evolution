@@ -1,40 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.reefangel.evolution" android:versionCode="1"
-	android:versionName="1.0">
+    package="com.reefangel.evolution"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="8" />
+
     <uses-permission android:name="android.permission.INTERNET" />
-		
-	<application android:icon="@drawable/ic_launcher"
-		android:label="@string/app_name" android:theme="@android:style/Theme.Holo.Light.NoActionBar">
-		<uses-library android:name="com.android.future.usb.accessory" />
-		<activity android:name=".EvolutionLaunch" android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".EvolutionActivity" android:label="@string/app_name"
-			>
-		</activity>
-		<activity android:name=".EvolutionPhone" android:label="@string/app_name"
-			>
-		</activity>
-		<activity android:name=".EvolutionTablet" android:label="@string/app_name"
-			>
-		</activity>
-		<activity android:name="UsbAccessoryActivity" android:label="Reef Angel Evolution"
-			android:taskAffinity="" android:launchMode="singleInstance">
-			<intent-filter>
-				<action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
-			</intent-filter>
 
-			<meta-data android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
-				android:resource="@xml/accessory_filter" />
-		</activity>
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+        <uses-library android:name="com.android.future.usb.accessory" />
 
-	</application>
+        <activity
+            android:name=".EvolutionLaunch"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".EvolutionActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".EvolutionPhone"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".EvolutionTablet"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".RFModeChoicesActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Holo.Light.Dialog" >
+        </activity>
+        <activity
+            android:name="UsbAccessoryActivity"
+            android:label="Reef Angel Evolution"
+            android:launchMode="singleInstance"
+            android:taskAffinity="" >
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+                android:resource="@xml/accessory_filter" />
+        </activity>
+    </application>
+
 </manifest>

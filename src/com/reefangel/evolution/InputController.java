@@ -7,12 +7,16 @@ import java.util.ArrayList;
 
 import com.reefangel.evolution.EvolutionActivity.UpdateData;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
@@ -37,6 +41,8 @@ public class InputController extends AccessoryController  {
 	private int Relay_R[];
 	private int Relay_RON[];
 	private int Relay_ROFF[];
+	
+	String rf_unit=" s";
 	
 	SharedPreferences prefs;
 		
@@ -226,7 +232,50 @@ public class InputController extends AccessoryController  {
 							(float) 1.0
 							);	
 					v.addView(lRFVortech,lr);
+					TextView trm = (TextView) this.findViewById(R.id.RFModeValue);
 
+					OnLongClickListener listenermode = new OnLongClickListener() {
+						public boolean onLongClick(View v) {
+							mHostActivity.startActivityForResult( new Intent( mHostActivity, RFModeChoicesActivity.class ),Globals.PICK_RF_MODE );
+							return true;
+						}
+					};
+					trm.setOnLongClickListener(listenermode);
+
+					final TextView trs = (TextView) this.findViewById(R.id.RFSpeedValue);
+					OnLongClickListener listenerspeed = new OnLongClickListener() {
+						public boolean onLongClick(View v) {
+							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
+							final ProgressView p = new ProgressView(mHostActivity);
+							builder.setTitle("Reef Angel Evolution");
+							builder.setMessage("Select Speed %:");
+							builder.setNegativeButton("Cancel", null);
+							builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int item) {
+									trs.setText(p.getPercentage()+"%");
+									SpeedometerView s = (SpeedometerView) findViewById(R.id.RFSpeedometer);
+									s.setHandTarget(p.getPercentage());
+									SendCommand(Globals.RF_COMMAND_MODE,(byte)item);
+								}
+							});
+							TextView t=(TextView)v;
+							String cp =t.getText().toString();
+							cp=cp.replace("%",""); 
+							p.setOverrideMode(1);
+							p.setPercentage(Integer.parseInt(cp));
+							p.setCurrentPercentage(Integer.parseInt(cp));
+							p.setPercentageText(Integer.parseInt(cp)+"%");
+							p.setLabel("Speed");
+							p.setScaleX(.9f);
+							builder.setView(p);
+							AlertDialog alert = builder.create();
+							alert.show();
+							return true;
+						}
+					};
+					trs.setOnLongClickListener(listenerspeed);					
+					
+					
 					tspec1ports = tabsports.newTabSpec("RF Radion");
 					tspec1ports.setIndicator("RF Radion");
 					tspec1ports.setContent(R.id.rfradionexpports);
@@ -414,7 +463,7 @@ public class InputController extends AccessoryController  {
 	public void setByteMsg(byte channel, int value) {
 		TextView c;
 		SpeedometerView s;
-		String rf_unit="s";
+		
 		switch (channel){
 		case Globals.DIMMING_DAYLIGHT:
 			mDaylightView.setPercentage(value);
@@ -498,6 +547,10 @@ public class InputController extends AccessoryController  {
 					s.setScaleColor(0x9FFF0000);
 					break;
 				}
+				c = (TextView) findViewById(R.id.RFDurationValue);
+				String d=c.getText().toString();
+				d=d.replace(" ms", "").replace(" s", "");
+				c.setText(d+rf_unit);
 			}
 			break;
 		case Globals.RF_SPEED:
@@ -686,4 +739,17 @@ public class InputController extends AccessoryController  {
 			}
 		}
 	}
+	
+	public void SendCommand (byte cmd, byte state)
+	{
+		Log.d(TAG,"Command Sent: " + state);
+		mHostActivity.sendCommand(cmd, (byte)0, state);
+		try {
+			mHostActivity.server.send(new byte[] {cmd, (byte) 0, state});
+		} catch (IOException e) {
+			Log.e(TAG,e.getMessage());
+			e.printStackTrace();
+		}		
+	}		
+	
 }

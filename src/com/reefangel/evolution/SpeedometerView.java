@@ -301,6 +301,7 @@ public final class SpeedometerView extends View {
 					String valueString = Integer.toString(value);
 					canvas.drawText(valueString, 0.5f, y2 - 0.015f, scalePaint);
 					canvas.drawText(valueString, 0.5f, y2 - 0.015f, scaleShadowPaint);
+					Log.d(TAG, "Drawing with Color: " + scalePaint.getColor());
 				}
 			}
 			
@@ -368,20 +369,24 @@ public final class SpeedometerView extends View {
 	}
 	
 	private void regenerateBackground() {
-		// free the old bitmap
-		if (background != null) {
-			background.recycle();
+		if (getWidth()>0 && getHeight()>0)
+		{
+			// free the old bitmap
+			if (background != null) {
+				background.recycle();
+			}
+			
+			background = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+			Canvas backgroundCanvas = new Canvas(background);
+			float scale = (float) getWidth();		
+			backgroundCanvas.scale(scale, scale);
+			
+			drawRim(backgroundCanvas);
+			drawFace(backgroundCanvas);
+			drawScale(backgroundCanvas);
+			drawTitle(backgroundCanvas);
+			Log.d(TAG, "Regenerated Background");
 		}
-		
-		background = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-		Canvas backgroundCanvas = new Canvas(background);
-		float scale = (float) getWidth();		
-		backgroundCanvas.scale(scale, scale);
-		
-		drawRim(backgroundCanvas);
-		drawFace(backgroundCanvas);
-		drawScale(backgroundCanvas);
-		drawTitle(backgroundCanvas);		
 	}
 
 	private boolean handNeedsToMove() {
@@ -433,5 +438,8 @@ public final class SpeedometerView extends View {
 
 	public void setScaleColor(int color) {
 		scalePaint.setColor(color);
+		Log.d(TAG, "Color Changed to: " + color);
+		regenerateBackground();
+		invalidate();
 	}
 }
