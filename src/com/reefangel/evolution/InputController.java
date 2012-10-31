@@ -5,8 +5,6 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import com.reefangel.evolution.EvolutionActivity.UpdateData;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TableLayout;
@@ -247,7 +246,7 @@ public class InputController extends AccessoryController  {
 						public boolean onLongClick(View v) {
 							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
 							final ProgressView p = new ProgressView(mHostActivity);
-							builder.setTitle("Reef Angel Evolution");
+							builder.setTitle(R.string.app_name);
 							builder.setMessage("Select Speed %:");
 							builder.setNegativeButton("Cancel", null);
 							builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -275,6 +274,32 @@ public class InputController extends AccessoryController  {
 					};
 					trs.setOnLongClickListener(listenerspeed);					
 					
+					final TextView trd = (TextView) this.findViewById(R.id.RFDurationValue);
+					OnLongClickListener listenerduration = new OnLongClickListener() {
+						public boolean onLongClick(View v) {
+							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
+							final NumberPicker p = new NumberPicker(mHostActivity);
+							builder.setTitle(R.string.app_name);
+							builder.setMessage("Select Duration:");
+							builder.setNegativeButton("Cancel", null);
+							builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int item) {
+									trd.setText(p.getValue()+rf_unit);
+									SendCommand(Globals.RF_COMMAND_DURATION,(byte)item);
+								}
+							});
+							String cp =trd.getText().toString();
+							cp=cp.replace(" ms","").replace(" s", "");
+							p.setMaxValue(100);
+							p.setMinValue(0);
+							p.setValue(Integer.parseInt(cp));
+							builder.setView(p);
+							AlertDialog alert = builder.create();
+							alert.show();
+							return true;
+						}
+					};
+					trd.setOnLongClickListener(listenerduration);		
 					
 					tspec1ports = tabsports.newTabSpec("RF Radion");
 					tspec1ports.setIndicator("RF Radion");
@@ -508,43 +533,72 @@ public class InputController extends AccessoryController  {
 				c = (TextView) findViewById(R.id.RFModeValue);
 				c.setText(RfMode[value]);
 			    s = (SpeedometerView)findViewById(R.id.RFSpeedometer);
+			    TextView rdv = (TextView) findViewById(R.id.RFDurationValue);
+			    TextView rdl = (TextView) findViewById(R.id.RFDurationLabel);
 				switch (value)
 				{
 				case 0:
 					rf_unit=" s";
 					s.setScaleColor(0x9F00FF00);
+					rdv.setVisibility(4);
+					rdl.setVisibility(4);
+					rdv.setEnabled(false);
 					break;
 				case 1: case 2:
 					rf_unit=" s";
 					s.setScaleColor(0x9FFFFF00);
+					rdv.setVisibility(4);
+					rdl.setVisibility(4);
+					rdv.setEnabled(false);
 					break;
 				case 3:
 					rf_unit=" ms";
 					s.setScaleColor(0x9F0000FF);
+					rdv.setVisibility(0);
+					rdl.setVisibility(0);
+					rdv.setEnabled(true);
 					break;
 				case 4:
 					rf_unit=" s";
 					s.setScaleColor(0x9FFF99FF);
+					rdv.setVisibility(0);
+					rdl.setVisibility(0);
+					rdv.setEnabled(true);
 					break;
 				case 5:
 					rf_unit=" ms";
 					s.setScaleColor(0x9FBB00FF);
+					rdv.setVisibility(0);
+					rdl.setVisibility(0);
+					rdv.setEnabled(true);
 					break;
 				case 6:
 					rf_unit=" s";
 					s.setScaleColor(0x9FBB00FF);
+					rdv.setVisibility(4);
+					rdl.setVisibility(4);
+					rdv.setEnabled(false);
 					break;
 				case 7: case 8: case 9:
 					rf_unit=" s";
 					s.setScaleColor(0x9FFFFFFF);
+					rdv.setVisibility(4);
+					rdl.setVisibility(4);
+					rdv.setEnabled(false);
 					break;
 				case 10:
 					rf_unit=" ms";
 					s.setScaleColor(0x9F00DDFF);
+					rdv.setVisibility(0);
+					rdl.setVisibility(0);
+					rdv.setEnabled(true);
 					break;
 				default:
 					rf_unit=" s";
 					s.setScaleColor(0x9FFF0000);
+					rdv.setVisibility(4);
+					rdl.setVisibility(4);
+					rdv.setEnabled(false);
 					break;
 				}
 				c = (TextView) findViewById(R.id.RFDurationValue);
