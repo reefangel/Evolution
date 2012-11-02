@@ -65,7 +65,7 @@ public class ProgressView extends View {
 	}
 
 	public int getPercentage() {
-		return currentP;
+		return targetP;
 	}
 	
 	public void setPercentage(int p) {

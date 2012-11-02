@@ -39,7 +39,7 @@ public class XMLfunctions {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        String xml = XMLfunctions.getXML("http://forum.reefangel.com/status/labels.aspx?id="+sharedPreferences.getString("MYREEFANGELID", ""));
+        String xml = XMLfunctions.getXML(Globals.PORTAL_LABELS+"?id="+sharedPreferences.getString("MYREEFANGELID", ""));
         Document doc = XMLfunctions.XMLfromString(xml);
                 
         NodeList nRA=doc.getElementsByTagName("RA");

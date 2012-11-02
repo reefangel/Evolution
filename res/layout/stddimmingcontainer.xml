@@ -7,19 +7,30 @@
     android:baselineAligned="false"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingLeft="15dip"
-    android:paddingRight="15dip" >
+    android:paddingLeft="10dip"
+    android:paddingRight="10dip"
+    android:paddingTop="10dip" >
 
     <com.reefangel.evolution.ProgressView
-        android:id="@+id/daylightdimming"
+        android:id="@+id/daylightdimming1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <com.reefangel.evolution.ProgressView
-        android:id="@+id/actinicdimming"
+        android:id="@+id/actinicdimming1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+    <com.reefangel.evolution.ProgressView
+        android:id="@+id/daylightdimming2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
+    <com.reefangel.evolution.ProgressView
+        android:id="@+id/actinicdimming2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 </LinearLayout>

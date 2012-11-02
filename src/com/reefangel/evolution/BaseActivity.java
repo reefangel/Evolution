@@ -1,18 +1,32 @@
 package com.reefangel.evolution;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import com.reefangel.evolution.InputController.SwitchDisplayer;
+
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class BaseActivity extends EvolutionActivity {
 	private static final String TAG = "EvolutionBaseActivity";
@@ -69,8 +83,10 @@ public class BaseActivity extends EvolutionActivity {
 			mInputController.setParam(Globals.ORP,orp);
 			mInputController.setParam(Globals.PHEXP,phe);
 			mInputController.setParam(Globals.WL,wl);
-			mInputController.setByteMsg(Globals.DIMMING_ACTINIC,41+new Random().nextInt(5));
-			mInputController.setByteMsg(Globals.DIMMING_DAYLIGHT,84+new Random().nextInt(5));
+			mInputController.setByteMsg(Globals.DIMMING_ACTINIC1,41+new Random().nextInt(5));
+			mInputController.setByteMsg(Globals.DIMMING_DAYLIGHT1,84+new Random().nextInt(5));
+			mInputController.setByteMsg(Globals.DIMMING_ACTINIC2,95+new Random().nextInt(5));
+			mInputController.setByteMsg(Globals.DIMMING_DAYLIGHT2,37+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.DIMMING_CHANNEL0,61+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.DIMMING_CHANNEL1,48+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.DIMMING_CHANNEL2,12+new Random().nextInt(5));
@@ -97,6 +113,8 @@ public class BaseActivity extends EvolutionActivity {
 			mInputController.switchStateChanged(Globals.IO_CHANNEL3, new Random().nextInt(10)<5);
 			mInputController.switchStateChanged(Globals.IO_CHANNEL4, new Random().nextInt(10)<5);
 			mInputController.switchStateChanged(Globals.IO_CHANNEL5, new Random().nextInt(10)<5);
+			mInputController.setByteMsg(Globals.CUSTOM0,23+new Random().nextInt(5));
+			mInputController.setByteMsg(Globals.CUSTOM1,79+new Random().nextInt(5));
 			
 		} else if (item.getTitle() == "Quit") {
 			finish();
@@ -127,29 +145,109 @@ public class BaseActivity extends EvolutionActivity {
 
 			public void run() {
 				
-				ParamsView mTemperature1 = (ParamsView) findViewById(R.id.T1);
-				ParamsView mTemperature2 = (ParamsView) findViewById(R.id.T2);
-				ParamsView mTemperature3 = (ParamsView) findViewById(R.id.T3);
-				ParamsView mpH = (ParamsView) findViewById(R.id.PH);
-				ParamsView mSalinity = (ParamsView) findViewById(R.id.SAL);
-				ParamsView mOrp = (ParamsView) findViewById(R.id.ORP);
-				ParamsView mpHExp = (ParamsView) findViewById(R.id.PHE);
-				ParamsView mWaterLevel = (ParamsView) findViewById(R.id.WL);
 				EvolutionDB dh; 
 				dh = new EvolutionDB(getBaseContext());
 				dh.insert(
-						Integer.toString(mTemperature1.getParam()),
-						Integer.toString(mTemperature2.getParam()),
-						Integer.toString(mTemperature3.getParam()),
-						Integer.toString(mpH.getParam()),
-						Integer.toString(mSalinity.getParam()),
-						Integer.toString(mOrp.getParam()),
-						Integer.toString(mpHExp.getParam()),
-						Integer.toString(mWaterLevel.getParam())
+						Integer.toString(mInputController.mTemperature1.getParam()),
+						Integer.toString(mInputController.mTemperature2.getParam()),
+						Integer.toString(mInputController.mTemperature3.getParam()),
+						Integer.toString(mInputController.mpH.getParam()),
+						Integer.toString(mInputController.mSalinity.getParam()),
+						Integer.toString(mInputController.mOrp.getParam()),
+						Integer.toString(mInputController.mpHExp.getParam()),
+						Integer.toString(mInputController.mWaterLevel.getParam())
 						);
 				dh.finalize();
 				Log.d(TAG,"Saved Data");
-				Log.d(TAG,"T1: "+ mTemperature1.getParam());
+				
+		        SharedPreferences sharedPreferences = getBaseContext().getSharedPreferences(Globals.PREFS_NAME, 0);
+				String line = null;
+				
+				String url=Globals.PORTAL_SUBMIT+"?id="+sharedPreferences.getString("MYREEFANGELID", "test")+
+						"&t1="+Integer.toString(mInputController.mTemperature1.getParam())+
+						"&t2="+Integer.toString(mInputController.mTemperature2.getParam())+
+						"&t3="+Integer.toString(mInputController.mTemperature3.getParam())+
+						"&ph="+Integer.toString(mInputController.mpH.getParam())+
+						"&sal="+Integer.toString(mInputController.mSalinity.getParam())+
+						"&orp="+Integer.toString(mInputController.mOrp.getParam())+
+						"&phe="+Integer.toString(mInputController.mpHExp.getParam())+
+						"&wl="+Integer.toString(mInputController.mWaterLevel.getParam())+
+						"&atolow="+Integer.toString(mInputController.getswitchState(0)==true?1:0) +
+						"&atohigh="+Integer.toString(mInputController.getswitchState(1)==true?1:0) +
+						"&pwma="+Integer.toString(mInputController.mActinicView1.getPercentage())+
+						"&pwmd="+Integer.toString(mInputController.mDaylightView1.getPercentage())+
+						"&pwma2="+Integer.toString(mInputController.mActinicView2.getPercentage())+
+						"&pwmd2="+Integer.toString(mInputController.mDaylightView2.getPercentage())+
+						"&em="+em+
+						"&rem="+rem;
+				for (int a=0;a<8;a++)
+				{
+					url+="&r" + (a+1) + "="+mInputController.Relay_R[a]+
+							"&ron" + (a+1) + "="+mInputController.Relay_RON[a]+
+							"&roff" + (a+1) + "="+mInputController.Relay_ROFF[a];
+				}
+				if (BigInteger.valueOf(em).testBit(0)) {
+					for (int a=0;a<6;a++)
+					{
+						int resID = getResources().getIdentifier("channel"+a+"dimming", "id", "com.reefangel.evolution");
+						ProgressView c = (ProgressView)findViewById(resID);
+						url+="&pwme" + a + "="+c.getPercentage();
+					}							
+				}
+				if (BigInteger.valueOf(em).testBit(1)) {
+					String[] r={"rfw","rfrb","rfr","rfg","rfb","rfi"};
+					for (int a=0;a<6;a++)
+					{
+						int resID = getResources().getIdentifier("radion"+a+"dimming", "id", "com.reefangel.evolution");
+						ProgressView c = (ProgressView)findViewById(resID);
+						url+="&"+ r[a] + "="+c.getPercentage();
+					}		
+					TextView t=(TextView)findViewById(R.id.RFModeValue);
+					url+="&rfm="+t.getTag();
+					t=(TextView)findViewById(R.id.RFSpeedValue);
+					url+="&rfs="+t.getTag();
+					t=(TextView)findViewById(R.id.RFDurationValue);
+					url+="&rfd="+t.getTag();							
+				}
+				if (BigInteger.valueOf(em).testBit(2)) {
+					ProgressView aiw = (ProgressView)findViewById(R.id.aiwhitedimming);
+					url+="&aiw="+aiw.getPercentage();
+					ProgressView aib = (ProgressView)findViewById(R.id.aibluedimming);
+					url+="&aib="+aib.getPercentage();
+					ProgressView airb = (ProgressView)findViewById(R.id.airoyalbluedimming);					
+					url+="&airb="+airb.getPercentage();
+				}
+				if (BigInteger.valueOf(em).testBit(5)) {
+					int mio=0;
+					for (int a=Globals.IO_CHANNEL0;a<=Globals.IO_CHANNEL5;a++)
+						if (mInputController.getswitchState(a))
+							mio+=1<<(a-Globals.IO_CHANNEL0);
+					url+="&io="+mio;
+				}
+				boolean checkcustom=false;
+				for (int a=0;a<8;a++)
+					if (c[a]!=0) checkcustom=true;
+				if (checkcustom)
+					for (int a=0;a<8;a++)
+						url+="&c" + a + "="+c[a];
+						
+				try {
+					DefaultHttpClient httpClient = new DefaultHttpClient();
+					HttpPost httpPost = new HttpPost(url);
+					Log.d(TAG,"Portal URL: "+url);
+					HttpResponse httpResponse = httpClient.execute(httpPost);
+					HttpEntity httpEntity = httpResponse.getEntity();
+					line = EntityUtils.toString(httpEntity);
+					
+				} catch (UnsupportedEncodingException e) {
+					line = "Can't connect to server";
+				} catch (MalformedURLException e) {
+					line = "Can't connect to server";
+				} catch (IOException e) {
+					line = "Can't connect to server";
+				}
+
+				Log.d(TAG,line);
 			}
 
 		}, 5000, 300000);		

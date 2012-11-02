@@ -18,7 +18,7 @@ public class Globals {
 	public static final byte BYTEMSG = 0x20;
 
 	public static final byte RELAY = 0x30;
-		
+
 	public static final byte EXPANSIONMODULES = 0x70;
 
 	public static final byte RELAYMODULES = 0x71;
@@ -44,12 +44,14 @@ public class Globals {
 	public static final byte DIMMING_CHANNEL4 = 0x4;
 	public static final byte DIMMING_CHANNEL5 = 0x5;
 	
-	public static final byte DIMMING_DAYLIGHT = 0x6;
-	public static final byte DIMMING_ACTINIC = 0x7;	
+	public static final byte DIMMING_DAYLIGHT1 = 0x6;
+	public static final byte DIMMING_ACTINIC1 = 0x7;	
+	public static final byte DIMMING_DAYLIGHT2 = 0x8;
+	public static final byte DIMMING_ACTINIC2 = 0x9;	
 
-	public static final byte RF_MODE = 0x8;	
-	public static final byte RF_SPEED = 0x9;	
-	public static final byte RF_DURATION = 0xa;	
+	public static final byte RF_MODE = 0xa;	
+	public static final byte RF_SPEED = 0xb;	
+	public static final byte RF_DURATION = 0xc;	
 
 	public static final byte RF_RADION_WHITE = 0x10;	
 	public static final byte RF_RADION_ROYAL_BLUE = 0x11;	
@@ -60,15 +62,22 @@ public class Globals {
 	
 	public static final byte AI_WHITE = 0x20;	
 	public static final byte AI_BLUE = 0x21;	
-	public static final byte AI_ROYAL_BLUE = 0x22;	
+	public static final byte AI_ROYAL_BLUE = 0x22;
+	
+	public static final byte CUSTOM0 = 0x30;
+	public static final byte CUSTOM1 = 0x31;
+	public static final byte CUSTOM2 = 0x32;
+	public static final byte CUSTOM3 = 0x33;
+	public static final byte CUSTOM4 = 0x34;
+	public static final byte CUSTOM5 = 0x35;
+	public static final byte CUSTOM6 = 0x36;
+	public static final byte CUSTOM7 = 0x37;	
 	
 // Relay
 	public static final byte RELAY_R = 0x0;
 	public static final byte RELAY_RON = 0x1;
 	public static final byte RELAY_ROFF = 0x2;
 
-	public static final String PREFS_NAME = "EvolutionPrefs";
-	
 // Commands
 	public static final byte RELAY_COMMAND = 0x3;
 	public static final byte DIMMING_COMMAND_OVERRIDE_STATE = 0x4;
@@ -79,5 +88,12 @@ public class Globals {
 	
 // Activity Requests
 	public static final int PICK_RF_MODE = 0;
+	
+
+// Strings	
+	public static final String PREFS_NAME = "EvolutionPrefs";
+	public static final String PORTAL_LABELS = "http://forum.reefangel.com/status/labels.aspx";
+	public static final String PORTAL_SUBMIT = "http://forum.reefangel.com/status/submitp.aspx";
+	
 	
 }

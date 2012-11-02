@@ -73,6 +73,7 @@ public class EvolutionActivity extends Activity implements Runnable {
 	
 	int em=0;
 	int rem=0;
+	int[] c={0,0,0,0,0,0,0,0};
 	
 	byte[] buffer = new byte[16384];	
 
@@ -337,7 +338,7 @@ public class EvolutionActivity extends Activity implements Runnable {
 		unregisterReceiver(mUsbReceiver);
 		DBUpdateTimer.cancel();
 		Log.d(TAG,"Destroyed");		
-		super.onDestroy();		
+		super.onDestroy();
 	}
 
 	@SuppressLint("NewApi")

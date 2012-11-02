@@ -104,7 +104,7 @@ public class GraphActivity extends Activity
             // create a simple date format that draws on the year portion of our timestamp.
             // see http://download.oracle.com/javase/1.4.2/docs/api/java/text/SimpleDateFormat.html
             // for a full description of SimpleDateFormat.
-            private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
  
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {

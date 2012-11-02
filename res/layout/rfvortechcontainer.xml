@@ -6,7 +6,8 @@
     android:background="@color/EvolutionWhite"
     android:baselineAligned="false"
     android:gravity="center"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:paddingTop="10dp" >
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -31,19 +31,21 @@ public class InputController extends AccessoryController  {
 	private static final String TAG = "EvolutionInputController";
 
 	private String RfMode[] = {"Constant","Lagoon","Reef Crest","Short Pulse","Long Pulse","Nutrient Transport","Tidal Swell","Feeding","Feeding","Night","Storm","Custom","Custom","Custom","Custom"};
-	private ParamsView mTemperature1;
-	private ParamsView mTemperature2;
-	private ParamsView mTemperature3;
-	private ParamsView mpH;
-	private ParamsView mSalinity;
-	private ParamsView mOrp;
-	private ParamsView mpHExp;
-	private ParamsView mWaterLevel;
-	private ProgressView mDaylightView;
-	private ProgressView mActinicView;
-	private int Relay_R[];
-	private int Relay_RON[];
-	private int Relay_ROFF[];
+	public ParamsView mTemperature1;
+	public ParamsView mTemperature2;
+	public ParamsView mTemperature3;
+	public ParamsView mpH;
+	public ParamsView mSalinity;
+	public ParamsView mOrp;
+	public ParamsView mpHExp;
+	public ParamsView mWaterLevel;
+	public ProgressView mDaylightView1;
+	public ProgressView mActinicView1;
+	public ProgressView mDaylightView2;
+	public ProgressView mActinicView2;
+	public int Relay_R[];
+	public int Relay_RON[];
+	public int Relay_ROFF[];
 	private Handler TimerHandler;
 	Runnable TimerRunnable;
 
@@ -94,11 +96,20 @@ public class InputController extends AccessoryController  {
 		mWaterLevel.setParamID(7);
 		mWaterLevel.setFormat(mWLFormatter);
 		
-		mDaylightView = (ProgressView) findViewById(R.id.daylightdimming);
-		mDaylightView.setLabel("Daylight");
-		mActinicView = (ProgressView) findViewById(R.id.actinicdimming);
-		mActinicView.setBarColor(1);
-		mActinicView.setLabel("Actinic");
+		mDaylightView1 = (ProgressView) findViewById(R.id.daylightdimming1);
+		mDaylightView1.setLabel("Daylight 1");
+		mDaylightView1.setMode(1);
+		mActinicView1 = (ProgressView) findViewById(R.id.actinicdimming1);
+		mActinicView1.setBarColor(1);
+		mActinicView1.setLabel("Actinic 1");
+		mActinicView1.setMode(1);
+		mDaylightView2 = (ProgressView) findViewById(R.id.daylightdimming2);
+		mDaylightView2.setLabel("Daylight 2");
+		mDaylightView2.setMode(1);
+		mActinicView2 = (ProgressView) findViewById(R.id.actinicdimming2);
+		mActinicView2.setBarColor(1);
+		mActinicView2.setLabel("Actinic 2");
+		mActinicView2.setMode(1);
 
 		mRelayButtonControllers = new ArrayList<RelayButtonController>();
 		mSwitchDisplayers = new ArrayList<SwitchDisplayer>();
@@ -106,56 +117,6 @@ public class InputController extends AccessoryController  {
 		Relay_R = new int[8];
 		Relay_RON = new int[8];
 		Relay_ROFF = new int[8];
-
-//		Runnable TimerRunnable = new Runnable() {
-//			public void run() {
-//				EvolutionDB dh; 
-//				dh = new EvolutionDB(mHostActivity);
-//				dh.insert(
-//						Integer.toString(mTemperature1.getParam()),
-//						Integer.toString(mTemperature2.getParam()),
-//						Integer.toString(mTemperature3.getParam()),
-//						Integer.toString(mpH.getParam()),
-//						Integer.toString(mSalinity.getParam()),
-//						Integer.toString(mOrp.getParam()),
-//						Integer.toString(mpHExp.getParam()),
-//						Integer.toString(mWaterLevel.getParam())
-//						);
-//				dh.finalize();
-//				Log.d(TAG,"Saved Data"+mHostActivity);
-//				Log.d(TAG,"T1: "+ mTemperature1.getParam());
-//				
-//				TimerHandler.postDelayed(this, 5000);
-//			}
-//		};		
-//		TimerHandler = new Handler();
-//		TimerHandler.postDelayed(TimerRunnable, 5000);
-
-//		Timer timer = new Timer();
-//
-//		timer.scheduleAtFixedRate(new TimerTask() {
-//
-//			public void run() {
-//
-//				EvolutionDB dh; 
-//				dh = new EvolutionDB(mHostActivity);
-//				dh.insert(
-//						Integer.toString(mTemperature1.getParam()),
-//						Integer.toString(mTemperature2.getParam()),
-//						Integer.toString(mTemperature3.getParam()),
-//						Integer.toString(mpH.getParam()),
-//						Integer.toString(mSalinity.getParam()),
-//						Integer.toString(mOrp.getParam()),
-//						Integer.toString(mpHExp.getParam()),
-//						Integer.toString(mWaterLevel.getParam())
-//						);
-//				dh.finalize();
-//				Log.d(TAG,"Saved Data"+mHostActivity);
-//				Log.d(TAG,"T1: "+ mTemperature1.getParam());
-//
-//			}
-//
-//		}, 0, 5000);
 
 		TabHost tabs = (TabHost) this.findViewById(R.id.tabhost);
 		tabs.setup();
@@ -220,8 +181,10 @@ public class InputController extends AccessoryController  {
 			v.setVisibility(4);
 		}	
 
-		mDaylightView.setPercentage(0);
-		mActinicView.setPercentage(0);
+		mDaylightView1.setPercentage(0);
+		mActinicView1.setPercentage(0);
+		mDaylightView2.setPercentage(0);
+		mActinicView2.setPercentage(0);
 
 		for (int a=0;a<8;a++)
 		{
@@ -256,12 +219,12 @@ public class InputController extends AccessoryController  {
 			break;
 		case Globals.WL:
 			mWaterLevel.setParam(t);
-			break;			
+			break;	
 		case Globals.EXPANSIONMODULES:
 			if (mHostActivity.em!=t)
 			{
 				mHostActivity.em=t;
-				Log.d("EvolutionActivity", "Expansion Modules: " + t);
+				Log.d(TAG, "Expansion Modules: " + t);
 
 				if (BigInteger.valueOf(t).testBit(0)) {
 
@@ -336,16 +299,17 @@ public class InputController extends AccessoryController  {
 									trs.setText(p.getPercentage()+"%");
 									SpeedometerView s = (SpeedometerView) findViewById(R.id.RFSpeedometer);
 									s.setHandTarget(p.getPercentage());
+									trs.setTag(p.getPercentage());
 									SendCommand(Globals.RF_COMMAND_MODE,(byte)item);
 								}
 							});
-							TextView t=(TextView)v;
-							String cp =t.getText().toString();
-							cp=cp.replace("%",""); 
+//							TextView t=(TextView)v;
+//							String cp =t.getText().toString();
+//							cp=cp.replace("%",""); 
 							p.setOverrideMode(1);
-							p.setPercentage(Integer.parseInt(cp));
-							p.setCurrentPercentage(Integer.parseInt(cp));
-							p.setPercentageText(Integer.parseInt(cp)+"%");
+							p.setPercentage((Integer) trs.getTag());
+							p.setCurrentPercentage((Integer) trs.getTag());
+							p.setPercentageText((Integer) trs.getTag()+"%");
 							p.setLabel("Speed");
 							p.setScaleX(.9f);
 							builder.setView(p);
@@ -368,14 +332,16 @@ public class InputController extends AccessoryController  {
 							builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
 									trd.setText(p.getValue()+rf_unit);
+									trd.setTag(p.getValue());
 									SendCommand(Globals.RF_COMMAND_DURATION,(byte)item);
 								}
 							});
-							String cp =trd.getText().toString();
-							cp=cp.replace(" ms","").replace(" s", "");
+//							String cp =trd.getText().toString();
+//							cp=cp.replace(" ms","").replace(" s", "");
 							p.setMaxValue(100);
 							p.setMinValue(0);
-							p.setValue(Integer.parseInt(cp));
+//							p.setValue(Integer.parseInt(cp));
+							p.setValue((Integer) trd.getTag());
 							builder.setView(p);
 							AlertDialog alert = builder.create();
 							alert.show();
@@ -473,7 +439,7 @@ public class InputController extends AccessoryController  {
 							(float) 1.0
 							);	
 					v.addView(lIOExp,lr);
-					for (int i = 2; i < 8; i++) {
+					for (int i = Globals.IO_CHANNEL0; i <= Globals.IO_CHANNEL5; i++) {
 						SwitchDisplayer sd = new SwitchDisplayer(i);
 						mSwitchDisplayers.add(sd);
 					}
@@ -498,7 +464,7 @@ public class InputController extends AccessoryController  {
 			if (mHostActivity.rem!=t)
 			{
 				int firstbox=-1;
-				Log.d("EvolutionActivity", "Relay Modules: " + t);
+				Log.d(TAG, "Relay Modules: " + t);
 				mHostActivity.rem=t;
 				TabHost tabs = (TabHost) this.findViewById(R.id.tabhost);
 				for(int a=0;a<8;a++)
@@ -573,11 +539,17 @@ public class InputController extends AccessoryController  {
 		SpeedometerView s;
 
 		switch (channel){
-		case Globals.DIMMING_DAYLIGHT:
-			mDaylightView.setPercentage(value);
+		case Globals.DIMMING_DAYLIGHT1:
+			mDaylightView1.setPercentage(value);
 			break;
-		case Globals.DIMMING_ACTINIC:
-			mActinicView.setPercentage(value);
+		case Globals.DIMMING_ACTINIC1:
+			mActinicView1.setPercentage(value);
+			break;
+		case Globals.DIMMING_DAYLIGHT2:
+			mDaylightView2.setPercentage(value);
+			break;
+		case Globals.DIMMING_ACTINIC2:
+			mActinicView2.setPercentage(value);
 			break;
 		case Globals.DIMMING_CHANNEL0: case Globals.DIMMING_CHANNEL1: case Globals.DIMMING_CHANNEL2: case Globals.DIMMING_CHANNEL3: case Globals.DIMMING_CHANNEL4: case Globals.DIMMING_CHANNEL5:
 			if (BigInteger.valueOf(mHostActivity.em).testBit(0)) {
@@ -615,6 +587,7 @@ public class InputController extends AccessoryController  {
 			if (BigInteger.valueOf(mHostActivity.em).testBit(1)) {
 				c = (TextView) findViewById(R.id.RFModeValue);
 				c.setText(RfMode[value]);
+				c.setTag(value);
 				s = (SpeedometerView)findViewById(R.id.RFSpeedometer);
 				TextView rdv = (TextView) findViewById(R.id.RFDurationValue);
 				TextView rdl = (TextView) findViewById(R.id.RFDurationLabel);
@@ -685,9 +658,9 @@ public class InputController extends AccessoryController  {
 					break;
 				}
 				c = (TextView) findViewById(R.id.RFDurationValue);
-				String d=c.getText().toString();
-				d=d.replace(" ms", "").replace(" s", "");
-				c.setText(d+rf_unit);
+//				String d=c.getText().toString();
+//				d=d.replace(" ms", "").replace(" s", "");
+				c.setText(c.getTag()+rf_unit);
 			}
 			break;
 		case Globals.RF_SPEED:
@@ -695,13 +668,17 @@ public class InputController extends AccessoryController  {
 			c.setText(value+"%");
 			s = (SpeedometerView)findViewById(R.id.RFSpeedometer);
 			s.setHandTarget(value);
+			c.setTag(value);
 			break;
 		case Globals.RF_DURATION:
 			c = (TextView) findViewById(R.id.RFDurationValue);
 			c.setText(value+rf_unit);
+			c.setTag(value);
 			break;
+		case Globals.CUSTOM0: case Globals.CUSTOM1: case Globals.CUSTOM2: case Globals.CUSTOM3: case Globals.CUSTOM4: case Globals.CUSTOM5: case Globals.CUSTOM6: case Globals.CUSTOM7:
+			mHostActivity.c[channel-0x30]=value;
+			break;			
 		}
-
 	}
 
 	public void setRelay(byte attr, int value) {
@@ -729,6 +706,12 @@ public class InputController extends AccessoryController  {
 		task.execute();
 	}
 
+	public boolean getswitchState(int switchIndex)
+	{
+		SwitchDisplayer sd = mSwitchDisplayers.get(switchIndex);
+		return sd.GetState();
+	}
+	
 	public void switchStateChanged(int switchIndex, boolean switchState) {
 		if (switchIndex >= 0 && switchIndex < mSwitchDisplayers.size()) {
 			SwitchDisplayer sd = mSwitchDisplayers.get(switchIndex);
@@ -744,6 +727,7 @@ public class InputController extends AccessoryController  {
 		private final ImageView mTargetView;
 		private final Drawable mOnImage;
 		private final Drawable mOffImage;
+		private boolean state;
 
 		SwitchDisplayer(int switchIndex) {
 			int viewId= R.id.LowATO;
@@ -780,17 +764,22 @@ public class InputController extends AccessoryController  {
 			mTargetView = (ImageView) findViewById(viewId);
 			mOffImage = mHostActivity.getResources().getDrawable(R.drawable.ato_off);
 			mOnImage = mHostActivity.getResources().getDrawable(R.drawable.ato_on);
-
+			state=false;
 		}
 
-		public void onSwitchStateChange(Boolean switchState) {
+		void onSwitchStateChange(Boolean switchState) {
 			Drawable currentImage;
+			state=switchState;
 			if (!switchState) {
 				currentImage = mOffImage;
 			} else {
 				currentImage = mOnImage;
 			}
 			mTargetView.setImageDrawable(currentImage);
+		}
+		boolean GetState()
+		{
+			return state;
 		}
 
 	}
