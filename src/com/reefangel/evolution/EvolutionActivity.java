@@ -20,10 +20,13 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.microbridge.server.AbstractServerListener;
 import org.microbridge.server.Server;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -60,6 +63,7 @@ public class EvolutionActivity extends Activity implements Runnable {
 	private UsbManager mUsbManager;
 	private PendingIntent mPermissionIntent;
 	private boolean mPermissionRequestPending;
+	Timer DBUpdateTimer;
 
 	UsbAccessory mAccessory;
 	boolean MicrobridgeLink=false;
@@ -193,7 +197,9 @@ public class EvolutionActivity extends Activity implements Runnable {
 		}
 	}
 
+	@SuppressLint("NewApi")
 	private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+		@SuppressLint("NewApi")
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
@@ -278,7 +284,6 @@ public class EvolutionActivity extends Activity implements Runnable {
 		});	 
 		
 		if (!MicrobridgeLink) enableControls(false);
-
 	}
 
 	@Override
@@ -290,6 +295,7 @@ public class EvolutionActivity extends Activity implements Runnable {
 		}
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -329,9 +335,12 @@ public class EvolutionActivity extends Activity implements Runnable {
 		server.stop();
 		server=null;
 		unregisterReceiver(mUsbReceiver);
-		super.onDestroy();
+		DBUpdateTimer.cancel();
+		Log.d(TAG,"Destroyed");		
+		super.onDestroy();		
 	}
 
+	@SuppressLint("NewApi")
 	private void openAccessory(UsbAccessory accessory) {
 		mFileDescriptor = mUsbManager.openAccessory(accessory);
 		if (mFileDescriptor != null) {
@@ -548,4 +557,5 @@ public class EvolutionActivity extends Activity implements Runnable {
 			mHandler.sendMessage(m);
         }
     }	
+
 }

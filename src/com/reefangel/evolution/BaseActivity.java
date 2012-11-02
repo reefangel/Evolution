@@ -1,17 +1,21 @@
 package com.reefangel.evolution;
 
+import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class BaseActivity extends EvolutionActivity {
-
+	private static final String TAG = "EvolutionBaseActivity";
 	private InputController mInputController;
 
 	public BaseActivity() {
@@ -26,9 +30,9 @@ public class BaseActivity extends EvolutionActivity {
 		} else {
 			hideControls();
 		}
-	
+		Log.d(TAG,"Created");		
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add("Simulate");
@@ -40,18 +44,31 @@ public class BaseActivity extends EvolutionActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getTitle() == "Simulate") {
 			showControls();
-			mInputController.setParam(Globals.T1_PROBE,775+new Random().nextInt(5));
-			mInputController.setParam(Globals.T2_PROBE,978+new Random().nextInt(5));
-			mInputController.setParam(Globals.T3_PROBE,871+new Random().nextInt(5));
-			mInputController.setParam(Globals.PH,817+new Random().nextInt(5));
+			EvolutionDB dh; 
+			int t1=775+new Random().nextInt(5);
+			int t2=978+new Random().nextInt(5);
+			int t3=871+new Random().nextInt(5);
+			int ph=817+new Random().nextInt(5);
+			int sal=345+new Random().nextInt(5);
+			int orp=426+new Random().nextInt(5);
+			int phe=764+new Random().nextInt(5);
+			int wl=61+new Random().nextInt(5);
+
+			dh = new EvolutionDB(this);
+	        dh.insert(Integer.toString(t1),Integer.toString(t2),Integer.toString(t3),Integer.toString(ph),Integer.toString(sal),Integer.toString(orp),Integer.toString(phe),Integer.toString(wl));
+	        dh.finalize();
+			mInputController.setParam(Globals.T1_PROBE,t1);
+			mInputController.setParam(Globals.T2_PROBE,t2);
+			mInputController.setParam(Globals.T3_PROBE,t3);
+			mInputController.setParam(Globals.PH,ph);
 			mInputController.setParam(Globals.EXPANSIONMODULES,0);
 			mInputController.setParam(Globals.RELAYMODULES,0);
 			mInputController.setParam(Globals.EXPANSIONMODULES,255);
 			mInputController.setParam(Globals.RELAYMODULES,255);
-			mInputController.setParam(Globals.SALINITY,345+new Random().nextInt(5));
-			mInputController.setParam(Globals.ORP,426+new Random().nextInt(5));
-			mInputController.setParam(Globals.PHEXP,764+new Random().nextInt(5));
-			mInputController.setParam(Globals.WL,61+new Random().nextInt(5));
+			mInputController.setParam(Globals.SALINITY,sal);
+			mInputController.setParam(Globals.ORP,orp);
+			mInputController.setParam(Globals.PHEXP,phe);
+			mInputController.setParam(Globals.WL,wl);
 			mInputController.setByteMsg(Globals.DIMMING_ACTINIC,41+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.DIMMING_DAYLIGHT,84+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.DIMMING_CHANNEL0,61+new Random().nextInt(5));
@@ -103,9 +120,39 @@ public class BaseActivity extends EvolutionActivity {
 
 	protected void showControls() {
 		setContentView(R.layout.main);
-
 		mInputController = new InputController(this);
 		mInputController.accessoryAttached();
+		DBUpdateTimer = new Timer();
+		DBUpdateTimer.scheduleAtFixedRate(new TimerTask() {
+
+			public void run() {
+				
+				ParamsView mTemperature1 = (ParamsView) findViewById(R.id.T1);
+				ParamsView mTemperature2 = (ParamsView) findViewById(R.id.T2);
+				ParamsView mTemperature3 = (ParamsView) findViewById(R.id.T3);
+				ParamsView mpH = (ParamsView) findViewById(R.id.PH);
+				ParamsView mSalinity = (ParamsView) findViewById(R.id.SAL);
+				ParamsView mOrp = (ParamsView) findViewById(R.id.ORP);
+				ParamsView mpHExp = (ParamsView) findViewById(R.id.PHE);
+				ParamsView mWaterLevel = (ParamsView) findViewById(R.id.WL);
+				EvolutionDB dh; 
+				dh = new EvolutionDB(getBaseContext());
+				dh.insert(
+						Integer.toString(mTemperature1.getParam()),
+						Integer.toString(mTemperature2.getParam()),
+						Integer.toString(mTemperature3.getParam()),
+						Integer.toString(mpH.getParam()),
+						Integer.toString(mSalinity.getParam()),
+						Integer.toString(mOrp.getParam()),
+						Integer.toString(mpHExp.getParam()),
+						Integer.toString(mWaterLevel.getParam())
+						);
+				dh.finalize();
+				Log.d(TAG,"Saved Data");
+				Log.d(TAG,"T1: "+ mTemperature1.getParam());
+			}
+
+		}, 5000, 300000);		
 	}
 	
 	protected void handleParamsMessage(ParamsMsg t) {
