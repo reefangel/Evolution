@@ -20,6 +20,7 @@ import com.reefangel.evolution.InputController.SwitchDisplayer;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.ActionBar.Tab;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,6 +51,7 @@ public class BaseActivity extends EvolutionActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add("Simulate");
+		menu.add("Settings");
 		menu.add("Quit");
 		return true;
 	}
@@ -115,7 +117,11 @@ public class BaseActivity extends EvolutionActivity {
 			mInputController.switchStateChanged(Globals.IO_CHANNEL5, new Random().nextInt(10)<5);
 			mInputController.setByteMsg(Globals.CUSTOM0,23+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.CUSTOM1,79+new Random().nextInt(5));
-			
+
+		} else if (item.getTitle() == "Settings") {
+			this.startActivityForResult( new Intent( this, SettingsActivity.class ),Globals.PICK_RF_MODE );
+			return true;
+
 		} else if (item.getTitle() == "Quit") {
 			finish();
 			System.exit(0);

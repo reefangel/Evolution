@@ -88,6 +88,11 @@ public class ProgressView extends View {
 		invalidate();
 	}	
 
+	public void setLabel(int label) {
+		mLabelText = getResources().getString(label);
+		invalidate();
+	}	
+	
 	public void setPercentageText(String label) {
 		mPercentageText = label;
 		invalidate();

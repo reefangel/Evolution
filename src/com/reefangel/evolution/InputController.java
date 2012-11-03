@@ -1,17 +1,26 @@
 package com.reefangel.evolution;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Date;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -46,7 +55,6 @@ public class InputController extends AccessoryController  {
 	public int Relay_R[];
 	public int Relay_RON[];
 	public int Relay_ROFF[];
-	private Handler TimerHandler;
 	Runnable TimerRunnable;
 
 	String rf_unit=" s";
@@ -61,6 +69,7 @@ public class InputController extends AccessoryController  {
 	private final DecimalFormat mSalinityFormatter = new DecimalFormat("##.#");
 	private final DecimalFormat mWLFormatter = new DecimalFormat("###" + (char)0x0025);
 
+	
 	InputController(EvolutionActivity hostActivity) {
 		super(hostActivity);
 		mTemperature1 = (ParamsView) findViewById(R.id.T1);
@@ -97,18 +106,18 @@ public class InputController extends AccessoryController  {
 		mWaterLevel.setFormat(mWLFormatter);
 		
 		mDaylightView1 = (ProgressView) findViewById(R.id.daylightdimming1);
-		mDaylightView1.setLabel("Daylight 1");
+		mDaylightView1.setLabel(R.string.Daylight1Label);
 		mDaylightView1.setMode(1);
 		mActinicView1 = (ProgressView) findViewById(R.id.actinicdimming1);
 		mActinicView1.setBarColor(1);
-		mActinicView1.setLabel("Actinic 1");
+		mActinicView1.setLabel(R.string.Actinic1Label);
 		mActinicView1.setMode(1);
 		mDaylightView2 = (ProgressView) findViewById(R.id.daylightdimming2);
-		mDaylightView2.setLabel("Daylight 2");
+		mDaylightView2.setLabel(R.string.Daylight2Label);
 		mDaylightView2.setMode(1);
 		mActinicView2 = (ProgressView) findViewById(R.id.actinicdimming2);
 		mActinicView2.setBarColor(1);
-		mActinicView2.setLabel("Actinic 2");
+		mActinicView2.setLabel(R.string.Actinic2Label);
 		mActinicView2.setMode(1);
 
 		mRelayButtonControllers = new ArrayList<RelayButtonController>();
@@ -130,21 +139,15 @@ public class InputController extends AccessoryController  {
 		TabHost tabsports = (TabHost) this.findViewById(R.id.tabhostports);
 		tabsports.setup();
 
-		TabSpec tspec1ports = tabsports.newTabSpec("Std Ports");
-		tspec1ports.setIndicator("Std Ports");
+		String s=getResources().getString(R.string.TabStdPortsLabel);
+		TabSpec tspec1ports = tabsports.newTabSpec(s);
+		tspec1ports.setIndicator(s);
 		tspec1ports.setContent(R.id.standardports);
 		tabsports.addTab(tspec1ports);
-		tabsports.setCurrentTabByTag("Std Ports");
+		tabsports.setCurrentTabByTag(s);
 
 		prefs = mHostActivity.getSharedPreferences(Globals.PREFS_NAME, 0);
-		//        Log.d(TAG,"Reef Angel ID: " + prefs.getString("MYREEFANGELID", ""));
-		//        if (prefs.getString("MYREEFANGELID", "")!="")
-		//        {
-		//		    DownloadXMLLabels task = new DownloadXMLLabels();
-		//		    task.execute();
-		//        }
-		//        else
-		//        {
+
 		try {
 			mHostActivity.server.send(new byte[] {Globals.PORTAL_REQUEST_COMMAND});
 			Log.d(TAG,"Request Portal name");
@@ -152,7 +155,6 @@ public class InputController extends AccessoryController  {
 			Log.e(TAG,e.getMessage());
 			e.printStackTrace();
 		}	
-		//        }
 		Log.d(TAG,"Set Default Labels");
 		UpdateLabels();
 
@@ -193,32 +195,44 @@ public class InputController extends AccessoryController  {
 			Relay_ROFF[a] = 255;
 		}
 	}
-
+	
 	public void setParam(byte param, int t) {
+		getResources();
+		final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
+		final int cancelid = Resources.getSystem().getIdentifier("cancel", "string", "android");
+		
 		switch (param){
 		case Globals.T1_PROBE:
 			mTemperature1.setParam(t);
+			CheckAlerts(t, mTemperature1, prefs.getFloat("PARAMSLESSTHAN0",0f),prefs.getFloat("PARAMSGREATERTHAN0",0f));
 			break;
 		case Globals.T2_PROBE:
 			mTemperature2.setParam(t);
+			CheckAlerts(t, mTemperature2, prefs.getFloat("PARAMSLESSTHAN1",0f),prefs.getFloat("PARAMSGREATERTHAN1",0f));
 			break;
 		case Globals.T3_PROBE:
 			mTemperature3.setParam(t);
+			CheckAlerts(t, mTemperature3, prefs.getFloat("PARAMSLESSTHAN2",0f),prefs.getFloat("PARAMSGREATERTHAN2",0f));
 			break;
 		case Globals.PH:
 			mpH.setParam(t);
+			CheckAlerts(t, mpH, prefs.getFloat("PARAMSLESSTHAN3",0f),prefs.getFloat("PARAMSGREATERTHAN3",0f));
 			break;
 		case Globals.SALINITY:
 			mSalinity.setParam(t);
+			CheckAlerts(t, mSalinity, prefs.getFloat("PARAMSLESSTHAN4",0f),prefs.getFloat("PARAMSGREATERTHAN4",0f));
 			break;
 		case Globals.ORP:
 			mOrp.setParam(t);
+			CheckAlerts(t, mOrp, prefs.getFloat("PARAMSLESSTHAN5",0f),prefs.getFloat("PARAMSGREATERTHAN5",0f));
 			break;
 		case Globals.PHEXP:
 			mpHExp.setParam(t);
+			CheckAlerts(t, mpHExp, prefs.getFloat("PARAMSLESSTHAN6",0f),prefs.getFloat("PARAMSGREATERTHAN6",0f));
 			break;
 		case Globals.WL:
 			mWaterLevel.setParam(t);
+			CheckAlerts(t, mWaterLevel, prefs.getFloat("PARAMSLESSTHAN7",0f),prefs.getFloat("PARAMSGREATERTHAN7",0f));
 			break;	
 		case Globals.EXPANSIONMODULES:
 			if (mHostActivity.em!=t)
@@ -231,11 +245,12 @@ public class InputController extends AccessoryController  {
 					TabHost tabsports = (TabHost) this.findViewById(R.id.tabhostports);
 					tabsports.setup();
 
-					TabSpec tspec1ports = tabsports.newTabSpec("Dim Exp Ports");
-					tspec1ports.setIndicator("Dim Exp Ports");
+					String s=getResources().getString(R.string.TabDimPortsLabel);
+					TabSpec tspec1ports = tabsports.newTabSpec(s);
+					tspec1ports.setIndicator(s);
 					tspec1ports.setContent(R.id.dimmingexpports);
 					tabsports.addTab(tspec1ports);
-					tabsports.setCurrentTabByTag("Std Ports");
+					tabsports.setCurrentTabByTag(getResources().getString(R.string.TabStdPortsLabel));
 
 					ViewGroup v = (ViewGroup) this.findViewById(R.id.dimmingexpports);
 					LinearLayout lDimmingExp = new LinearLayout(mHostActivity);
@@ -262,8 +277,9 @@ public class InputController extends AccessoryController  {
 					TabHost tabsports = (TabHost) this.findViewById(R.id.tabhostports);
 					tabsports.setup();
 
-					TabSpec tspec1ports = tabsports.newTabSpec("RF Vortech");
-					tspec1ports.setIndicator("RF Vortech");
+					String s=getResources().getString(R.string.TabRFVortechLabel);
+					TabSpec tspec1ports = tabsports.newTabSpec(s);
+					tspec1ports.setIndicator(s);
 					tspec1ports.setContent(R.id.rfvortechexpports);
 					tabsports.addTab(tspec1ports);
 
@@ -292,9 +308,9 @@ public class InputController extends AccessoryController  {
 							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
 							final ProgressView p = new ProgressView(mHostActivity);
 							builder.setTitle(R.string.app_name);
-							builder.setMessage("Select Speed %:");
-							builder.setNegativeButton("Cancel", null);
-							builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+							builder.setMessage(R.string.SelectSpeedLabel);
+							builder.setNegativeButton(getResources().getString(cancelid), null);
+							builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
 									trs.setText(p.getPercentage()+"%");
 									SpeedometerView s = (SpeedometerView) findViewById(R.id.RFSpeedometer);
@@ -310,7 +326,7 @@ public class InputController extends AccessoryController  {
 							p.setPercentage((Integer) trs.getTag());
 							p.setCurrentPercentage((Integer) trs.getTag());
 							p.setPercentageText((Integer) trs.getTag()+"%");
-							p.setLabel("Speed");
+							p.setLabel(R.string.SpeedLabel);
 							p.setScaleX(.9f);
 							builder.setView(p);
 							AlertDialog alert = builder.create();
@@ -327,9 +343,9 @@ public class InputController extends AccessoryController  {
 							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
 							final NumberPicker p = new NumberPicker(mHostActivity);
 							builder.setTitle(R.string.app_name);
-							builder.setMessage("Select Duration:");
-							builder.setNegativeButton("Cancel", null);
-							builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+							builder.setMessage(R.string.SelectDurationLabel);
+							builder.setNegativeButton(getResources().getString(cancelid), null);
+							builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
 									trd.setText(p.getValue()+rf_unit);
 									trd.setTag(p.getValue());
@@ -349,12 +365,13 @@ public class InputController extends AccessoryController  {
 						}
 					};
 					trd.setOnLongClickListener(listenerduration);		
-
-					tspec1ports = tabsports.newTabSpec("RF Radion");
-					tspec1ports.setIndicator("RF Radion");
+					
+					String sr=getResources().getString(R.string.TabRFRadionLabel);
+					tspec1ports = tabsports.newTabSpec(sr);
+					tspec1ports.setIndicator(sr);
 					tspec1ports.setContent(R.id.rfradionexpports);
 					tabsports.addTab(tspec1ports);
-					tabsports.setCurrentTabByTag("Std Ports");
+					tabsports.setCurrentTabByTag(getResources().getString(R.string.TabStdPortsLabel));
 
 					v = (ViewGroup) this.findViewById(R.id.rfradionexpports);
 					LinearLayout lRadionExp = new LinearLayout(mHostActivity);
@@ -377,12 +394,13 @@ public class InputController extends AccessoryController  {
 
 					TabHost tabsports = (TabHost) this.findViewById(R.id.tabhostports);
 					tabsports.setup();
-
-					TabSpec tspec1ports = tabsports.newTabSpec("AI Ports");
-					tspec1ports.setIndicator("AI Ports");
+					
+					String s=getResources().getString(R.string.TabAiPortsLabel);
+					TabSpec tspec1ports = tabsports.newTabSpec(s);
+					tspec1ports.setIndicator(s);
 					tspec1ports.setContent(R.id.aiports);
 					tabsports.addTab(tspec1ports);
-					tabsports.setCurrentTabByTag("Std Ports");
+					tabsports.setCurrentTabByTag(getResources().getString(R.string.TabStdPortsLabel));
 
 					ViewGroup v = (ViewGroup) this.findViewById(R.id.aiports);
 					LinearLayout lDimmingAI = new LinearLayout(mHostActivity);
@@ -424,11 +442,12 @@ public class InputController extends AccessoryController  {
 					TabHost tabsports = (TabHost) this.findViewById(R.id.tabhostports);
 					tabsports.setup();
 
-					TabSpec tspec1ports = tabsports.newTabSpec("I/O Exp Ports");
-					tspec1ports.setIndicator("I/O Exp Ports");
+					String s=getResources().getString(R.string.TabIOPortsLabel);
+					TabSpec tspec1ports = tabsports.newTabSpec(s);
+					tspec1ports.setIndicator(s);
 					tspec1ports.setContent(R.id.ioexpports);
 					tabsports.addTab(tspec1ports);
-					tabsports.setCurrentTabByTag("Std Ports");
+					tabsports.setCurrentTabByTag(getResources().getString(R.string.TabStdPortsLabel));
 
 					ViewGroup v = (ViewGroup) this.findViewById(R.id.ioexpports);
 					LinearLayout lIOExp = new LinearLayout(mHostActivity);
@@ -467,23 +486,24 @@ public class InputController extends AccessoryController  {
 				Log.d(TAG, "Relay Modules: " + t);
 				mHostActivity.rem=t;
 				TabHost tabs = (TabHost) this.findViewById(R.id.tabhost);
+				String s=getResources().getString(R.string.TabBoxLabel);
 				for(int a=0;a<8;a++)
 					if (BigInteger.valueOf(t).testBit(a)) {
 						if (firstbox==-1) firstbox=a;
 						Log.d(TAG,"Adding Box "+(a+1)+ " tab");
-						TabSpec tspec2 = tabs.newTabSpec("Box " + (a+1));
-						tspec2.setIndicator("Box " + (a+1));
+						TabSpec tspec2 = tabs.newTabSpec(s + (a+1));
+						tspec2.setIndicator(s + (a+1));
 						int resID = getResources().getIdentifier("expbox"+(a+1), "id", "com.reefangel.evolution");
 						Log.d(TAG,"ID: " + resID);
 						tspec2.setContent(resID);
 						tabs.addTab(tspec2);
-						tabs.setCurrentTabByTag("Box " + (a+1));
+						tabs.setCurrentTabByTag(s + (a+1));
 
 						ViewGroup v = (ViewGroup) this.findViewById(resID);
 						v.setVisibility(0);
 						TableLayout tLayout = new TableLayout(mHostActivity);
 						tLayout = (TableLayout) View.inflate(mHostActivity, R.layout.relaybox, null);
-						TableLayout.LayoutParams tp = new TableLayout.LayoutParams(
+						new TableLayout.LayoutParams(
 								TableLayout.LayoutParams.WRAP_CONTENT,
 								TableLayout.LayoutParams.WRAP_CONTENT
 								);
@@ -524,7 +544,7 @@ public class InputController extends AccessoryController  {
 						}
 
 					}
-				if (firstbox!=-1) tabs.setCurrentTabByTag("Box " + (firstbox+1));
+				if (firstbox!=-1) tabs.setCurrentTabByTag(s + (firstbox+1));
 
 			}
 
@@ -806,11 +826,78 @@ public class InputController extends AccessoryController  {
 		}
 
 		protected void onPostExecute(Integer result) {
+		}
+	}
+	
+	public class SendAlert extends AsyncTask<String, Integer, Integer> {
 
+		protected Integer doInBackground(String... params) {
+			Log.d(TAG,"Sending Alert: " + params[0]);
+			Log.d(TAG,"Sending Alert: " + params[1]);
+			String line = null;
+			String url="";
+			try {
+				url="e="+URLEncoder.encode(prefs.getString("AlertEmail", ""), "utf-8");
+				url+="&s="+URLEncoder.encode(params[0], "utf-8");
+				url+="&b="+URLEncoder.encode(params[1], "utf-8");
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			url=Globals.PORTAL_ALERT+"?"+url;
+
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				HttpPost httpPost = new HttpPost(url);
+				Log.d(TAG,"Alert URL: "+url);
+				HttpResponse httpResponse = httpClient.execute(httpPost);
+				HttpEntity httpEntity = httpResponse.getEntity();
+				line = EntityUtils.toString(httpEntity);
+				
+			} catch (UnsupportedEncodingException e) {
+				line = "Can't connect to server";
+			} catch (MalformedURLException e) {
+				line = "Can't connect to server";
+			} catch (IOException e) {
+				line = "Can't connect to server";
+			}
+
+			Log.d(TAG,line);					
+			return null;
+		}
+		protected void onProgressUpdate(Integer... values) {
 		}
 
-
+		protected void onPostExecute(Integer result) {
+		}
 	}
+	
+	private void CheckAlerts(int CurrentValue, ParamsView Param, float ParamLess, float ParamGreater )
+	{
+		String ParamLabel=Param.getLabel();
+		float ParamCheck= (float)CurrentValue/Param.getDecimal();
+		Date LastAlert=Param.getLastAlert();
+		if (new Date().getTime()-LastAlert.getTime()>3600000 )
+		{
+			if (ParamCheck < ParamLess)
+			{
+				SendAlert task = new SendAlert();
+				task.execute(ParamLabel + " Alert",ParamCheck + " is less than "+ParamLess);
+				Param.setLastAlert(new Date());
+			}
+			if (ParamCheck > ParamGreater && ParamGreater>0)
+			{
+				SendAlert task = new SendAlert();
+				task.execute(ParamLabel + " Alert",ParamCheck + " is greater than "+ParamGreater);
+				Param.setLastAlert(new Date());
+			}
+		}
+		else
+		{
+			Log.d(TAG,"Alert not sent. Last Alert was less than 1hr.");
+		}
+		
+	}	
 
 	public void UpdateLabels()
 	{

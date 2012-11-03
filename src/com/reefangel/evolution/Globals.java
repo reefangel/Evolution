@@ -94,6 +94,7 @@ public class Globals {
 	public static final String PREFS_NAME = "EvolutionPrefs";
 	public static final String PORTAL_LABELS = "http://forum.reefangel.com/status/labels.aspx";
 	public static final String PORTAL_SUBMIT = "http://forum.reefangel.com/status/submitp.aspx";
+	public static final String PORTAL_ALERT = "http://www.reefangel.com/status/sendalert.asp";
 	
 	
 }

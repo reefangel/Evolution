@@ -336,7 +336,7 @@ public class EvolutionActivity extends Activity implements Runnable {
 		server.stop();
 		server=null;
 		unregisterReceiver(mUsbReceiver);
-		DBUpdateTimer.cancel();
+		if (DBUpdateTimer!=null) DBUpdateTimer.cancel();
 		Log.d(TAG,"Destroyed");		
 		super.onDestroy();
 	}
