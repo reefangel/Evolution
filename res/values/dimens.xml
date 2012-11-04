@@ -11,4 +11,5 @@
 	<dimen name="atoheight">50dp</dimen>
 	<dimen name="ParamsLabel">20dp</dimen>	
 	<dimen name="ParamsValue">40dp</dimen>	
+	<dimen name="InputValue">20dp</dimen>	
 </resources> 

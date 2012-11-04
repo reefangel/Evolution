@@ -29,9 +29,13 @@
     <string name="SelectSpeedLabel">Select Speed %:</string>
     <string name="SelectDurationLabel">Select Duration:</string>
     <string name="SendEmailLabel">Send email alerts to</string>
+    <string name="AlertFrequencyLabel">Send alerts every</string>
     <string name="ParamSendEmailLabel">Send email alerts when xxx is</string>
     <string name="ParamLessLabel">Less than</string>
     <string name="ParamGreaterLabel">Greater than</string>
     <string name="ParamDisableLabel">To disable, set to 0</string>
+    <string name="InputOnLabel">On</string>
+    <string name="InputOffLabel">Off</string>
+    <string name="InputDisableLabel">Never send alerts</string>
     
 </resources>

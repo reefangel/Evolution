@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/SendEmailLabel"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
+
     <EditText
         android:id="@+id/AlertEmail"
         android:layout_width="match_parent"
@@ -21,6 +21,19 @@
 
         <requestFocus />
     </EditText>
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:text="@string/AlertFrequencyLabel"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/AlertFrequency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="fill_parent"

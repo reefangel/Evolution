@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
-import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,17 +14,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import com.reefangel.evolution.InputController.SwitchDisplayer;
-
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
-import android.app.ActionBar.Tab;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -107,14 +100,14 @@ public class BaseActivity extends EvolutionActivity {
 			mInputController.setByteMsg(Globals.AI_WHITE,57+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.AI_BLUE,83+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.AI_ROYAL_BLUE,91+new Random().nextInt(5));
-			mInputController.switchStateChanged(Globals.LOW_ATO, new Random().nextInt(10)<5);
-			mInputController.switchStateChanged(Globals.HIGH_ATO, new Random().nextInt(10)<5);
-			mInputController.switchStateChanged(Globals.IO_CHANNEL0, new Random().nextInt(10)<5);
-			mInputController.switchStateChanged(Globals.IO_CHANNEL1, new Random().nextInt(10)<5);
-			mInputController.switchStateChanged(Globals.IO_CHANNEL2, new Random().nextInt(10)<5);
-			mInputController.switchStateChanged(Globals.IO_CHANNEL3, new Random().nextInt(10)<5);
-			mInputController.switchStateChanged(Globals.IO_CHANNEL4, new Random().nextInt(10)<5);
-			mInputController.switchStateChanged(Globals.IO_CHANNEL5, new Random().nextInt(10)<5);
+			mInputController.setInput(Globals.LOW_ATO, new Random().nextInt(10)<5?1:0);			
+			mInputController.setInput(Globals.HIGH_ATO, new Random().nextInt(10)<5?1:0);			
+			mInputController.setInput(Globals.IO_CHANNEL0, new Random().nextInt(10)<5?1:0);			
+			mInputController.setInput(Globals.IO_CHANNEL1, new Random().nextInt(10)<5?1:0);			
+			mInputController.setInput(Globals.IO_CHANNEL2, new Random().nextInt(10)<5?1:0);			
+			mInputController.setInput(Globals.IO_CHANNEL3, new Random().nextInt(10)<5?1:0);			
+			mInputController.setInput(Globals.IO_CHANNEL4, new Random().nextInt(10)<5?1:0);			
+			mInputController.setInput(Globals.IO_CHANNEL5, new Random().nextInt(10)<5?1:0);			
 			mInputController.setByteMsg(Globals.CUSTOM0,23+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.CUSTOM1,79+new Random().nextInt(5));
 
@@ -178,8 +171,8 @@ public class BaseActivity extends EvolutionActivity {
 						"&orp="+Integer.toString(mInputController.mOrp.getParam())+
 						"&phe="+Integer.toString(mInputController.mpHExp.getParam())+
 						"&wl="+Integer.toString(mInputController.mWaterLevel.getParam())+
-						"&atolow="+Integer.toString(mInputController.getswitchState(0)==true?1:0) +
-						"&atohigh="+Integer.toString(mInputController.getswitchState(1)==true?1:0) +
+						"&atolow="+Integer.toString(mInputController.mATO[0].getState()) +
+						"&atohigh="+Integer.toString(mInputController.mATO[1].getState()) +
 						"&pwma="+Integer.toString(mInputController.mActinicView1.getPercentage())+
 						"&pwmd="+Integer.toString(mInputController.mDaylightView1.getPercentage())+
 						"&pwma2="+Integer.toString(mInputController.mActinicView2.getPercentage())+
@@ -226,7 +219,7 @@ public class BaseActivity extends EvolutionActivity {
 				if (BigInteger.valueOf(em).testBit(5)) {
 					int mio=0;
 					for (int a=Globals.IO_CHANNEL0;a<=Globals.IO_CHANNEL5;a++)
-						if (mInputController.getswitchState(a))
+						if (mInputController.mIO[a-Globals.IO_CHANNEL0].getState()==1)
 							mio+=1<<(a-Globals.IO_CHANNEL0);
 					url+="&io="+mio;
 				}
@@ -284,7 +277,7 @@ public class BaseActivity extends EvolutionActivity {
 	}	
 	protected void handleSwitchMessage(SwitchMsg o) {
 		if (mInputController != null) {
-			mInputController.switchStateChanged(o.getSw(), o.getState() != 0);
+			mInputController.setInput(o.getSw(), o.getState());
 		}
 	}
 

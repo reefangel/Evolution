@@ -23,7 +23,8 @@ public class ProgressView extends View {
 	
 	private static final String TAG = "EvolutionProgressView";
 
-	private EvolutionActivity mActivity;
+	private Context mContext;
+//	private EvolutionActivity mActivity;
 	private Drawable mProgressBackground;
 	private Drawable[] mProgressDrawables;
 	private int mDrawableindex;
@@ -119,25 +120,26 @@ public class ProgressView extends View {
 	}	
 	
 	private void initProgressView(Context context) {
-		mActivity = (EvolutionActivity) context;
+		mContext=context;
+//		mActivity = (EvolutionActivity) context;
 		OnLongClickListener listener = new OnLongClickListener() {
 			public boolean onLongClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-				final ProgressView p = new ProgressView(mActivity);
+				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+				final ProgressView p = new ProgressView(mContext);
 				builder.setTitle("Override Channel?");
 				builder.setMessage("Select Override %:");
 				builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
 						mState= 1;
 						setPercentage(p.getPercentage());
-						SendCommand(Globals.DIMMING_COMMAND_OVERRIDE_STATE,(byte)item);
+						SendCommand(Globals.DIMMING_COMMAND_OVERRIDE_STATE,(byte)p.getPercentage());
 						invalidate();
 					}
 				});
 				builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
 						mState= 0;
-						SendCommand(Globals.DIMMING_COMMAND_OVERRIDE_STATE,(byte)item);
+						SendCommand(Globals.DIMMING_COMMAND_OVERRIDE_STATE,(byte)p.getPercentage());
 						invalidate();
 					}
 				});
@@ -332,6 +334,8 @@ public class ProgressView extends View {
 	public void SendCommand (byte cmd, byte state)
 	{
 		Log.d(TAG,"Dimming Command Sent: " + state);
+		EvolutionActivity mActivity;
+		mActivity=(EvolutionActivity)mContext;
 		mActivity.sendCommand(cmd, (byte) mChannel, state);
 		try {
 			mActivity.server.send(new byte[] {cmd, (byte) mChannel, state});

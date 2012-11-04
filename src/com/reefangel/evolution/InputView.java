@@ -13,17 +13,21 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import com.reefangel.evolution.ParamsView.SendAlert;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,54 +35,46 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.NumberPicker;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
-public class ParamsView extends View implements OnClickListener {
+public class InputView extends View {
 	
-	private static final String TAG = "EvolutionParamsView";
+	private static final String TAG = "EvolutionInputView";
 	SharedPreferences prefs;
-	
+
 	private Context mContext;
-	private Drawable mParamBackground;
-	private int mParamID;
-	private int mDecimal;
+	private Drawable[] mInputBackground;
+	private int mInputID;
 	
-	private Paint mLabelPaint;
-	private Paint mParamPaint;
+	private Bitmap background; // holds the cached static part
+	
+	private Paint mInputPaint;
 	private String mLabelText;
-	private int mParam;
-	private DecimalFormat mFormat;
+	private int mInput;
 	private Date mLastAlert;
 	
-	public ParamsView(Context context) {
+	public InputView(Context context) {
 		super(context);
 		initParamView(context);
-		this.setOnClickListener(this);
 		this.setOnLongClickListener(longlistener);
 	}
 
-	public ParamsView(Context context, AttributeSet attrs) {
+	public InputView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		initParamView(context);
-		this.setOnClickListener(this);
 		this.setOnLongClickListener(longlistener);
 	}
 
-	public void setParam(int p) {
-		mParam = p;
-		CheckParamsAlerts();
+	public void setState(int p) {
+		mInput = p;
+		CheckInputAlerts();
 		invalidate();
 	}
 
-	public int getParam() {
-		return mParam;
-	}
-
-	public void setFormat(DecimalFormat d) {
-		mFormat = d;
-	}
-
-	public DecimalFormat getFormat() {
-		return mFormat;
+	public int getState() {
+		return mInput;
 	}
 	
 	public void setLastAlert(Date d) {
@@ -89,16 +85,8 @@ public class ParamsView extends View implements OnClickListener {
 		return mLastAlert;
 	}
 	
-	public void setDecimal(int d) {
-		mDecimal = d;
-	}
-
-	public int getDecimal() {
-		return mDecimal;
-	}
-	
-	public void setParamID(int b) {
-		mParamID=b;
+	public void setInputID(int b) {
+		mInputID=b;
 		invalidate();
 	}
 
@@ -114,64 +102,71 @@ public class ParamsView extends View implements OnClickListener {
 		mContext=context;
 		prefs = mContext.getSharedPreferences(Globals.PREFS_NAME, 0);
 		
-		mParam=0;
-		mLabelText="";
-		mParamID=0;
-		mDecimal=1;
-		mFormat=new DecimalFormat();
+		mInput=0;
+		mLabelText="Input";
+		mInputID=0;
 		mLastAlert=new Date(new Date().getTime()-Globals.AlertFrequency[(int) prefs.getLong("AlertFrequency", 2)]);
 		Resources r = context.getResources();
-		mParamBackground = r.getDrawable(R.drawable.none_bk);
-		int w = mParamBackground.getIntrinsicWidth();
-		int h = mParamBackground.getIntrinsicHeight();
-		mParamBackground.setBounds(0, 0, w, h);
-		mLabelPaint = new Paint();
-		mLabelPaint.setColor(Color.WHITE);
-		mLabelPaint.setTextSize(getResources().getDimension(R.dimen.ParamsLabel)); 
-		mLabelPaint.setTextAlign(Paint.Align.CENTER);
-		mLabelPaint.setAntiAlias(true);
-		mLabelPaint.setShadowLayer(2, 2, 2, Color.BLACK);
-		mParamPaint = new Paint();
-		mParamPaint.setColor(Color.BLACK);
-		mParamPaint.setTextSize(getResources().getDimension(R.dimen.ParamsValue)); 
-		mParamPaint.setTextAlign(Paint.Align.CENTER);
-		mParamPaint.setAntiAlias(true);
-		mParamPaint.setShadowLayer(2, 2, 2, R.color.EvolutionPurple);
+		mInputBackground = new Drawable[2];
+		mInputBackground[0] = r.getDrawable(R.drawable.ato_off);
+		mInputBackground[1] = r.getDrawable(R.drawable.ato_on);
+		int w = mInputBackground[0].getIntrinsicWidth();
+		int h = mInputBackground[0].getIntrinsicHeight();
+		mInputBackground[0].setBounds(0, 0, w, h);
+		mInputBackground[1].setBounds(0, 0, w, h);
+		mInputPaint = new Paint();
+		mInputPaint.setColor(Color.BLACK);
+		mInputPaint.setTextSize(getResources().getDimension(R.dimen.InputValue)); 
+		mInputPaint.setTextAlign(Paint.Align.LEFT);
+		mInputPaint.setAntiAlias(true);
+		mInputPaint.setShadowLayer(2, 2, 2, R.color.EvolutionPurple);
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		int w=mParamBackground.getIntrinsicWidth();
-		int h=mParamBackground.getIntrinsicHeight();
-		float scalew = (float) getWidth()/w;	
-		canvas.save(); 
-		canvas.scale(scalew, scalew, 0, 0); 
-		int x =(w/2);
-		canvas.drawText(mLabelText, x, h/2.5f, mLabelPaint);
-		canvas.drawText(mFormat.format((double)mParam/mDecimal), x ,h*1.15f  , mParamPaint);
-		canvas.restore(); 
+		int w=mInputBackground[0].getIntrinsicWidth();
+//		int h=mInputBackground[0].getIntrinsicHeight();
+//		float scalew = (float) getWidth()/w;
+//		scalew/=6;
+//		canvas.save(); 
+//		canvas.scale(scalew, scalew, 0, 0); 
+		canvas.drawBitmap(background, 0, 0, null); 
+		canvas.drawText(mLabelText, w+10, mInputPaint.getTextSize()+3, mInputPaint);
+//		canvas.drawText(mFormat.format((double)mInput/mDecimal), x ,h*1.15f  , mInputPaint);
+//		canvas.restore(); 
 	}
-	
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		float scalew = (float)MeasureSpec.getSize(widthMeasureSpec)/mParamBackground.getIntrinsicWidth();
-		setMeasuredDimension(widthMeasureSpec, (int)(mParamBackground.getIntrinsicHeight()*scalew*1.5));
+		if (MeasureSpec.getSize(widthMeasureSpec)<MeasureSpec.getSize(heightMeasureSpec)*6)
+			setMeasuredDimension(widthMeasureSpec, MeasureSpec.getSize(widthMeasureSpec)/6);
+		else
+			setMeasuredDimension(MeasureSpec.getSize(heightMeasureSpec)*6, MeasureSpec.getSize(heightMeasureSpec));
 	}
 	
-	public void onClick(View v) {
-		Intent intent = new Intent(mContext, GraphActivity.class);
-		intent.putExtra("PARAM_ID", mParamID);
-		intent.putExtra("PARAM_LABEL", mLabelText);
-		mContext.startActivity(intent);
-	}
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+//		Log.d(TAG, "Size changed to " + w + "x" + h);
+		regenerateBackground();
+	}	
+
+	private void regenerateBackground() {
+		// free the old bitmap
+		if (background != null) {
+			background.recycle();
+		}
+		background = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+		Canvas backgroundCanvas = new Canvas(background);
+		mInputBackground[mInput].draw(backgroundCanvas);
+	}	
 	
 	OnLongClickListener longlistener = new OnLongClickListener() {
 		public boolean onLongClick(View v) {
 			final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Globals.PREFS_NAME, 0);
-		    View view = LayoutInflater.from(mContext).inflate(R.layout.paramssettings, (ViewGroup) findViewById(R.id.inputContainer));
-			final EditText elt = (EditText)view.findViewById(R.id.ParamsLessThan);
-			final EditText egt = (EditText)view.findViewById(R.id.ParamsGreaterThan);
+		    View view = LayoutInflater.from(mContext).inflate(R.layout.inputsettings, (ViewGroup) findViewById(R.id.inputContainer));
+			final RadioButton rif = (RadioButton)view.findViewById(R.id.InputOff);
+			final RadioButton rin = (RadioButton)view.findViewById(R.id.InputOn);
+			final RadioButton rid = (RadioButton)view.findViewById(R.id.InputDisabled);
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			getResources();
 			final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
@@ -184,14 +179,17 @@ public class ParamsView extends View implements OnClickListener {
 			builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
 					SharedPreferences.Editor editor = sharedPreferences.edit();
-					editor.putFloat("PARAMSLESSTHAN"+mParamID, Float.parseFloat(elt.getText().toString()));
-					editor.putFloat("PARAMSGREATERTHAN"+mParamID,Float.parseFloat(egt.getText().toString()));
+					if (rif.isChecked()) editor.putInt("INPUTIS"+mInputID, 0 );
+					if (rin.isChecked()) editor.putInt("INPUTIS"+mInputID, 1 );
+					if (rid.isChecked()) editor.putInt("INPUTIS"+mInputID, 2 );
 					editor.commit();
 				}
 			});
 		    builder.setView(view);
-		    elt.setText(Float.toString(sharedPreferences.getFloat("PARAMSLESSTHAN"+mParamID, 0)));
-		    egt.setText(Float.toString(sharedPreferences.getFloat("PARAMSGREATERTHAN"+mParamID,0)));	
+		    int i=sharedPreferences.getInt("INPUTIS"+mInputID, -1);
+		    if (i==0) rif.setChecked(true);
+		    if (i==1) rin.setChecked(true);
+		    if (i==2) rid.setChecked(true);
 			AlertDialog alert = builder.create();
 			alert.show();
 			return true;
@@ -199,29 +197,24 @@ public class ParamsView extends View implements OnClickListener {
 		
 	};
 	
-	private void CheckParamsAlerts()
+	private void CheckInputAlerts()
 	{
-		float ParamCheck= (float)mParam/mDecimal;
-		float ParamLess=prefs.getFloat("PARAMSLESSTHAN"+mParamID,0f);
-		float ParamGreater=prefs.getFloat("PARAMSGREATERTHAN"+mParamID,0f);
+//		float ParamCheck= (float)mParam/mDecimal;
+//		float ParamLess=prefs.getFloat("PARAMSLESSTHAN"+mParamID,0f);
+//		float ParamGreater=prefs.getFloat("PARAMSGREATERTHAN"+mParamID,0f);
+		String[] OnOffState={"Off","On"};
 		if (new Date().getTime()-mLastAlert.getTime()>Globals.AlertFrequency[(int) prefs.getLong("AlertFrequency", 2)] )
 		{
-			if (ParamCheck < ParamLess)
+			if (mInput == prefs.getInt("INPUTIS"+mInputID, -1))
 			{
 				SendAlert task = new SendAlert();
-				task.execute(mLabelText + " Alert",ParamCheck + " is less than "+ParamLess);
-				setLastAlert(new Date());
-			}
-			if (ParamCheck > ParamGreater && ParamGreater>0)
-			{
-				SendAlert task = new SendAlert();
-				task.execute(mLabelText + " Alert",ParamCheck + " is greater than "+ParamGreater);
+				task.execute(mLabelText + " Alert",mLabelText + " is "+OnOffState[mInput]);
 				setLastAlert(new Date());
 			}
 		}
 		else
 		{
-			Log.d(TAG,"Alert not sent. Last Alert was less than " + Globals.AlertFrequency[(int) prefs.getLong("AlertFrequency", 2)]);
+			Log.d(TAG,"Alert not sent. Last Alert was less than 1hr.");
 		}
 	}	
 	
@@ -267,5 +260,5 @@ public class ParamsView extends View implements OnClickListener {
 
 		protected void onPostExecute(Integer result) {
 		}
-	}		
+	}			
 }

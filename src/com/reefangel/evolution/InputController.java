@@ -52,6 +52,8 @@ public class InputController extends AccessoryController  {
 	public ProgressView mActinicView1;
 	public ProgressView mDaylightView2;
 	public ProgressView mActinicView2;
+	public InputView[] mATO;
+	public InputView[] mIO;
 	public int Relay_R[];
 	public int Relay_RON[];
 	public int Relay_ROFF[];
@@ -61,7 +63,7 @@ public class InputController extends AccessoryController  {
 
 	SharedPreferences prefs;
 
-	ArrayList<SwitchDisplayer> mSwitchDisplayers;
+//	ArrayList<SwitchDisplayer> mSwitchDisplayers;
 	ArrayList<RelayButtonController> mRelayButtonControllers;
 	private final DecimalFormat mNoFormatter = new DecimalFormat("###");
 	private final DecimalFormat mTemperatureFormatter = new DecimalFormat("##.#" + (char)0x00B0);
@@ -119,9 +121,18 @@ public class InputController extends AccessoryController  {
 		mActinicView2.setBarColor(1);
 		mActinicView2.setLabel(R.string.Actinic2Label);
 		mActinicView2.setMode(1);
+		
+		mATO = new InputView[2];
+		
+		mATO[0] = (InputView) findViewById(R.id.LowATOInput);
+		mATO[0].setInputID(0);
+		mATO[0].setLabel("Low ATO");
+		mATO[1] = (InputView) findViewById(R.id.HighATOInput);
+		mATO[1].setInputID(1);
+		mATO[1].setLabel("High ATO");
 
 		mRelayButtonControllers = new ArrayList<RelayButtonController>();
-		mSwitchDisplayers = new ArrayList<SwitchDisplayer>();
+//		mSwitchDisplayers = new ArrayList<SwitchDisplayer>();
 
 		Relay_R = new int[8];
 		Relay_RON = new int[8];
@@ -167,10 +178,10 @@ public class InputController extends AccessoryController  {
 	
 	protected void onAccesssoryAttached() {
 
-		for (int i = 0; i < 2; i++) {
-			SwitchDisplayer sd = new SwitchDisplayer(i);
-			mSwitchDisplayers.add(sd);
-		}
+//		for (int i = 0; i < 2; i++) {
+//			SwitchDisplayer sd = new SwitchDisplayer(i);
+//			mSwitchDisplayers.add(sd);
+//		}
 
 		//		int bt=1;
 		for (int i=1;i<9;i++)
@@ -204,35 +215,27 @@ public class InputController extends AccessoryController  {
 		switch (param){
 		case Globals.T1_PROBE:
 			mTemperature1.setParam(t);
-			CheckAlerts(t, mTemperature1, prefs.getFloat("PARAMSLESSTHAN0",0f),prefs.getFloat("PARAMSGREATERTHAN0",0f));
 			break;
 		case Globals.T2_PROBE:
 			mTemperature2.setParam(t);
-			CheckAlerts(t, mTemperature2, prefs.getFloat("PARAMSLESSTHAN1",0f),prefs.getFloat("PARAMSGREATERTHAN1",0f));
 			break;
 		case Globals.T3_PROBE:
 			mTemperature3.setParam(t);
-			CheckAlerts(t, mTemperature3, prefs.getFloat("PARAMSLESSTHAN2",0f),prefs.getFloat("PARAMSGREATERTHAN2",0f));
 			break;
 		case Globals.PH:
 			mpH.setParam(t);
-			CheckAlerts(t, mpH, prefs.getFloat("PARAMSLESSTHAN3",0f),prefs.getFloat("PARAMSGREATERTHAN3",0f));
 			break;
 		case Globals.SALINITY:
 			mSalinity.setParam(t);
-			CheckAlerts(t, mSalinity, prefs.getFloat("PARAMSLESSTHAN4",0f),prefs.getFloat("PARAMSGREATERTHAN4",0f));
 			break;
 		case Globals.ORP:
 			mOrp.setParam(t);
-			CheckAlerts(t, mOrp, prefs.getFloat("PARAMSLESSTHAN5",0f),prefs.getFloat("PARAMSGREATERTHAN5",0f));
 			break;
 		case Globals.PHEXP:
 			mpHExp.setParam(t);
-			CheckAlerts(t, mpHExp, prefs.getFloat("PARAMSLESSTHAN6",0f),prefs.getFloat("PARAMSGREATERTHAN6",0f));
 			break;
 		case Globals.WL:
 			mWaterLevel.setParam(t);
-			CheckAlerts(t, mWaterLevel, prefs.getFloat("PARAMSLESSTHAN7",0f),prefs.getFloat("PARAMSGREATERTHAN7",0f));
 			break;	
 		case Globals.EXPANSIONMODULES:
 			if (mHostActivity.em!=t)
@@ -458,9 +461,12 @@ public class InputController extends AccessoryController  {
 							(float) 1.0
 							);	
 					v.addView(lIOExp,lr);
+					mIO=new InputView[6];
 					for (int i = Globals.IO_CHANNEL0; i <= Globals.IO_CHANNEL5; i++) {
-						SwitchDisplayer sd = new SwitchDisplayer(i);
-						mSwitchDisplayers.add(sd);
+						int resID = getResources().getIdentifier("IO"+(i-Globals.IO_CHANNEL0)+"Input", "id", "com.reefangel.evolution");
+						mIO[i-Globals.IO_CHANNEL0] = (InputView) findViewById(resID);
+						mIO[i-Globals.IO_CHANNEL0].setInputID(i);
+						mIO[i-Globals.IO_CHANNEL0].setLabel("I/O Channel "+(i-Globals.IO_CHANNEL0));
 					}
 
 				}			
@@ -716,6 +722,18 @@ public class InputController extends AccessoryController  {
 			r.SetState(Relay_R[box], Relay_RON[box], Relay_ROFF[box]);
 		}
 	}
+	
+	public void setInput(byte channel, int state) {
+		switch (channel)
+		{
+		case Globals.LOW_ATO: case Globals.HIGH_ATO:
+			mATO[channel].setState(state);
+			break;
+		case Globals.IO_CHANNEL0: case Globals.IO_CHANNEL1: case Globals.IO_CHANNEL2: case Globals.IO_CHANNEL3: case Globals.IO_CHANNEL4: case Globals.IO_CHANNEL5:
+			mIO[channel-Globals.IO_CHANNEL0].setState(state);
+			break;
+		}
+	}	
 
 	public void setPortalName(String portalname) {
 		Log.d(TAG,"Downloading Labels");
@@ -726,83 +744,83 @@ public class InputController extends AccessoryController  {
 		task.execute();
 	}
 
-	public boolean getswitchState(int switchIndex)
-	{
-		SwitchDisplayer sd = mSwitchDisplayers.get(switchIndex);
-		return sd.GetState();
-	}
-	
-	public void switchStateChanged(int switchIndex, boolean switchState) {
-		if (switchIndex >= 0 && switchIndex < mSwitchDisplayers.size()) {
-			SwitchDisplayer sd = mSwitchDisplayers.get(switchIndex);
-			sd.onSwitchStateChange(switchState);
-		}
-	}
-
-	public void onSwitchStateChange(int switchIndex, Boolean switchState) {
-		switchStateChanged(switchIndex, switchState);
-	}
-
-	class SwitchDisplayer {
-		private final ImageView mTargetView;
-		private final Drawable mOnImage;
-		private final Drawable mOffImage;
-		private boolean state;
-
-		SwitchDisplayer(int switchIndex) {
-			int viewId= R.id.LowATO;
-			switch (switchIndex) {
-			case Globals.LOW_ATO:
-				viewId = R.id.LowATO;
-				break;
-			case Globals.HIGH_ATO:
-				viewId = R.id.HighATO;
-				break;
-			case Globals.IO_CHANNEL0:
-				viewId = R.id.iochannel0;
-				break;
-			case Globals.IO_CHANNEL1:
-				viewId = R.id.iochannel1;
-				break;
-			case Globals.IO_CHANNEL2:
-				viewId = R.id.iochannel2;
-				break;
-			case Globals.IO_CHANNEL3:
-				viewId = R.id.iochannel3;
-				break;
-			case Globals.IO_CHANNEL4:
-				viewId = R.id.iochannel4;
-				break;
-			case Globals.IO_CHANNEL5:
-				viewId = R.id.iochannel5;
-				break;
-
-				//			case Globals.IO_CHANNEL0: case Globals.IO_CHANNEL1: case Globals.IO_CHANNEL2: case Globals.IO_CHANNEL3: case Globals.IO_CHANNEL4: case Globals.IO_CHANNEL5:
-				//				viewId = getResources().getIdentifier("iochannel"+(switchIndex-0x2), "id", "com.reefangel.evolution");
-				//				break;
-			}
-			mTargetView = (ImageView) findViewById(viewId);
-			mOffImage = mHostActivity.getResources().getDrawable(R.drawable.ato_off);
-			mOnImage = mHostActivity.getResources().getDrawable(R.drawable.ato_on);
-			state=false;
-		}
-
-		void onSwitchStateChange(Boolean switchState) {
-			Drawable currentImage;
-			state=switchState;
-			if (!switchState) {
-				currentImage = mOffImage;
-			} else {
-				currentImage = mOnImage;
-			}
-			mTargetView.setImageDrawable(currentImage);
-		}
-		boolean GetState()
-		{
-			return state;
-		}
-
-	}
+//	public boolean getswitchState(int switchIndex)
+//	{
+//		SwitchDisplayer sd = mSwitchDisplayers.get(switchIndex);
+//		return sd.GetState();
+//	}
+//	
+//	public void switchStateChanged(int switchIndex, boolean switchState) {
+//		if (switchIndex >= 0 && switchIndex < mSwitchDisplayers.size()) {
+//			SwitchDisplayer sd = mSwitchDisplayers.get(switchIndex);
+//			sd.onSwitchStateChange(switchState);
+//		}
+//	}
+//
+//	public void onSwitchStateChange(int switchIndex, Boolean switchState) {
+//		switchStateChanged(switchIndex, switchState);
+//	}
+//
+//	class SwitchDisplayer {
+//		private final ImageView mTargetView;
+//		private final Drawable mOnImage;
+//		private final Drawable mOffImage;
+//		private boolean state;
+//
+//		SwitchDisplayer(int switchIndex) {
+//			int viewId= R.id.LowATO;
+//			switch (switchIndex) {
+//			case Globals.LOW_ATO:
+//				viewId = R.id.LowATO;
+//				break;
+//			case Globals.HIGH_ATO:
+//				viewId = R.id.HighATO;
+//				break;
+//			case Globals.IO_CHANNEL0:
+//				viewId = R.id.iochannel0;
+//				break;
+//			case Globals.IO_CHANNEL1:
+//				viewId = R.id.iochannel1;
+//				break;
+//			case Globals.IO_CHANNEL2:
+//				viewId = R.id.iochannel2;
+//				break;
+//			case Globals.IO_CHANNEL3:
+//				viewId = R.id.iochannel3;
+//				break;
+//			case Globals.IO_CHANNEL4:
+//				viewId = R.id.iochannel4;
+//				break;
+//			case Globals.IO_CHANNEL5:
+//				viewId = R.id.iochannel5;
+//				break;
+//
+//				//			case Globals.IO_CHANNEL0: case Globals.IO_CHANNEL1: case Globals.IO_CHANNEL2: case Globals.IO_CHANNEL3: case Globals.IO_CHANNEL4: case Globals.IO_CHANNEL5:
+//				//				viewId = getResources().getIdentifier("iochannel"+(switchIndex-0x2), "id", "com.reefangel.evolution");
+//				//				break;
+//			}
+//			mTargetView = (ImageView) findViewById(viewId);
+//			mOffImage = mHostActivity.getResources().getDrawable(R.drawable.ato_off);
+//			mOnImage = mHostActivity.getResources().getDrawable(R.drawable.ato_on);
+//			state=false;
+//		}
+//
+//		void onSwitchStateChange(Boolean switchState) {
+//			Drawable currentImage;
+//			state=switchState;
+//			if (!switchState) {
+//				currentImage = mOffImage;
+//			} else {
+//				currentImage = mOnImage;
+//			}
+//			mTargetView.setImageDrawable(currentImage);
+//		}
+//		boolean GetState()
+//		{
+//			return state;
+//		}
+//
+//	}
 
 	private void setupRelayButtonController(int index, int pos, int viewId) {
 		//		Log.d(TAG,"Relay Button index: " + index + ", pos: " + pos + ", viewID: " + viewId);
@@ -829,76 +847,6 @@ public class InputController extends AccessoryController  {
 		}
 	}
 	
-	public class SendAlert extends AsyncTask<String, Integer, Integer> {
-
-		protected Integer doInBackground(String... params) {
-			Log.d(TAG,"Sending Alert: " + params[0]);
-			Log.d(TAG,"Sending Alert: " + params[1]);
-			String line = null;
-			String url="";
-			try {
-				url="e="+URLEncoder.encode(prefs.getString("AlertEmail", ""), "utf-8");
-				url+="&s="+URLEncoder.encode(params[0], "utf-8");
-				url+="&b="+URLEncoder.encode(params[1], "utf-8");
-			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			url=Globals.PORTAL_ALERT+"?"+url;
-
-			try {
-				DefaultHttpClient httpClient = new DefaultHttpClient();
-				HttpPost httpPost = new HttpPost(url);
-				Log.d(TAG,"Alert URL: "+url);
-				HttpResponse httpResponse = httpClient.execute(httpPost);
-				HttpEntity httpEntity = httpResponse.getEntity();
-				line = EntityUtils.toString(httpEntity);
-				
-			} catch (UnsupportedEncodingException e) {
-				line = "Can't connect to server";
-			} catch (MalformedURLException e) {
-				line = "Can't connect to server";
-			} catch (IOException e) {
-				line = "Can't connect to server";
-			}
-
-			Log.d(TAG,line);					
-			return null;
-		}
-		protected void onProgressUpdate(Integer... values) {
-		}
-
-		protected void onPostExecute(Integer result) {
-		}
-	}
-	
-	private void CheckAlerts(int CurrentValue, ParamsView Param, float ParamLess, float ParamGreater )
-	{
-		String ParamLabel=Param.getLabel();
-		float ParamCheck= (float)CurrentValue/Param.getDecimal();
-		Date LastAlert=Param.getLastAlert();
-		if (new Date().getTime()-LastAlert.getTime()>3600000 )
-		{
-			if (ParamCheck < ParamLess)
-			{
-				SendAlert task = new SendAlert();
-				task.execute(ParamLabel + " Alert",ParamCheck + " is less than "+ParamLess);
-				Param.setLastAlert(new Date());
-			}
-			if (ParamCheck > ParamGreater && ParamGreater>0)
-			{
-				SendAlert task = new SendAlert();
-				task.execute(ParamLabel + " Alert",ParamCheck + " is greater than "+ParamGreater);
-				Param.setLastAlert(new Date());
-			}
-		}
-		else
-		{
-			Log.d(TAG,"Alert not sent. Last Alert was less than 1hr.");
-		}
-		
-	}	
-
 	public void UpdateLabels()
 	{
 		for (int a=1; a<4; a++)

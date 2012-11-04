@@ -2,154 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/IOExpContainer"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="200dp"
     android:background="@color/EvolutionWhite"
     android:baselineAligned="false"
     android:gravity="center"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <com.reefangel.evolution.InputView
+        android:id="@+id/IO0Input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/iochannel0"
-            style="@style/EvolutionButtonDisplay"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/ato_off" />
-
-        <TextView
-            android:id="@+id/IOChannel0Label"
-            style="@style/EvolutionATO"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="I/O Channel 0" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.reefangel.evolution.InputView
+        android:id="@+id/IO1Input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/iochannel1"
-            style="@style/EvolutionButtonDisplay"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/ato_off" />
-
-        <TextView
-            android:id="@+id/IOChannel1Label"
-            style="@style/EvolutionATO"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="I/O Channel 1" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.reefangel.evolution.InputView
+        android:id="@+id/IO2Input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/iochannel2"
-            style="@style/EvolutionButtonDisplay"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/ato_off" />
-
-        <TextView
-            android:id="@+id/IOChannel2Label"
-            style="@style/EvolutionATO"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="I/O Channel 2" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.reefangel.evolution.InputView
+        android:id="@+id/IO3Input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/iochannel3"
-            style="@style/EvolutionButtonDisplay"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/ato_off" />
-
-        <TextView
-            android:id="@+id/IOChannel3Label"
-            style="@style/EvolutionATO"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="I/O Channel 3" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.reefangel.evolution.InputView
+        android:id="@+id/IO4Input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/iochannel4"
-            style="@style/EvolutionButtonDisplay"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/ato_off" />
-
-        <TextView
-            android:id="@+id/IOChannel4Label"
-            style="@style/EvolutionATO"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="I/O Channel 4" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.reefangel.evolution.InputView
+        android:id="@+id/IO5Input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <ImageButton
-            android:id="@+id/iochannel5"
-            style="@style/EvolutionButtonDisplay"
-            android:layout_weight="1"
-            android:background="@null"
-            android:src="@drawable/ato_off" />
-
-        <TextView
-            android:id="@+id/IOChannel5Label"
-            style="@style/EvolutionATO"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="I/O Channel 5" />
-    </LinearLayout>
+        android:layout_weight="1" />
 
 </LinearLayout>
