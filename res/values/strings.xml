@@ -13,6 +13,10 @@
     <string name="no">No</string>
     <string name="off">Off</string>
     <string name="on">On</string>
+    <string name="next">Next</string>
+    <string name="change">Change</string>
+    <string name="label">Label: </string>
+    <string name="function">Function: </string>
     <string name="Actinic1Label">Actinic 1</string>
     <string name="Daylight1Label">Daylight 1</string>
     <string name="Actinic2Label">Actinic 2</string>
@@ -37,5 +41,7 @@
     <string name="InputOnLabel">On</string>
     <string name="InputOffLabel">Off</string>
     <string name="InputDisableLabel">Never send alerts</string>
-    
+    <string name="RelayChooseModeLabel">Choose Mode:</string>
+    <string name="CurrentSettingsLabel">Current Settings:</string>    
+    <string name="ChangeSettingsLabel">Change Function Settings</string>    
 </resources>

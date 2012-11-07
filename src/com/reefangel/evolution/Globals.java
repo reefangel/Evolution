@@ -95,6 +95,7 @@ public class Globals {
 	public static final String PORTAL_LABELS = "http://forum.reefangel.com/status/labels.aspx";
 	public static final String PORTAL_SUBMIT = "http://forum.reefangel.com/status/submitp.aspx";
 	public static final String PORTAL_ALERT = "http://www.reefangel.com/status/sendalert.asp";
+	public static final String PORTAL_UPDATE_LABELS = "http://forum.reefangel.com/status/updatelabels.aspx";
 	
 	public static final long[] AlertFrequency={600000, 1800000, 3600000, 21600000, 86400000};
 	

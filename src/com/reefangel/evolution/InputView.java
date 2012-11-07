@@ -105,7 +105,7 @@ public class InputView extends View {
 		mInput=0;
 		mLabelText="Input";
 		mInputID=0;
-		mLastAlert=new Date(new Date().getTime()-Globals.AlertFrequency[(int) prefs.getLong("AlertFrequency", 2)]);
+		mLastAlert=new Date(new Date().getTime()-84600000);
 		Resources r = context.getResources();
 		mInputBackground = new Drawable[2];
 		mInputBackground[0] = r.getDrawable(R.drawable.ato_off);
@@ -138,8 +138,10 @@ public class InputView extends View {
 	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		int minheight = (MeasureSpec.getSize(widthMeasureSpec)/6);
+		if (minheight<mInputBackground[0].getIntrinsicHeight()) minheight=mInputBackground[0].getIntrinsicHeight()+5;
 		if (MeasureSpec.getSize(widthMeasureSpec)<MeasureSpec.getSize(heightMeasureSpec)*6)
-			setMeasuredDimension(widthMeasureSpec, MeasureSpec.getSize(widthMeasureSpec)/6);
+			setMeasuredDimension(widthMeasureSpec, minheight);
 		else
 			setMeasuredDimension(MeasureSpec.getSize(heightMeasureSpec)*6, MeasureSpec.getSize(heightMeasureSpec));
 	}

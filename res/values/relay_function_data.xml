@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<resources> 
+    <string-array name="relay_function"> 
+        <item>Not Used</item> 
+        <item>Timed Port</item> 
+        <item>Heater</item> 
+        <item>Chiller/Fan</item> 
+        <item>Auto Top Off</item> 
+        <item>pH Control</item> 
+        <item>CO2 Control</item> 
+        <item>Dosing Pump</item> 
+        <item>Delayed Start</item> 
+        <item>Opposite</item> 
+        <item>Always On</item> 
+        </string-array> 
+</resources>
