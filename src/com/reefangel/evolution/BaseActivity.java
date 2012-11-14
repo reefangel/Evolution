@@ -14,6 +14,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import com.reefangel.evolution.InputController.DownloadXMLLabels;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -110,7 +112,8 @@ public class BaseActivity extends EvolutionActivity {
 			mInputController.setInput(Globals.IO_CHANNEL5, new Random().nextInt(10)<5?1:0);			
 			mInputController.setByteMsg(Globals.CUSTOM0,23+new Random().nextInt(5));
 			mInputController.setByteMsg(Globals.CUSTOM1,79+new Random().nextInt(5));
-
+			mInputController.setPortalName("test");
+			
 		} else if (item.getTitle() == "Settings") {
 			this.startActivityForResult( new Intent( this, SettingsActivity.class ),Globals.PICK_RF_MODE );
 			return true;

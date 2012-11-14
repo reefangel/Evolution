@@ -1,5 +1,22 @@
 package com.reefangel.evolution;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URLEncoder;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
+
 
 public class Globals {
 	
@@ -99,4 +116,32 @@ public class Globals {
 	
 	public static final long[] AlertFrequency={600000, 1800000, 3600000, 21600000, 86400000};
 	
+	public static String UpdateLabel(String ReefAngelID, String LabelID, String LabelText)
+	{
+		Log.d("EvolutionUpdateLabel","Trying to update");
+		String updateurl=Globals.PORTAL_UPDATE_LABELS+"?id="+ReefAngelID;
+		try {
+			updateurl+=LabelID+URLEncoder.encode(LabelText, "utf-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		String line = null;
+		try {
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost(updateurl);
+			Log.d("EvolutionUpdateLabel","Update Label URL: "+updateurl);
+			HttpResponse httpResponse = httpClient.execute(httpPost);
+			HttpEntity httpEntity = httpResponse.getEntity();
+			line = EntityUtils.toString(httpEntity);
+			
+		} catch (UnsupportedEncodingException e) {
+			line = "Can't connect to server";
+		} catch (MalformedURLException e) {
+			line = "Can't connect to server";
+		} catch (IOException e) {
+			line = "Can't connect to server";
+		}		
+		Log.d("EvolutionUpdateLabel",line);
+		return line;
+	}
 }

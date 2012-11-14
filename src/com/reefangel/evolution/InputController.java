@@ -876,28 +876,46 @@ public class InputController extends AccessoryController  {
 		if (mRelayButtonControllers.size()>0)
 		{
 			int indexr=0;
-			for (int a=1;a<9;a++)
-			{
-				RelayButtonController r = mRelayButtonControllers.get(indexr);
-				r.SetLabel(prefs.getString("R"+a+"N", "Port "+a));
-				Log.d(TAG,"Updated Label R"+a+"N: " + prefs.getString("R"+a+"N", "Relay "+a));
-				indexr++;
-			}
+//			for (int a=1;a<9;a++)
+//			{
+//				RelayButtonController r = mRelayButtonControllers.get(indexr);
+//				r.SetLabel(prefs.getString("R"+a+"N", "Port "+a));
+//				Log.d(TAG,"Updated Label R"+a+"N: " + prefs.getString("R"+a+"N", "Port "+a));
+//				indexr++;
+//			}
 			int x=1;
 			int y=1;
 			while (indexr<mRelayButtonControllers.size())
 			{
 				RelayButtonController r = mRelayButtonControllers.get(indexr);
-				r.SetLabel(prefs.getString("R"+x+""+y+"N", "Relay "+x+""+y));
-				Log.d(TAG,"Updated Label R"+x+""+y+"N: " + prefs.getString("R"+x+""+y+"N", "Relay "+x+""+y));
+				r.SetLabel(prefs.getString("R"+x+""+y+"N", "Port "+x+""+y));
+				Log.d(TAG,"Updated Label R"+x+""+y+"N: " + prefs.getString("R"+x+""+y+"N", "Port "+x+""+y));
 				indexr++;
-				y++;
-				if (y==9)
+				y+=2;
+				if (y>=9)
 				{
 					y=1;
 					x++;
+					indexr+=4;
 				}
 			}
+			x=1;
+			y=2;
+			indexr=4;
+			while (indexr<mRelayButtonControllers.size())
+			{
+				RelayButtonController r = mRelayButtonControllers.get(indexr);
+				r.SetLabel(prefs.getString("R"+x+""+y+"N", "Port "+x+""+y));
+				Log.d(TAG,"Updated Label R"+x+""+y+"N: " + prefs.getString("R"+x+""+y+"N", "Port "+x+""+y));
+				indexr++;
+				y+=2;
+				if (y>=9)
+				{
+					y=2;
+					x++;
+					indexr+=4;
+				}
+			}			
 		}
 	}
 

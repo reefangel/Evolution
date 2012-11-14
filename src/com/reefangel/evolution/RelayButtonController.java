@@ -19,6 +19,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.style.RelativeSizeSpan;
@@ -62,7 +63,7 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 	private int mRON;
 	private int mROFF;
 	private int mFunction;
-	
+	SharedPreferences prefs;
 
 	public RelayButtonController(EvolutionActivity activity, int relayNumber, int pos,
 			Resources res) {
@@ -79,12 +80,12 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 		mTopOnBackground = res.getDrawable(R.drawable.relay_on1);
 		mBottomOffBackground = res.getDrawable(R.drawable.relay_off);
 		mBottomOnBackground = res.getDrawable(R.drawable.relay_on);
+		prefs = mActivity.getSharedPreferences(Globals.PREFS_NAME, 0);
 	}
 
 	public void attachToView(ViewGroup targetView) {
-		final SharedPreferences prefs = mActivity.getSharedPreferences(Globals.PREFS_NAME, 0);
 		mLabel = (TextView) targetView.getChildAt(0);
-		mLabel.setText(prefs.getString("Relay " + mRelayNumber +"N","Relay " + mRelayNumber));
+		mLabel.setText(prefs.getString("R" + mRelayNumber +"N","Port " + mRelayNumber));
 		mOverride = (TextView) targetView.getChildAt(2);
 		mOverride.setText("");
 		mButton = (Button) targetView.getChildAt(1);
@@ -119,30 +120,12 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 						Log.d(TAG,mLabel.getText().toString());
 						if (!trl.getText().toString().equals(mLabel.getText().toString()))
 						{
-							String url=Globals.PORTAL_UPDATE_LABELS+"?id="+prefs.getString("MYREEFANGELID", "");
-							try {
-								url+="&R"+mCommandTarget+"N="+URLEncoder.encode(trl.getText().toString(), "utf-8");
-							} catch (UnsupportedEncodingException e1) {
-								e1.printStackTrace();
-							}
-							String line = null;
-							try {
-								DefaultHttpClient httpClient = new DefaultHttpClient();
-								HttpPost httpPost = new HttpPost(url);
-								Log.d(TAG,"Update Label URL: "+url);
-								HttpResponse httpResponse = httpClient.execute(httpPost);
-								HttpEntity httpEntity = httpResponse.getEntity();
-								line = EntityUtils.toString(httpEntity);
-								
-							} catch (UnsupportedEncodingException e) {
-								line = "Can't connect to server";
-							} catch (MalformedURLException e) {
-								line = "Can't connect to server";
-							} catch (IOException e) {
-								line = "Can't connect to server";
-							}		
-							Toast.makeText(mActivity, line, Toast.LENGTH_SHORT).show();
-							Log.d(TAG,line);							
+							String params[] = new String[3];
+							params[0]=prefs.getString("MYREEFANGELID", "");
+							params[1]="&tag=R"+mCommandTarget+"N&value=";
+							params[2]=trl.getText().toString();
+							PortalUpdateLabelTask p = new PortalUpdateLabelTask();
+							p.execute(params);
 						}
 					}
 				});
@@ -275,4 +258,25 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 	{
 		mLabel.setText(label);
 	}
+	
+	public class PortalUpdateLabelTask extends AsyncTask<String, String, Integer> {
+
+		protected Integer doInBackground(String... params) {
+			String values[] = new String[2];
+			values[0]=Globals.UpdateLabel(params[0], params[1], params[2]);
+			values[1]=params[2];
+			publishProgress(values); 
+			return null;
+		}
+
+		protected void onProgressUpdate(String... values) {
+			if (values[0].equals("Label Updated"))
+				mLabel.setText(values[1]);
+			Log.d(TAG,"Portal Label Updated");
+			Toast.makeText(mActivity, values[0], Toast.LENGTH_SHORT).show();
+		}
+
+		protected void onPostExecute(Integer result) {
+		}
+	}	
 }
