@@ -108,19 +108,23 @@ public class InputController extends AccessoryController  {
 		mWaterLevel.setFormat(mWLFormatter);
 		
 		mDaylightView1 = (ProgressView) findViewById(R.id.daylightdimming1);
-		mDaylightView1.setLabel(R.string.Daylight1Label);
+//		mDaylightView1.setLabel(R.string.Daylight1Label);
 		mDaylightView1.setMode(1);
+		mDaylightView1.setChannel(Globals.DIMMING_DAYLIGHT1);
 		mActinicView1 = (ProgressView) findViewById(R.id.actinicdimming1);
 		mActinicView1.setBarColor(1);
-		mActinicView1.setLabel(R.string.Actinic1Label);
+//		mActinicView1.setLabel(R.string.Actinic1Label);
 		mActinicView1.setMode(1);
+		mActinicView1.setChannel(Globals.DIMMING_ACTINIC1);
 		mDaylightView2 = (ProgressView) findViewById(R.id.daylightdimming2);
-		mDaylightView2.setLabel(R.string.Daylight2Label);
+//		mDaylightView2.setLabel(R.string.Daylight2Label);
 		mDaylightView2.setMode(1);
+		mDaylightView2.setChannel(Globals.DIMMING_DAYLIGHT2);
 		mActinicView2 = (ProgressView) findViewById(R.id.actinicdimming2);
 		mActinicView2.setBarColor(1);
-		mActinicView2.setLabel(R.string.Actinic2Label);
+//		mActinicView2.setLabel(R.string.Actinic2Label);
 		mActinicView2.setMode(1);
+		mActinicView2.setChannel(Globals.DIMMING_ACTINIC2);
 		
 		mATO = new InputView[2];
 		
@@ -272,6 +276,7 @@ public class InputController extends AccessoryController  {
 						c.setLabel("Channel "+ i);
 						c.setMode(1);
 						c.setPercentage(0);
+						c.setChannel(i);
 					}
 				}
 
@@ -330,7 +335,7 @@ public class InputController extends AccessoryController  {
 							p.setCurrentPercentage((Integer) trs.getTag());
 							p.setPercentageText((Integer) trs.getTag()+"%");
 							p.setLabel(R.string.SpeedLabel);
-							p.setScaleX(.9f);
+//							p.setScaleX(.9f);
 							builder.setView(p);
 							AlertDialog alert = builder.create();
 							alert.show();

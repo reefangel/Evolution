@@ -29,6 +29,7 @@
     <string name="TabIOPortsLabel">"I/O Exp Ports"</string>
     <string name="TabBoxLabel">"Box "</string>
     
+    <string name="SelectDimmingLabel">Select Dimming %:</string>
     <string name="SpeedLabel">Speed</string>
     <string name="SelectSpeedLabel">Select Speed %:</string>
     <string name="SelectDurationLabel">Select Duration:</string>

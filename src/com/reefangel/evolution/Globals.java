@@ -116,6 +116,8 @@ public class Globals {
 	
 	public static final long[] AlertFrequency={600000, 1800000, 3600000, 21600000, 86400000};
 	
+	public static final String[] DimmingPortalID={"PWME0N","PWME1N","PWME2N","PWME3N","PWME4N","PWME5N","PWMD1N","PWMA1N","PWMD2N","PWMA2N"}; 
+	
 	public static String UpdateLabel(String ReefAngelID, String LabelID, String LabelText)
 	{
 		Log.d("EvolutionUpdateLabel","Trying to update");

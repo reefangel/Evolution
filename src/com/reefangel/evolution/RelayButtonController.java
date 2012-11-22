@@ -1,29 +1,12 @@
 package com.reefangel.evolution;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URLEncoder;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.SubscriptSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +22,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.Toast;
-//import android.widget.CompoundButton;
-//import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 public class RelayButtonController implements android.view.View.OnClickListener {
@@ -115,11 +95,11 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 					public void onClick(DialogInterface dialog, int item) {
 						SharedPreferences.Editor editor = prefs.edit();
 						editor.putInt("RELAY_FUNCTION"+mCommandTarget, srf.getSelectedItemPosition());
-						editor.commit();
 						Log.d(TAG,trl.getText().toString());
 						Log.d(TAG,mLabel.getText().toString());
 						if (!trl.getText().toString().equals(mLabel.getText().toString()))
 						{
+							editor.putString("R"+mCommandTarget+"N", trl.getText().toString());
 							String params[] = new String[3];
 							params[0]=prefs.getString("MYREEFANGELID", "");
 							params[1]="&tag=R"+mCommandTarget+"N&value=";
@@ -127,6 +107,7 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 							PortalUpdateLabelTask p = new PortalUpdateLabelTask();
 							p.execute(params);
 						}
+						editor.commit();
 					}
 				});
 				final AlertDialog alert = builder.create();

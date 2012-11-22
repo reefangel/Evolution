@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,12 +13,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
-import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TabHost;
+import android.widget.Toast;
+import android.widget.TabHost.TabSpec;
 
 public class ProgressView extends View {
 	
@@ -54,6 +60,7 @@ public class ProgressView extends View {
 	int h;
 	float scalew;	
 
+	SharedPreferences prefs;
 
 	public ProgressView(Context context) {
 		super(context);
@@ -106,6 +113,15 @@ public class ProgressView extends View {
 
 	public void setChannel(int channel) {
 		mChannel = channel;
+		if (channel<6)
+		{
+			setLabel(prefs.getString(Globals.DimmingPortalID[mChannel],"Channel " + mChannel));
+		}
+		else
+		{
+			String sLabel[]={"Daylight 1","Actinic 1","Daylight 2","Actinic 2"};
+			setLabel(prefs.getString(Globals.DimmingPortalID[mChannel],sLabel[mChannel-6]));
+		}
 		invalidate();
 	}
 
@@ -121,39 +137,72 @@ public class ProgressView extends View {
 	
 	private void initProgressView(Context context) {
 		mContext=context;
-//		mActivity = (EvolutionActivity) context;
+		prefs = mContext.getSharedPreferences(Globals.PREFS_NAME, 0);
 		OnLongClickListener listener = new OnLongClickListener() {
 			public boolean onLongClick(View v) {
+
+				View view = LayoutInflater.from(mContext).inflate(R.layout.dimmingsettings, (ViewGroup) findViewById(R.id.StdDimmingContainer));
 				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-				final ProgressView p = new ProgressView(mContext);
-				builder.setTitle("Override Channel?");
-				builder.setMessage("Select Override %:");
-				builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						mState= 1;
-						setPercentage(p.getPercentage());
-						SendCommand(Globals.DIMMING_COMMAND_OVERRIDE_STATE,(byte)p.getPercentage());
-						invalidate();
-					}
-				});
-				builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						mState= 0;
-						SendCommand(Globals.DIMMING_COMMAND_OVERRIDE_STATE,(byte)p.getPercentage());
-						invalidate();
-					}
-				});
+				final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
+				final int cancelid = Resources.getSystem().getIdentifier("cancel", "string", "android");
+				final EditText trl = (EditText) view.findViewById(R.id.ProgressCurrentLabel);
+				trl.setText(mLabelText);
+				
+				final ProgressView p = (ProgressView) view.findViewById(R.id.ProgressOverrideDimming);
 				p.setOverrideMode(1);
 				p.setPercentage(currentP);
 				p.setCurrentPercentage(currentP);
 				p.setPercentageText(currentP+"%");
 				p.setBarColor(mDrawableindex);
 				p.setLabel(mLabelText);
-				p.setScaleX(.9f);
-				builder.setView(p);
-				AlertDialog alert = builder.create();
+				builder.setTitle(R.string.app_name);
+				builder.setView(view);
+				builder.setNegativeButton(getResources().getString(cancelid), null);
+				builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						SharedPreferences.Editor editor = prefs.edit();
+						Log.d(TAG,trl.getText().toString());
+						Log.d(TAG,mLabelText);
+						if (!trl.getText().toString().equals(mLabelText))
+						{
+							editor.putString(Globals.DimmingPortalID[mChannel], trl.getText().toString());
+							String params[] = new String[3];
+							params[0]=prefs.getString("MYREEFANGELID", "");
+							params[1]="&tag="+Globals.DimmingPortalID[mChannel]+"&value=";
+							params[2]=trl.getText().toString();
+							PortalUpdateLabelTask p = new PortalUpdateLabelTask();
+							p.execute(params);
+						}
+						if (currentP!=p.getPercentage())
+						{
+							mState= 1;
+							setPercentage(p.getPercentage());
+							SendCommand(Globals.DIMMING_COMMAND_OVERRIDE_STATE,(byte)p.getPercentage());
+						}						
+					editor.commit();
+					}
+				});
+				final AlertDialog alert = builder.create();
+				
+				TabHost tabsports = (TabHost) view.findViewById(R.id.tabhostprogress);
+				tabsports.setup();
+
+				TabSpec tspecports = tabsports.newTabSpec("Override");
+				tspecports.setIndicator("Override");
+				tspecports.setContent(R.id.ProgressOverride);
+				tabsports.addTab(tspecports);
+				tabsports.setCurrentTabByTag("Override");
+
+				tspecports = tabsports.newTabSpec("Settings");
+				tspecports.setIndicator("Settings");
+				tspecports.setContent(R.id.ProgressSettings);
+				tabsports.addTab(tspecports);
+				tabsports.setCurrentTabByTag("Settings");
+
+				tabsports.setCurrentTabByTag("Override");
+				
 				alert.show();
-				invalidate();
+			
 				return true;
 			}
 		};
@@ -211,7 +260,6 @@ public class ProgressView extends View {
 		destRect = new Rect(0, 0, mProgressBackground.getIntrinsicWidth()*2/3,mProgressBackground.getIntrinsicHeight());
 		destRect.offset(mProgressBackground.getIntrinsicWidth()/3, 0); 
 		setPercentage(0);
-		setLabel("Channel");
 		setMode(0);
 	}
 
@@ -362,4 +410,26 @@ public class ProgressView extends View {
     		return super.onTouchEvent(event);    		
 
     }
+    
+	public class PortalUpdateLabelTask extends AsyncTask<String, String, Integer> {
+
+		protected Integer doInBackground(String... params) {
+			String values[] = new String[2];
+			values[0]=Globals.UpdateLabel(params[0], params[1], params[2]);
+			values[1]=params[2];
+			publishProgress(values); 
+			return null;
+		}
+
+		protected void onProgressUpdate(String... values) {
+			if (values[0].equals("Label Updated"))
+				mLabelText=values[1];
+			invalidate();
+			Log.d(TAG,"Portal Label Updated");
+			Toast.makeText(mContext, values[0], Toast.LENGTH_SHORT).show();
+		}
+
+		protected void onPostExecute(Integer result) {
+		}
+	}	    
 }
