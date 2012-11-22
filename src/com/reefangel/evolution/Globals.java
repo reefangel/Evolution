@@ -117,6 +117,8 @@ public class Globals {
 	public static final long[] AlertFrequency={600000, 1800000, 3600000, 21600000, 86400000};
 	
 	public static final String[] DimmingPortalID={"PWME0N","PWME1N","PWME2N","PWME3N","PWME4N","PWME5N","PWMD1N","PWMA1N","PWMD2N","PWMA2N"}; 
+	public static final String[] ParamsPortalID={"T1N","T2N","T3N","PHN","SALN","ORPN","PHEN","WLN"}; 
+	public static final String[] ParamsDefaultLabel={"Temp 1","Temp 2","Temp 3","pH","Salinity","ORP","pH Exp","WL"}; 
 	
 	public static String UpdateLabel(String ReefAngelID, String LabelID, String LabelText)
 	{

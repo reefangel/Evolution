@@ -225,6 +225,7 @@ public class ProgressView extends View {
 		currentP = 0;
 		targetP = 0;
 		mPercentageText="";
+		mLabelText="";		
 		mDrawableindex=0;
 		mProgressDrawables=new Drawable[6];
 		Resources r = context.getResources();

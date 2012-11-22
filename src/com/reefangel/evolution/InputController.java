@@ -170,8 +170,8 @@ public class InputController extends AccessoryController  {
 			Log.e(TAG,e.getMessage());
 			e.printStackTrace();
 		}	
-		Log.d(TAG,"Set Default Labels");
-		UpdateLabels();
+//		Log.d(TAG,"Set Default Labels");
+//		UpdateLabels();
 
 
 	}

@@ -13,6 +13,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import com.reefangel.evolution.ProgressView.PortalUpdateLabelTask;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,6 +33,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.TabHost.TabSpec;
 
 public class ParamsView extends View implements OnClickListener {
 	
@@ -99,6 +105,7 @@ public class ParamsView extends View implements OnClickListener {
 	
 	public void setParamID(int b) {
 		mParamID=b;
+		setLabel(prefs.getString(Globals.ParamsPortalID[mParamID],Globals.ParamsDefaultLabel[mParamID]));
 		invalidate();
 	}
 
@@ -168,33 +175,96 @@ public class ParamsView extends View implements OnClickListener {
 	
 	OnLongClickListener longlistener = new OnLongClickListener() {
 		public boolean onLongClick(View v) {
-			final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Globals.PREFS_NAME, 0);
-		    View view = LayoutInflater.from(mContext).inflate(R.layout.paramssettings, (ViewGroup) findViewById(R.id.inputContainer));
+//			final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Globals.PREFS_NAME, 0);
+//		    View view = LayoutInflater.from(mContext).inflate(R.layout.paramssettings, (ViewGroup) findViewById(R.id.inputContainer));
+//			final EditText elt = (EditText)view.findViewById(R.id.ParamsLessThan);
+//			final EditText egt = (EditText)view.findViewById(R.id.ParamsGreaterThan);
+//			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//			getResources();
+//			final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
+//			final int cancelid = Resources.getSystem().getIdentifier("cancel", "string", "android");
+//			builder.setTitle(R.string.app_name);
+//			String s=getResources().getString(R.string.ParamSendEmailLabel);
+//			s=s.replace("xxx", mLabelText);
+//			builder.setMessage(s);
+//			builder.setNegativeButton(getResources().getString(cancelid), null);
+//			builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
+//				public void onClick(DialogInterface dialog, int item) {
+//					SharedPreferences.Editor editor = sharedPreferences.edit();
+//					editor.putFloat("PARAMSLESSTHAN"+mParamID, Float.parseFloat(elt.getText().toString()));
+//					editor.putFloat("PARAMSGREATERTHAN"+mParamID,Float.parseFloat(egt.getText().toString()));
+//					editor.commit();
+//				}
+//			});
+//		    builder.setView(view);
+//		    elt.setText(Float.toString(sharedPreferences.getFloat("PARAMSLESSTHAN"+mParamID, 0)));
+//		    egt.setText(Float.toString(sharedPreferences.getFloat("PARAMSGREATERTHAN"+mParamID,0)));	
+//			AlertDialog alert = builder.create();
+//			alert.show();
+//			return true;
+			View view = LayoutInflater.from(mContext).inflate(R.layout.paramssettings, (ViewGroup) findViewById(R.id.ParamsContainer));
 			final EditText elt = (EditText)view.findViewById(R.id.ParamsLessThan);
 			final EditText egt = (EditText)view.findViewById(R.id.ParamsGreaterThan);
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-			getResources();
 			final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
 			final int cancelid = Resources.getSystem().getIdentifier("cancel", "string", "android");
+			final EditText trl = (EditText) view.findViewById(R.id.ParamsCurrentLabel);
+			trl.setText(mLabelText);
+			
 			builder.setTitle(R.string.app_name);
 			String s=getResources().getString(R.string.ParamSendEmailLabel);
 			s=s.replace("xxx", mLabelText);
-			builder.setMessage(s);
+			TextView t = (TextView) view.findViewById(R.id.ParamsSendAlertWhenLabel);
+			t.setText(s);
+			builder.setView(view);
+		    elt.setText(Float.toString(prefs.getFloat("PARAMSLESSTHAN"+mParamID, 0)));
+		    egt.setText(Float.toString(prefs.getFloat("PARAMSGREATERTHAN"+mParamID,0)));	
+			
 			builder.setNegativeButton(getResources().getString(cancelid), null);
 			builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					SharedPreferences.Editor editor = sharedPreferences.edit();
+					SharedPreferences.Editor editor = prefs.edit();
+					Log.d(TAG,trl.getText().toString());
+					Log.d(TAG,mLabelText);
+					if (!trl.getText().toString().equals(mLabelText))
+					{
+						editor.putString(Globals.ParamsPortalID[mParamID], trl.getText().toString());
+						String params[] = new String[3];
+						params[0]=prefs.getString("MYREEFANGELID", "");
+						params[1]="&tag="+Globals.ParamsPortalID[mParamID]+"&value=";
+						params[2]=trl.getText().toString();
+						PortalUpdateLabelTask p = new PortalUpdateLabelTask();
+						p.execute(params);
+					}
 					editor.putFloat("PARAMSLESSTHAN"+mParamID, Float.parseFloat(elt.getText().toString()));
 					editor.putFloat("PARAMSGREATERTHAN"+mParamID,Float.parseFloat(egt.getText().toString()));
 					editor.commit();
+					
+				editor.commit();
 				}
 			});
-		    builder.setView(view);
-		    elt.setText(Float.toString(sharedPreferences.getFloat("PARAMSLESSTHAN"+mParamID, 0)));
-		    egt.setText(Float.toString(sharedPreferences.getFloat("PARAMSGREATERTHAN"+mParamID,0)));	
-			AlertDialog alert = builder.create();
+			final AlertDialog alert = builder.create();
+			
+			TabHost tabsports = (TabHost) view.findViewById(R.id.tabhostparams);
+			tabsports.setup();
+
+			TabSpec tspecports = tabsports.newTabSpec("Alerts");
+			tspecports.setIndicator("Override");
+			tspecports.setContent(R.id.ParamsAlerts);
+			tabsports.addTab(tspecports);
+			tabsports.setCurrentTabByTag("Alerts");
+
+			tspecports = tabsports.newTabSpec("Settings");
+			tspecports.setIndicator("Settings");
+			tspecports.setContent(R.id.ParamsSettings);
+			tabsports.addTab(tspecports);
+			tabsports.setCurrentTabByTag("Settings");
+
+			tabsports.setCurrentTabByTag("Alerts");
+			
 			alert.show();
-			return true;
+		
+			return true;			
 		}
 		
 	};
@@ -268,4 +338,25 @@ public class ParamsView extends View implements OnClickListener {
 		protected void onPostExecute(Integer result) {
 		}
 	}		
+	public class PortalUpdateLabelTask extends AsyncTask<String, String, Integer> {
+
+		protected Integer doInBackground(String... params) {
+			String values[] = new String[2];
+			values[0]=Globals.UpdateLabel(params[0], params[1], params[2]);
+			values[1]=params[2];
+			publishProgress(values); 
+			return null;
+		}
+
+		protected void onProgressUpdate(String... values) {
+			if (values[0].equals("Label Updated"))
+				mLabelText=values[1];
+			invalidate();
+			Log.d(TAG,"Portal Label Updated");
+			Toast.makeText(mContext, values[0], Toast.LENGTH_SHORT).show();
+		}
+
+		protected void onPostExecute(Integer result) {
+		}
+	}	  	
 }
