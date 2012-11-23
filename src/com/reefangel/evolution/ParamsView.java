@@ -21,9 +21,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
@@ -45,12 +49,14 @@ public class ParamsView extends View implements OnClickListener {
 	
 	private Context mContext;
 	private Drawable mParamBackground;
+
 	private int mParamID;
 	private int mDecimal;
 	
 	private Paint mLabelPaint;
 	private Paint mParamPaint;
 	private String mLabelText;
+	private boolean mLoading;
 	private int mParam;
 	private DecimalFormat mFormat;
 	private Date mLastAlert;
@@ -122,11 +128,13 @@ public class ParamsView extends View implements OnClickListener {
 		prefs = mContext.getSharedPreferences(Globals.PREFS_NAME, 0);
 		
 		mParam=0;
-		mLabelText="";
+		mLabelText="Param";
 		mParamID=0;
 		mDecimal=1;
+		mLoading=false;
 		mFormat=new DecimalFormat();
-		mLastAlert=new Date(new Date().getTime()-Globals.AlertFrequency[(int) prefs.getLong("AlertFrequency", 2)]);
+//		mLastAlert=new Date(new Date().getTime()-Globals.AlertFrequency[(int) prefs.getLong("AlertFrequency", 2)]);
+		mLastAlert=new Date(new Date().getTime()-86400000);
 		Resources r = context.getResources();
 		mParamBackground = r.getDrawable(R.drawable.none_bk);
 		int w = mParamBackground.getIntrinsicWidth();
@@ -154,8 +162,12 @@ public class ParamsView extends View implements OnClickListener {
 		canvas.save(); 
 		canvas.scale(scalew, scalew, 0, 0); 
 		int x =(w/2);
-		canvas.drawText(mLabelText, x, h/2.5f, mLabelPaint);
+		if (mLoading)
+			canvas.drawText("Saving...", x, h/2.5f, mLabelPaint);
+		else
+			canvas.drawText(mLabelText, x, h/2.5f, mLabelPaint);
 		canvas.drawText(mFormat.format((double)mParam/mDecimal), x ,h*1.15f  , mParamPaint);
+
 		canvas.restore(); 
 	}
 	
@@ -175,33 +187,6 @@ public class ParamsView extends View implements OnClickListener {
 	
 	OnLongClickListener longlistener = new OnLongClickListener() {
 		public boolean onLongClick(View v) {
-//			final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Globals.PREFS_NAME, 0);
-//		    View view = LayoutInflater.from(mContext).inflate(R.layout.paramssettings, (ViewGroup) findViewById(R.id.inputContainer));
-//			final EditText elt = (EditText)view.findViewById(R.id.ParamsLessThan);
-//			final EditText egt = (EditText)view.findViewById(R.id.ParamsGreaterThan);
-//			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//			getResources();
-//			final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
-//			final int cancelid = Resources.getSystem().getIdentifier("cancel", "string", "android");
-//			builder.setTitle(R.string.app_name);
-//			String s=getResources().getString(R.string.ParamSendEmailLabel);
-//			s=s.replace("xxx", mLabelText);
-//			builder.setMessage(s);
-//			builder.setNegativeButton(getResources().getString(cancelid), null);
-//			builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
-//				public void onClick(DialogInterface dialog, int item) {
-//					SharedPreferences.Editor editor = sharedPreferences.edit();
-//					editor.putFloat("PARAMSLESSTHAN"+mParamID, Float.parseFloat(elt.getText().toString()));
-//					editor.putFloat("PARAMSGREATERTHAN"+mParamID,Float.parseFloat(egt.getText().toString()));
-//					editor.commit();
-//				}
-//			});
-//		    builder.setView(view);
-//		    elt.setText(Float.toString(sharedPreferences.getFloat("PARAMSLESSTHAN"+mParamID, 0)));
-//		    egt.setText(Float.toString(sharedPreferences.getFloat("PARAMSGREATERTHAN"+mParamID,0)));	
-//			AlertDialog alert = builder.create();
-//			alert.show();
-//			return true;
 			View view = LayoutInflater.from(mContext).inflate(R.layout.paramssettings, (ViewGroup) findViewById(R.id.ParamsContainer));
 			final EditText elt = (EditText)view.findViewById(R.id.ParamsLessThan);
 			final EditText egt = (EditText)view.findViewById(R.id.ParamsGreaterThan);
@@ -233,6 +218,8 @@ public class ParamsView extends View implements OnClickListener {
 						params[0]=prefs.getString("MYREEFANGELID", "");
 						params[1]="&tag="+Globals.ParamsPortalID[mParamID]+"&value=";
 						params[2]=trl.getText().toString();
+						mLoading=true;
+						invalidate();
 						PortalUpdateLabelTask p = new PortalUpdateLabelTask();
 						p.execute(params);
 					}
@@ -351,6 +338,7 @@ public class ParamsView extends View implements OnClickListener {
 		protected void onProgressUpdate(String... values) {
 			if (values[0].equals("Label Updated"))
 				mLabelText=values[1];
+			mLoading=false;
 			invalidate();
 			Log.d(TAG,"Portal Label Updated");
 			Toast.makeText(mContext, values[0], Toast.LENGTH_SHORT).show();

@@ -15,6 +15,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import com.reefangel.evolution.ProgressView.PortalUpdateLabelTask;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -25,9 +27,13 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnLongClickListener;
+import android.view.WindowManager.LayoutParams;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -273,7 +279,7 @@ public class InputController extends AccessoryController  {
 						int resID = getResources().getIdentifier("channel"+i+"dimming", "id", "com.reefangel.evolution");
 						ProgressView c = (ProgressView)findViewById(resID);
 						c.setBarColor(3);
-						c.setLabel("Channel "+ i);
+//						c.setLabel("Channel "+ i);
 						c.setMode(1);
 						c.setPercentage(0);
 						c.setChannel(i);
@@ -313,10 +319,43 @@ public class InputController extends AccessoryController  {
 					final TextView trs = (TextView) this.findViewById(R.id.RFSpeedValue);
 					OnLongClickListener listenerspeed = new OnLongClickListener() {
 						public boolean onLongClick(View v) {
+//							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
+//							final ProgressView p = new ProgressView(mHostActivity);
+//							builder.setTitle(R.string.app_name);
+//							builder.setMessage(R.string.SelectSpeedLabel);
+//							builder.setNegativeButton(getResources().getString(cancelid), null);
+//							builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog, int item) {
+//									trs.setText(p.getPercentage()+"%");
+//									SpeedometerView s = (SpeedometerView) findViewById(R.id.RFSpeedometer);
+//									s.setHandTarget(p.getPercentage());
+//									trs.setTag(p.getPercentage());
+//									SendCommand(Globals.RF_COMMAND_MODE,(byte)item);
+//								}
+//							});
+//							p.setOverrideMode(1);
+//							p.setPercentage((Integer) trs.getTag());
+//							p.setCurrentPercentage((Integer) trs.getTag());
+//							p.setPercentageText((Integer) trs.getTag()+"%");
+//							p.setLabel(R.string.SpeedLabel);
+//							builder.setView(p);
+//							AlertDialog alert = builder.create();
+//							alert.show();
+//							return true;
+							
+							View view = LayoutInflater.from(mHostActivity).inflate(R.layout.rfsettings, null);
 							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
-							final ProgressView p = new ProgressView(mHostActivity);
+							final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
+							final int cancelid = Resources.getSystem().getIdentifier("cancel", "string", "android");
+							
+							final ProgressView p = (ProgressView) view.findViewById(R.id.RFOverrideSpeed);
+							p.setOverrideMode(1);
+							p.setPercentage((Integer) trs.getTag());
+							p.setCurrentPercentage((Integer) trs.getTag());
+							p.setPercentageText((Integer) trs.getTag()+"%");
+							p.setLabel("Speed");
 							builder.setTitle(R.string.app_name);
-							builder.setMessage(R.string.SelectSpeedLabel);
+							builder.setView(view);
 							builder.setNegativeButton(getResources().getString(cancelid), null);
 							builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
@@ -327,19 +366,10 @@ public class InputController extends AccessoryController  {
 									SendCommand(Globals.RF_COMMAND_MODE,(byte)item);
 								}
 							});
-//							TextView t=(TextView)v;
-//							String cp =t.getText().toString();
-//							cp=cp.replace("%",""); 
-							p.setOverrideMode(1);
-							p.setPercentage((Integer) trs.getTag());
-							p.setCurrentPercentage((Integer) trs.getTag());
-							p.setPercentageText((Integer) trs.getTag()+"%");
-							p.setLabel(R.string.SpeedLabel);
-//							p.setScaleX(.9f);
-							builder.setView(p);
-							AlertDialog alert = builder.create();
+							final AlertDialog alert = builder.create();
 							alert.show();
-							return true;
+						
+							return true;							
 						}
 					};
 					trs.setOnLongClickListener(listenerspeed);					
@@ -385,17 +415,18 @@ public class InputController extends AccessoryController  {
 					LinearLayout lRadionExp = new LinearLayout(mHostActivity);
 					lRadionExp = (LinearLayout) View.inflate(mHostActivity, R.layout.rfradioncontainer, null);
 					v.addView(lRadionExp,lr);
-					int cColor[]={0,1,3,4,2,5};
-					String cLabel[]={"White","Royal Blue","Red","Green","Blue","Intensity"};
+					int cColor[]={0,1,4,3,2,5};
+//					String cLabel[]={"White","Royal Blue","Red","Green","Blue","Intensity"};
 
 					for (int i=0;i<6;i++)
 					{
 						int resID = getResources().getIdentifier("radion"+i+"dimming", "id", "com.reefangel.evolution");
 						ProgressView c = (ProgressView)findViewById(resID);
 						c.setBarColor(cColor[i]);
-						c.setLabel(cLabel[i]);
+//						c.setLabel(cLabel[i]);
 						c.setMode(1);
 						c.setPercentage(0);
+						c.setChannel(10+i);
 					}
 				}
 				if (BigInteger.valueOf(t).testBit(2)) {
@@ -421,14 +452,17 @@ public class InputController extends AccessoryController  {
 					v.addView(lDimmingAI,lr);
 
 					ProgressView aiw = (ProgressView)findViewById(R.id.aiwhitedimming);
-					aiw.setLabel("White");
+//					aiw.setLabel("White");
+					aiw.setChannel(16);
 					aiw.setPercentage(0);
 					ProgressView aib = (ProgressView)findViewById(R.id.aibluedimming);
-					aib.setLabel("Blue");
+//					aib.setLabel("Blue");
+					aib.setChannel(17);
 					aib.setBarColor(2);
 					aib.setPercentage(0);
 					ProgressView airb = (ProgressView)findViewById(R.id.airoyalbluedimming);
-					airb.setLabel("Royal Blue");
+//					airb.setLabel("Royal Blue");
+					airb.setChannel(18);
 					airb.setBarColor(1);
 					airb.setPercentage(0);
 				}

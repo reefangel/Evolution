@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import com.reefangel.evolution.ParamsView.PortalUpdateLabelTask;
 import com.reefangel.evolution.ParamsView.SendAlert;
 
 import android.app.AlertDialog;
@@ -37,7 +38,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
+import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.TabHost.TabSpec;
 
 public class InputView extends View {
 	
@@ -47,6 +51,7 @@ public class InputView extends View {
 	private Context mContext;
 	private Drawable[] mInputBackground;
 	private int mInputID;
+	private boolean mLoading;
 	
 	private Bitmap background; // holds the cached static part
 	
@@ -87,6 +92,7 @@ public class InputView extends View {
 	
 	public void setInputID(int b) {
 		mInputID=b;
+		setLabel(prefs.getString(Globals.InputPortalID[mInputID],Globals.InputDefaultLabel[mInputID]));
 		invalidate();
 	}
 
@@ -105,6 +111,7 @@ public class InputView extends View {
 		mInput=0;
 		mLabelText="Input";
 		mInputID=0;
+		mLoading=false;		
 		mLastAlert=new Date(new Date().getTime()-84600000);
 		Resources r = context.getResources();
 		mInputBackground = new Drawable[2];
@@ -125,15 +132,13 @@ public class InputView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		int w=mInputBackground[0].getIntrinsicWidth();
-//		int h=mInputBackground[0].getIntrinsicHeight();
-//		float scalew = (float) getWidth()/w;
-//		scalew/=6;
-//		canvas.save(); 
-//		canvas.scale(scalew, scalew, 0, 0); 
+
 		canvas.drawBitmap(background, 0, 0, null); 
-		canvas.drawText(mLabelText, w+10, mInputPaint.getTextSize()+3, mInputPaint);
-//		canvas.drawText(mFormat.format((double)mInput/mDecimal), x ,h*1.15f  , mInputPaint);
-//		canvas.restore(); 
+		if (mLoading)
+			canvas.drawText("Saving...", w+10, mInputPaint.getTextSize()+3, mInputPaint);
+		else
+			canvas.drawText(mLabelText, w+10, mInputPaint.getTextSize()+3, mInputPaint);
+
 	}
 	
 	@Override
@@ -164,37 +169,72 @@ public class InputView extends View {
 	
 	OnLongClickListener longlistener = new OnLongClickListener() {
 		public boolean onLongClick(View v) {
-			final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Globals.PREFS_NAME, 0);
-		    View view = LayoutInflater.from(mContext).inflate(R.layout.inputsettings, (ViewGroup) findViewById(R.id.inputContainer));
+			View view = LayoutInflater.from(mContext).inflate(R.layout.inputsettings, (ViewGroup) findViewById(R.id.inputContainer));
 			final RadioButton rif = (RadioButton)view.findViewById(R.id.InputOff);
 			final RadioButton rin = (RadioButton)view.findViewById(R.id.InputOn);
 			final RadioButton rid = (RadioButton)view.findViewById(R.id.InputDisabled);
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-			getResources();
 			final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
 			final int cancelid = Resources.getSystem().getIdentifier("cancel", "string", "android");
+			final EditText trl = (EditText) view.findViewById(R.id.ParamsCurrentLabel);
+			trl.setText(mLabelText);
+			
 			builder.setTitle(R.string.app_name);
 			String s=getResources().getString(R.string.ParamSendEmailLabel);
 			s=s.replace("xxx", mLabelText);
-			builder.setMessage(s);
+			TextView t = (TextView) view.findViewById(R.id.InputSendAlertWhenLabel);
+			t.setText(s);
+			builder.setView(view);
+		    int i=prefs.getInt("INPUTIS"+mInputID, -1);
+		    if (i==0) rif.setChecked(true);
+		    if (i==1) rin.setChecked(true);
+		    if (i==2) rid.setChecked(true);			
 			builder.setNegativeButton(getResources().getString(cancelid), null);
 			builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					SharedPreferences.Editor editor = sharedPreferences.edit();
+					SharedPreferences.Editor editor = prefs.edit();
+					Log.d(TAG,trl.getText().toString());
+					Log.d(TAG,mLabelText);
+					if (!trl.getText().toString().equals(mLabelText))
+					{
+						editor.putString(Globals.InputPortalID[mInputID], trl.getText().toString());
+						String params[] = new String[3];
+						params[0]=prefs.getString("MYREEFANGELID", "");
+						params[1]="&tag="+Globals.InputPortalID[mInputID]+"&value=";
+						params[2]=trl.getText().toString();
+						mLoading=true;
+						invalidate();							
+						PortalUpdateLabelTask p = new PortalUpdateLabelTask();
+						p.execute(params);
+					}
 					if (rif.isChecked()) editor.putInt("INPUTIS"+mInputID, 0 );
 					if (rin.isChecked()) editor.putInt("INPUTIS"+mInputID, 1 );
 					if (rid.isChecked()) editor.putInt("INPUTIS"+mInputID, 2 );
 					editor.commit();
 				}
 			});
-		    builder.setView(view);
-		    int i=sharedPreferences.getInt("INPUTIS"+mInputID, -1);
-		    if (i==0) rif.setChecked(true);
-		    if (i==1) rin.setChecked(true);
-		    if (i==2) rid.setChecked(true);
-			AlertDialog alert = builder.create();
+			final AlertDialog alert = builder.create();
+			
+			TabHost tabsports = (TabHost) view.findViewById(R.id.tabhostinput);
+			tabsports.setup();
+
+			TabSpec tspecports = tabsports.newTabSpec("Alerts");
+			tspecports.setIndicator("Override");
+			tspecports.setContent(R.id.InputAlerts);
+			tabsports.addTab(tspecports);
+			tabsports.setCurrentTabByTag("Alerts");
+
+			tspecports = tabsports.newTabSpec("Settings");
+			tspecports.setIndicator("Settings");
+			tspecports.setContent(R.id.InputSettings);
+			tabsports.addTab(tspecports);
+			tabsports.setCurrentTabByTag("Settings");
+
+			tabsports.setCurrentTabByTag("Alerts");
+			
 			alert.show();
-			return true;
+		
+			return true;			
 		}
 		
 	};
@@ -262,5 +302,28 @@ public class InputView extends View {
 
 		protected void onPostExecute(Integer result) {
 		}
-	}			
+	}	
+	
+	public class PortalUpdateLabelTask extends AsyncTask<String, String, Integer> {
+
+		protected Integer doInBackground(String... params) {
+			String values[] = new String[2];
+			values[0]=Globals.UpdateLabel(params[0], params[1], params[2]);
+			values[1]=params[2];
+			publishProgress(values); 
+			return null;
+		}
+
+		protected void onProgressUpdate(String... values) {
+			if (values[0].equals("Label Updated"))
+				mLabelText=values[1];
+			mLoading=false;
+			invalidate();
+			Log.d(TAG,"Portal Label Updated");
+			Toast.makeText(mContext, values[0], Toast.LENGTH_SHORT).show();
+		}
+
+		protected void onPostExecute(Integer result) {
+		}
+	}	 	
 }

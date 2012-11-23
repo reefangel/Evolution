@@ -43,6 +43,8 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 	private int mRON;
 	private int mROFF;
 	private int mFunction;
+	private boolean mLoading;
+	
 	SharedPreferences prefs;
 
 	public RelayButtonController(EvolutionActivity activity, int relayNumber, int pos,
@@ -55,6 +57,7 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 		mRON=0;
 		mROFF=1;
 		mFunction=-1;
+		mLoading=false;				
 		mCommandTarget = (byte) (relayNumber);
 		mTopOffBackground = res.getDrawable(R.drawable.relay_off1);
 		mTopOnBackground = res.getDrawable(R.drawable.relay_on1);
@@ -104,6 +107,7 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 							params[0]=prefs.getString("MYREEFANGELID", "");
 							params[1]="&tag=R"+mCommandTarget+"N&value=";
 							params[2]=trl.getText().toString();
+							mLabel.setText("Saving");
 							PortalUpdateLabelTask p = new PortalUpdateLabelTask();
 							p.execute(params);
 						}
@@ -253,6 +257,8 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 		protected void onProgressUpdate(String... values) {
 			if (values[0].equals("Label Updated"))
 				mLabel.setText(values[1]);
+			else
+				mLabel.setText(prefs.getString("R" + mRelayNumber +"N","Port " + mRelayNumber));
 			Log.d(TAG,"Portal Label Updated");
 			Toast.makeText(mActivity, values[0], Toast.LENGTH_SHORT).show();
 		}

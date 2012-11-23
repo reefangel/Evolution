@@ -116,9 +116,12 @@ public class Globals {
 	
 	public static final long[] AlertFrequency={600000, 1800000, 3600000, 21600000, 86400000};
 	
-	public static final String[] DimmingPortalID={"PWME0N","PWME1N","PWME2N","PWME3N","PWME4N","PWME5N","PWMD1N","PWMA1N","PWMD2N","PWMA2N"}; 
+	public static final String[] DimmingPortalID={"PWME0N","PWME1N","PWME2N","PWME3N","PWME4N","PWME5N","PWMD1N","PWMA1N","PWMD2N","PWMA2N","RFWN","RFRBN","RFRN","RFGN","RFBN","RFIN","AIWN","AIBN","AIRBN"}; 
+	public static final String[] DimmingDefaultLabel={"Channel 0","Channel 1","Channel 2","Channel 3","Channel 4","Channel 5","Daylight 1","Actinic 1","Daylight 2","Actinic 2","White","Royal Blue","Red","Green","Blue","Intensity","White","Blue","Royal Blue"}; 
 	public static final String[] ParamsPortalID={"T1N","T2N","T3N","PHN","SALN","ORPN","PHEN","WLN"}; 
 	public static final String[] ParamsDefaultLabel={"Temp 1","Temp 2","Temp 3","pH","Salinity","ORP","pH Exp","WL"}; 
+	public static final String[] InputPortalID={"ATOLOWN","ATOHIGHN","IO0N","IO1N","IO2N","IO3N","IO4N","IO5N"}; 
+	public static final String[] InputDefaultLabel={"Low ATO","High ATO","I/O Channel 0","I/O Channel 1","I/O Channel 2","I/O Channel 3","I/O Channel 4","I/O Channel 5"}; 
 	
 	public static String UpdateLabel(String ReefAngelID, String LabelID, String LabelText)
 	{

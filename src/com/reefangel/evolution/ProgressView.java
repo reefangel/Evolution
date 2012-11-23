@@ -37,6 +37,7 @@ public class ProgressView extends View {
 	private int mState;
 	private int mOverrideMode;
 	private int mChannel;
+	private boolean mLoading;
 	
 	private Bitmap background; // holds the cached static part
 	
@@ -113,15 +114,7 @@ public class ProgressView extends View {
 
 	public void setChannel(int channel) {
 		mChannel = channel;
-		if (channel<6)
-		{
-			setLabel(prefs.getString(Globals.DimmingPortalID[mChannel],"Channel " + mChannel));
-		}
-		else
-		{
-			String sLabel[]={"Daylight 1","Actinic 1","Daylight 2","Actinic 2"};
-			setLabel(prefs.getString(Globals.DimmingPortalID[mChannel],sLabel[mChannel-6]));
-		}
+		setLabel(prefs.getString(Globals.DimmingPortalID[mChannel],Globals.DimmingDefaultLabel[mChannel]));
 		invalidate();
 	}
 
@@ -170,6 +163,8 @@ public class ProgressView extends View {
 							params[0]=prefs.getString("MYREEFANGELID", "");
 							params[1]="&tag="+Globals.DimmingPortalID[mChannel]+"&value=";
 							params[2]=trl.getText().toString();
+							mLoading=true;
+							invalidate();							
 							PortalUpdateLabelTask p = new PortalUpdateLabelTask();
 							p.execute(params);
 						}
@@ -227,6 +222,7 @@ public class ProgressView extends View {
 		mPercentageText="";
 		mLabelText="";		
 		mDrawableindex=0;
+		mLoading=false;
 		mProgressDrawables=new Drawable[6];
 		Resources r = context.getResources();
 		mProgressDrawables[0]=r.getDrawable(R.drawable.daylight_bk);
@@ -273,6 +269,8 @@ public class ProgressView extends View {
 //		Log.d(TAG,"100%: "+ (w-(w/26)));
 //		Log.d(TAG,"0% Scaled: "+ (w/26)*scalew);
 //		Log.d(TAG,"100% Scaled: "+ (w-(w/26))*scalew);
+		mPercentageText = String.format("%d", currentP);
+		mPercentageText += " %";		
 		
 		if (mMode==0)
 		{
@@ -287,7 +285,10 @@ public class ProgressView extends View {
 				canvas.drawText(mPercentageText, x + (w/26),h*1.15f + mLabelPaint.getTextSize() , mLabelPaint);
 			else
 				canvas.drawText(mPercentageText, x - (w/5.2f),h*1.15f + mLabelPaint.getTextSize() , mLabelPaint);
-			canvas.drawText(mLabelText, 0, h, mLabelPaint);
+			if (mLoading)
+				canvas.drawText("Saving...", 0, h, mLabelPaint);
+			else
+				canvas.drawText(mLabelText, 0, h, mLabelPaint);
 		}
 		else
 		{
@@ -302,15 +303,15 @@ public class ProgressView extends View {
 				canvas.drawText(mPercentageText, x + (w/26), (h*.75f) , mLabelPaint);
 			else
 				canvas.drawText(mPercentageText, x - (w/5.2f), (h*.75f) , mLabelPaint);
-			canvas.drawText(mLabelText, 0, (h*.75f), mLabelPaint);
+			if (mLoading)
+				canvas.drawText("Saving...", 0, (h*.75f), mLabelPaint);
+			else
+				canvas.drawText(mLabelText, 0, (h*.75f), mLabelPaint);
 		}
 		canvas.restore(); 
 		if (IndicatorNeedsToMove()) {
 			moveIndicator();
 		}			
-		mPercentageText = String.format("%d", currentP);
-		mPercentageText += " %";		
-			
 	}
 	
 	@Override
@@ -398,12 +399,12 @@ public class ProgressView extends View {
     public boolean onTouchEvent(MotionEvent event) {
     	if (mOverrideMode==1)
     	{
-//	    	Log.d(TAG,"Override %: "+p);
 	    	int p =(int)((event.getX()-((w/26)*scalew))*100/((w-(w/13))*scalew));
 	    	p=p<0?0:p;
 	    	p=p>100?100:p;
 	    	currentP=p;
 	    	targetP=p;
+//	    	Log.d(TAG,"Override %: "+p);
 	    	invalidate();
 	    	return true;
     	}
@@ -425,6 +426,7 @@ public class ProgressView extends View {
 		protected void onProgressUpdate(String... values) {
 			if (values[0].equals("Label Updated"))
 				mLabelText=values[1];
+			mLoading=false;
 			invalidate();
 			Log.d(TAG,"Portal Label Updated");
 			Toast.makeText(mContext, values[0], Toast.LENGTH_SHORT).show();
