@@ -26,11 +26,13 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.EditText;
@@ -310,8 +312,27 @@ public class InputController extends AccessoryController  {
 
 					OnLongClickListener listenermode = new OnLongClickListener() {
 						public boolean onLongClick(View v) {
-							mHostActivity.startActivityForResult( new Intent( mHostActivity, RFModeChoicesActivity.class ),Globals.PICK_RF_MODE );
-							return true;
+							View view = LayoutInflater.from(mHostActivity).inflate(R.layout.rfmodes, null);
+							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
+							builder.setTitle(R.string.app_name);
+							builder.setView(view);
+							final AlertDialog alert = builder.create();
+							alert.show();
+							
+							for (int i=0;i<7;i++)
+							{
+								final int mode = i;
+								int resID = view.getResources().getIdentifier("RFMode"+i, "id", "com.reefangel.evolution");
+								TextView c = (TextView) view.findViewById(resID);
+								c.setOnClickListener( new OnClickListener() {
+									public void onClick ( View v ) {
+										setByteMsg(Globals.RF_MODE,(byte)mode);										
+										SendCommand(Globals.RF_COMMAND_MODE,(byte)mode);
+										alert.dismiss();
+									}
+								} );
+							}
+							return true;								
 						}
 					};
 					trm.setOnLongClickListener(listenermode);
@@ -319,30 +340,6 @@ public class InputController extends AccessoryController  {
 					final TextView trs = (TextView) this.findViewById(R.id.RFSpeedValue);
 					OnLongClickListener listenerspeed = new OnLongClickListener() {
 						public boolean onLongClick(View v) {
-//							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
-//							final ProgressView p = new ProgressView(mHostActivity);
-//							builder.setTitle(R.string.app_name);
-//							builder.setMessage(R.string.SelectSpeedLabel);
-//							builder.setNegativeButton(getResources().getString(cancelid), null);
-//							builder.setPositiveButton(getResources().getString(okid), new DialogInterface.OnClickListener() {
-//								public void onClick(DialogInterface dialog, int item) {
-//									trs.setText(p.getPercentage()+"%");
-//									SpeedometerView s = (SpeedometerView) findViewById(R.id.RFSpeedometer);
-//									s.setHandTarget(p.getPercentage());
-//									trs.setTag(p.getPercentage());
-//									SendCommand(Globals.RF_COMMAND_MODE,(byte)item);
-//								}
-//							});
-//							p.setOverrideMode(1);
-//							p.setPercentage((Integer) trs.getTag());
-//							p.setCurrentPercentage((Integer) trs.getTag());
-//							p.setPercentageText((Integer) trs.getTag()+"%");
-//							p.setLabel(R.string.SpeedLabel);
-//							builder.setView(p);
-//							AlertDialog alert = builder.create();
-//							alert.show();
-//							return true;
-							
 							View view = LayoutInflater.from(mHostActivity).inflate(R.layout.rfsettings, null);
 							AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
 							final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
