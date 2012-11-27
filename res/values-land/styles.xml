@@ -127,5 +127,13 @@
         <item name="android:paddingRight">15dp</item>        
     </style>
     <style name="EvolutionRelayWidget" parent="@style/EvolutionTextBase">
-    </style>     
+    </style>   
+     <style name="EvolutionRFMode" parent="@style/EvolutionTextBase">
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/EvolutionBlack</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">0</item>
+        <item name="android:shadowRadius">3</item>
+    </style>  
 </resources>

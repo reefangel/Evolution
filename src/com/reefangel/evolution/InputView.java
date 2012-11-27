@@ -138,7 +138,6 @@ public class InputView extends View {
 			canvas.drawText("Saving...", w+10, mInputPaint.getTextSize()+3, mInputPaint);
 		else
 			canvas.drawText(mLabelText, w+10, mInputPaint.getTextSize()+3, mInputPaint);
-
 	}
 	
 	@Override

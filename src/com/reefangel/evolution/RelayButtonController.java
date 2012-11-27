@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -77,7 +78,7 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 		OnLongClickListener listener = new OnLongClickListener() {
 			public boolean onLongClick(View v) {
 //				final CharSequence[] items = {"Off (Override)", "On (Override)", "Auto"};
-				View view = LayoutInflater.from(mActivity).inflate(R.layout.relaysettings, (ViewGroup) mActivity.findViewById(R.id.RelayContainer_ref));
+				View view = LayoutInflater.from(mActivity).inflate(R.layout.relaysettings, null);
 				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 				final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
 				final int cancelid = Resources.getSystem().getIdentifier("cancel", "string", "android");
@@ -91,6 +92,39 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 				final Spinner srf = (Spinner) view.findViewById(R.id.RelayCurrentFunction);
 				srf.setAdapter(fa);
 				srf.setSelection(prefs.getInt("RELAY_FUNCTION"+mCommandTarget, 0));
+				
+				final Button bcf = (Button) view.findViewById(R.id.ChangeFunction);
+				bcf.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						int l=R.layout.functionnone;
+						switch ((int)srf.getSelectedItemId())
+						{
+						case 0:
+							break;
+						case 1:
+							l=R.layout.functiontimedport;
+							break;
+						default:
+							break;
+						}
+						
+						View view = LayoutInflater.from(mActivity).inflate(l, null);
+						AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+						final int okid = Resources.getSystem().getIdentifier("ok", "string", "android");
+						final int cancelid = Resources.getSystem().getIdentifier("cancel", "string", "android");
+						builder.setTitle(R.string.app_name);
+						builder.setView(view);
+						builder.setNegativeButton(mActivity.getResources().getString(cancelid), null);
+						builder.setPositiveButton(mActivity.getResources().getString(okid), new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int item) {
+							}
+						});
+						final AlertDialog alert = builder.create();
+						alert.show();
+						
+					}
+				});
+				
 				builder.setTitle(R.string.app_name);
 				builder.setView(view);
 				builder.setNegativeButton(mActivity.getResources().getString(cancelid), null);
@@ -144,10 +178,6 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 				tabsports.setCurrentTabByTag("Override");
 				
 				alert.show();
-//		        String[] relay_functions = mActivity.getResources().getStringArray(R.array.relay_function); 
-//				ArrayAdapter<String> sa = new ArrayAdapter<String>(mActivity, R.layout.relay_function_item, R.id.label, relay_functions); 
-//				Spinner srf = (Spinner) view.findViewById(R.id.RelayFunction);
-//				srf.setAdapter(sa);
 				return true;
 			}
 		};

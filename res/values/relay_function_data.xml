@@ -12,5 +12,6 @@
         <item>Delayed Start</item> 
         <item>Opposite</item> 
         <item>Always On</item> 
+        <item>Custom Code</item> 
         </string-array> 
 </resources>

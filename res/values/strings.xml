@@ -45,4 +45,8 @@
     <string name="RelayChooseModeLabel">Choose Mode:</string>
     <string name="CurrentSettingsLabel">Current Settings:</string>    
     <string name="ChangeSettingsLabel">Change Function Settings</string>    
+    <string name="TimedPortSettingsLabel">Timed Port Settings:</string>    
+    <string name="TimedPortTurnOnLabel">Turn On at:</string>    
+    <string name="TimedPortTurnOffLabel">Turn Off at:</string>    
+    <string name="NoneSettingsLabel">No Settings to Change</string>    
 </resources>

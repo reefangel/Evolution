@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical" >
-
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="fill_parent"
@@ -16,86 +16,44 @@
 
     <TextView
         android:id="@+id/RFMode0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
+        style="@style/EvolutionRFMode"
         android:shadowColor="@color/EvolutionGreen"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="3"
-        android:text="Constant"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="Constant" />
 
     <TextView
         android:id="@+id/RFMode1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
+        style="@style/EvolutionRFMode"
         android:shadowColor="@color/EvolutionYellow"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="3"
-        android:text="Lagoon"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="Lagoon" />
 
     <TextView
         android:id="@+id/RFMode2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
+        style="@style/EvolutionRFMode"
         android:shadowColor="@color/EvolutionYellow"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="3"
-        android:text="Reef Crest"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:text="Reef Crest" />
+
     <TextView
         android:id="@+id/RFMode3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
+        style="@style/EvolutionRFMode"
         android:shadowColor="@color/EvolutionBlue"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="3"
-        android:text="Short Pulse"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:text="Short Pulse" />
+
     <TextView
         android:id="@+id/RFMode4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
+        style="@style/EvolutionRFMode"
         android:shadowColor="@color/EvolutionLightPink"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="3"
-        android:text="Long Pulse"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:text="Long Pulse" />
+
     <TextView
         android:id="@+id/RFMode5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
+        style="@style/EvolutionRFMode"
         android:shadowColor="@color/EvolutionDarkPink"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="3"
-        android:text="Nutrient Transport"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:text="Nutrient Transport" />
+
     <TextView
         android:id="@+id/RFMode6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
+        style="@style/EvolutionRFMode"
         android:shadowColor="@color/EvolutionDarkPink"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="3"
-        android:text="Tidal Swell"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="Tidal Swell" />
 
 </LinearLayout>
