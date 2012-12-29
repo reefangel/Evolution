@@ -28,6 +28,8 @@
     <string name="TabAiPortsLabel">"AI Ports"</string>
     <string name="TabIOPortsLabel">"I/O Exp Ports"</string>
     <string name="TabBoxLabel">"Box "</string>
+    <string name="seconds">"seconds"</string>
+    
     
     <string name="SelectDimmingLabel">Select Dimming %:</string>
     <string name="SpeedLabel">Speed</string>
@@ -48,5 +50,17 @@
     <string name="TimedPortSettingsLabel">Timed Port Settings:</string>    
     <string name="TimedPortTurnOnLabel">Turn On at:</string>    
     <string name="TimedPortTurnOffLabel">Turn Off at:</string>    
+    <string name="HeaterSettingsLabel">Heater Settings:</string>    
+    <string name="ChillerSettingsLabel">Chiller Settings:</string>    
+    <string name="pHControlSettingsLabel">pH Control Settings:</string>    
+    <string name="CO2ControlSettingsLabel">CO2 Control Settings:</string>    
+    <string name="ATOSettingsLabel">ATO Settings:</string>    
+    <string name="ATOFunctionLabel">Choose which float switches/function you are using:</string>    
+    <string name="ATOTimeoutLabel">ATO Timeout:</string>    
+    <string name="ATOLowLabel">Low ATO Only</string>    
+    <string name="ATOHighLabel">High ATO Only</string>    
+    <string name="ATOLowHighLabel">Both - Low ATO with safety High ATO</string>    
+    <string name="ATOStandardLabel">Both - Standard ATO</string>    
+    
     <string name="NoneSettingsLabel">No Settings to Change</string>    
 </resources>

@@ -20,6 +20,7 @@ import android.widget.TabHost.TabSpec;
 import android.widget.Button;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -104,6 +105,11 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 						case 1:
 							l=R.layout.functiontimedport;
 							break;
+						case 2: case 3: case 5: case 6:
+							l=R.layout.functionnumbers;
+							break;
+						case 4:
+							l=R.layout.functionato;
 						default:
 							break;
 						}
@@ -119,6 +125,75 @@ public class RelayButtonController implements android.view.View.OnClickListener 
 							public void onClick(DialogInterface dialog, int item) {
 							}
 						});
+						TextView fh = (TextView) view.findViewById(R.id.FunctionHeader);
+						TextView fuon = (TextView) view.findViewById(R.id.FunctionUnitOn);
+						TextView fuoff = (TextView) view.findViewById(R.id.FunctionUnitOff);
+						NumberPicker pnon = (NumberPicker) view.findViewById(R.id.FunctionNumberOn);
+						NumberPicker pdon = (NumberPicker) view.findViewById(R.id.FunctionDecimalOn);
+						NumberPicker pnoff = (NumberPicker) view.findViewById(R.id.FunctionNumberOff);
+						NumberPicker pdoff = (NumberPicker) view.findViewById(R.id.FunctionDecimalOff);
+						switch ((int)srf.getSelectedItemId())
+						{
+						case 2:
+							fuon.setText("º");
+							fuoff.setText("º");
+							fh.setText(mActivity.getResources().getString(R.string.HeaterSettingsLabel));
+							pnon.setMaxValue(150);
+							pnon.setMinValue(0);
+							pdon.setMaxValue(9);
+							pdon.setMinValue(0);
+							pnoff.setMaxValue(150);
+							pnoff.setMinValue(0);
+							pdoff.setMaxValue(9);
+							pdoff.setMinValue(0);
+							break;
+						case 3:
+							fuon.setText("º");
+							fuoff.setText("º");
+							fh.setText(mActivity.getResources().getString(R.string.ChillerSettingsLabel));
+							pnon.setMaxValue(150);
+							pnon.setMinValue(0);
+							pdon.setMaxValue(9);
+							pdon.setMinValue(0);
+							pnoff.setMaxValue(150);
+							pnoff.setMinValue(0);
+							pdoff.setMaxValue(9);
+							pdoff.setMinValue(0);
+							break;
+						case 4:
+							NumberPicker p = (NumberPicker) view.findViewById(R.id.ATOTimeout);
+							p.setMaxValue(32000);
+							p.setMinValue(0);
+							break;
+						case 5:
+							fuon.setText("pH");
+							fuoff.setText("pH");
+							fh.setText(mActivity.getResources().getString(R.string.pHControlSettingsLabel));
+							pnon.setMaxValue(13);
+							pnon.setMinValue(1);
+							pdon.setMaxValue(99);
+							pdon.setMinValue(0);
+							pnoff.setMaxValue(13);
+							pnoff.setMinValue(1);
+							pdoff.setMaxValue(99);
+							pdoff.setMinValue(0);
+							break;
+						case 6:
+							fuon.setText("pH");
+							fuoff.setText("pH");
+							fh.setText(mActivity.getResources().getString(R.string.CO2ControlSettingsLabel));
+							pnon.setMaxValue(13);
+							pnon.setMinValue(1);
+							pdon.setMaxValue(99);
+							pdon.setMinValue(0);
+							pnoff.setMaxValue(13);
+							pnoff.setMinValue(1);
+							pdoff.setMaxValue(99);
+							pdoff.setMinValue(0);
+							break;
+						default:
+							break;
+						}						
 						final AlertDialog alert = builder.create();
 						alert.show();
 						
